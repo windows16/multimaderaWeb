@@ -15,42 +15,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-  ComboboxEmpty,
-} from "@/components/ui/combobox"
 import { ExportToExcel } from "../../utils/ExportToExcel"
 import ErrorAlert from "@/components/ErrorAlert"
 import { useFetch } from "@/hooks/useFetch"
-import { useFiltro } from "@/hooks/useFiltro"
+import { useBusqueda } from "@/hooks/useBusqueda"
+import SearchBar from "@/components/SearchBar"
 
 export default function MaestroEmpleados() {
 
   const { items: itemEmpleados, error, recargar: obtenerEmpleados } = useFetch<Empleado>(getAllEmpleados)
-  const {
-    campoFiltro, setCampoFiltro,
-    valorFiltro, setValorFiltro,
-    valorCombobox, setValorCombobox,
-    valoresFiltro,
-    itemsFiltrados: empleadosFiltrados,
-    limpiarFiltro,
-  } = useFiltro(itemEmpleados)
+  const { busqueda, setBusqueda, itemsFiltrados: empleadosFiltrados } = useBusqueda(itemEmpleados)
 
   // Modal crear / editar
   const [modalEmpleadosAbierto, setModalEmpleadosAbierto] = useState(false)
@@ -67,84 +46,40 @@ export default function MaestroEmpleados() {
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-gray-800">Empleados</h1>
+          <div className="text-sm text-gray-600">
+            {empleadosFiltrados.length} {empleadosFiltrados.length !== 1? "registros" : "registro"} 
+          </div>
       </div>
 
-      {/* FILTROS */}
-      <div className="flex flex-col sm:flex-row sm:justify-end gap-3 mb-6">
-        <Select
-          value={campoFiltro}
-          onValueChange={(value) => {
-            setCampoFiltro(value)
-            setValorFiltro("")
-          }}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="Filtrar por" />
-          </SelectTrigger>
-
-          <SelectContent>
-            <SelectItem value="numeroDeEmpleado">numeroDeEmpleado</SelectItem>
-            <SelectItem value="nombre">nombre</SelectItem>
-            <SelectItem value="puesto">puesto</SelectItem>
-            <SelectItem value="dpi">dpi</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Combobox items={valoresFiltro}>
-          <ComboboxInput
-            placeholder="Escribe para filtrar..."
-            value={valorCombobox}
-            onChange={(e) => setValorCombobox(e.target.value)}/>
-
-          <ComboboxContent>
-            <ComboboxEmpty>No encontrado</ComboboxEmpty>
-
-            <ComboboxList>
-              {(item) => (
-                <ComboboxItem
-                  key={item}
-                  value={item}
-                  onClick={() => {setValorCombobox(item); setValorFiltro(item)}}>
-                  {item}
-                </ComboboxItem>
-              )}
-            </ComboboxList>
-          </ComboboxContent>
-        </Combobox>
-
-        <Button
-          onClick={() => {limpiarFiltro()}}
-          className="bg-blue-600">
-          Limpiar Filtro
-        </Button>
-      </div>
-      <div className="flex items-center  justify-end mb-6">
-        <div className="flex gap-2">
-          <Button onClick={() => { setEmpleadoSeleccionado(null); setModalEmpleadosAbierto(true) }}
-            className="bg-blue-600"><FaUserPlus />
-            Nuevo
-          </Button>
-
-          <Button onClick={() => 
-            ExportToExcel({
-              data: empleadosFiltrados,
-              fileName: "empleados.xlsx",
-              sheetName: "Empleados",
-              mapFn: (emp) => ({
-                "No. Empleado": emp.numeroDeEmpleado,
-                "Nombre": emp.nombre,
-                "Teléfono": emp.telefono,
-                "Fecha Nacimiento": formatFecha(emp.fechaNacimiento),
-                "DPI": emp.dpi,
-              }),
-            })
-          } className="bg-green-600"><FaFileExcel/>
-            Exportar
-          </Button>
-          
-        </div>
-      </div>
-      <div className="mb-4 text-sm text-gray-600">
-        Mostrando {empleadosFiltrados.length} {empleadosFiltrados.length !== 1? "registros" : "registro"} 
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <SearchBar
+            value={busqueda}
+            onChange={setBusqueda}
+            placeholder="Buscar por nombre, teléfono, fechaNac..."
+          />
+          <div className="flex gap-3">
+            <Button onClick={() => { setEmpleadoSeleccionado(null); setModalEmpleadosAbierto(true) }}
+              className="bg-blue-600"><FaUserPlus />
+              Nuevo Empleado
+            </Button>
+            
+            <Button onClick={() => 
+              ExportToExcel({
+                data: empleadosFiltrados,
+                fileName: "empleados.xlsx",
+                sheetName: "Empleados",
+                mapFn: (emp) => ({
+                  "No. Empleado": emp.numeroDeEmpleado,
+                  "Nombre": emp.nombre,
+                  "Teléfono": emp.telefono,
+                  "Fecha Nacimiento": formatFecha(emp.fechaNacimiento),
+                  "DPI": emp.dpi,
+                }),
+              })
+            } className="bg-green-600"><FaFileExcel/>
+              Exportar
+            </Button>
+          </div>
       </div>
       
       {/* TARJETAS */}
@@ -201,7 +136,8 @@ export default function MaestroEmpleados() {
           </Card>
         ))}
       </div>
-      
+    
+
       <ErrorAlert error={error} title="Error" />
       
       {/* MODALES */}

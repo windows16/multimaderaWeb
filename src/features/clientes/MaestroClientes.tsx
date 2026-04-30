@@ -1,6 +1,6 @@
 
 import { useState } from "react"
-import { FaEdit, FaUserPlus,FaFileExcel, FaTrash } from "react-icons/fa"
+import { FaEdit, FaUserPlus,FaFileExcel, FaTrash} from "react-icons/fa"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -10,52 +10,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-  ComboboxEmpty,
-} from "@/components/ui/combobox"
+
 import { ExportToExcel } from "@/utils/ExportToExcel"
 import ErrorAlert from "@/components/ErrorAlert"
 import type { Cliente } from "@/types/Clientes/Cliente"
 import { deleteCliente, getAllClientes } from "@/services/clientes-service"
 import ClientesForm from "./ClientesForm"
 import { useFetch } from "@/hooks/useFetch"
-import { useFiltro } from "@/hooks/useFiltro"
+import { useBusqueda } from "@/hooks/useBusqueda"
+import SearchBar from "@/components/SearchBar"
 
 export default function MaestroClientes() {
 
   const { items: itemCliente, error, recargar: obtenerClientes, handleError } = useFetch<Cliente>(getAllClientes)
-    const {
-      campoFiltro, setCampoFiltro,
-      valorFiltro, setValorFiltro,
-      valorCombobox, setValorCombobox,
-      valoresFiltro,
-      itemsFiltrados: clientesFiltrados,
-      limpiarFiltro,
-    } = useFiltro(itemCliente)
+  const { busqueda, setBusqueda, itemsFiltrados: clientesFiltrados } = useBusqueda(itemCliente)
 
  // Modal crear / editar
   const [modalClienteAbierto, setModalClienteAbierto] = useState(false)
   const [ClienteSeleccionado, setClienteSeleccionado] = useState<Omit<Cliente,"tipoCliente"> | null>(null)
 
-  
 
   async function eliminarCliente(cliente: Cliente) {
     if (!cliente.numeroDeCliente) return
@@ -73,77 +53,36 @@ export default function MaestroClientes() {
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-gray-800">Clientes</h1>
+        <div className="text-sm text-gray-600">
+            {clientesFiltrados.length} {clientesFiltrados.length !== 1? "registros" : "registro"} 
+        </div>
       </div>
 
-      {/* FILTROS */}
-      <div className="flex flex-col sm:flex-row sm:justify-end gap-3 mb-6">
-        <Select
-          value={campoFiltro}
-          onValueChange={(value) => {
-            setCampoFiltro(value)
-            setValorFiltro("")
-          }}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="Filtrar por" />
-          </SelectTrigger>
-
-          <SelectContent>
-            <SelectItem value="numeroDeCliente">numeroDeCliente</SelectItem>
-            <SelectItem value="nombre">nombre</SelectItem>
-            <SelectItem value="telefono">telefono</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Combobox items={valoresFiltro}>
-          <ComboboxInput
-            placeholder="Escribe para filtrar..."
-            value={valorCombobox}
-            onChange={(e) => setValorCombobox(e.target.value)}/>
-
-          <ComboboxContent>
-            <ComboboxEmpty>No encontrado</ComboboxEmpty>
-
-            <ComboboxList>
-              {(item) => (
-                <ComboboxItem
-                  key={item}
-                  value={item}
-                  onClick={() => {setValorCombobox(item); setValorFiltro(item)}}>
-                  {item}
-                </ComboboxItem>
-              )}
-            </ComboboxList>
-          </ComboboxContent>
-        </Combobox>
-
-        <Button
-          onClick={() => { limpiarFiltro() }}
-          className="bg-blue-600">
-          Limpiar Filtro
-        </Button>
-      </div>
-
-      <div className="flex items-center  justify-end mb-6">
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+      
+        <SearchBar
+          value={busqueda}
+          onChange={setBusqueda}
+          placeholder="Buscar por nombre, teléfono, tipo..."/>
           
-          <Button onClick={() => {  
+        <div className="flex gap-3">
+
+          <Button onClick={() => {
             setClienteSeleccionado(null)
             setModalClienteAbierto(true)
-          }}
-            className="bg-blue-600"><FaUserPlus />
-            Nuevo
+          }} className="bg-blue-600">
+            <FaUserPlus /> Nuevo Cliente
           </Button>
 
-          <Button onClick={() => 
+          <Button onClick={() =>
             ExportToExcel({
               data: clientesFiltrados,
               fileName: "Cliente.xlsx",
               sheetName: "Cliente"
             })
-          } className="bg-green-600"><FaFileExcel/>
-            Exportar
+          } className="bg-green-600">
+            <FaFileExcel /> Exportar
           </Button>
-          
         </div>
       </div>
 
@@ -155,7 +94,7 @@ export default function MaestroClientes() {
             className="shadow-md hover:shadow-lg transition">
             <CardHeader className="flex items-start justify-between">
               <CardTitle className="text-lg flex-1 truncate pr-2">
-                {item.numeroDeCliente} - {item.nombre}
+                {item.nombre}
               </CardTitle>
 
               <DropdownMenu>
@@ -170,8 +109,7 @@ export default function MaestroClientes() {
                     onClick={() => {
                       setClienteSeleccionado(item)
                       setModalClienteAbierto(true)
-                    }}
-                  >
+                    }}>
                     <FaEdit className="w-3.5 h-3.5 mr-2" />
                     Editar
                   </DropdownMenuItem>

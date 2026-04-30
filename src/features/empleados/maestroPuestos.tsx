@@ -1,6 +1,6 @@
 
 import { useState } from "react"
-import { FaEdit, FaUserPlus,FaFileExcel, FaTrash } from "react-icons/fa"
+import { FaEdit,FaFileExcel, FaTrash, FaPlusSquare } from "react-icons/fa"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -38,18 +38,13 @@ import PuestosForm from "./PuestosForm"
 import ErrorAlert from "@/components/ErrorAlert"
 import { useFetch } from "@/hooks/useFetch"
 import { useFiltro } from "@/hooks/useFiltro"
+import { useBusqueda } from "@/hooks/useBusqueda"
+import SearchBar from "@/components/SearchBar"
 
 export default function MaestroPuestos() {
 
-   const { items: itemPuesto, error, recargar: obtenerPuesto, handleError } = useFetch<Puesto>(getAllPuestos)
-  const {
-    campoFiltro, setCampoFiltro,
-    valorFiltro, setValorFiltro,
-    valorCombobox, setValorCombobox,
-    valoresFiltro,
-    itemsFiltrados: PuestoFiltrados,
-    limpiarFiltro,
-  } = useFiltro(itemPuesto)
+  const { items: itemPuesto, error, recargar: obtenerPuesto, handleError } = useFetch<Puesto>(getAllPuestos)
+  const { busqueda, setBusqueda, itemsFiltrados: puestosFiltrados } = useBusqueda(itemPuesto)
 
  // Modal crear / editar
   const [modalPuestoAbierto, setModalPuestoAbierto] = useState(false)
@@ -73,83 +68,41 @@ export default function MaestroPuestos() {
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-gray-800">Puesto</h1>
-      </div>
-
-      {/* FILTROS */}
-      <div className="flex flex-col sm:flex-row sm:justify-end gap-3 mb-6">
-        <Select
-          value={campoFiltro}
-          onValueChange={(value) => {
-            setCampoFiltro(value)
-            setValorFiltro("")
-          }}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="Filtrar por" />
-          </SelectTrigger>
-
-          <SelectContent>
-            <SelectItem value="idPuesto">idPuesto</SelectItem>
-            <SelectItem value="puesto">puesto</SelectItem>
-            <SelectItem value="descripcion">descripcion</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Combobox items={valoresFiltro}>
-          <ComboboxInput
-            placeholder="Escribe para filtrar..."
-            value={valorCombobox}
-            onChange={(e) => setValorCombobox(e.target.value)}/>
-
-          <ComboboxContent>
-            <ComboboxEmpty>No encontrado</ComboboxEmpty>
-
-            <ComboboxList>
-              {(item) => (
-                <ComboboxItem
-                  key={item}
-                  value={item}
-                  onClick={() => {setValorCombobox(item); setValorFiltro(item)}}>
-                  {item}
-                </ComboboxItem>
-              )}
-            </ComboboxList>
-          </ComboboxContent>
-        </Combobox>
-
-        <Button
-          onClick={() => { limpiarFiltro() }}
-          className="bg-blue-600">
-          Limpiar Filtro
-        </Button>
-      </div>
-
-      <div className="flex items-center  justify-end mb-6">
-        <div className="flex gap-2">
-          
-          <Button onClick={() => {  
-            setPuestoSeleccionado(null)
-            setModalPuestoAbierto(true)
-          }}
-            className="bg-blue-600"><FaUserPlus />
-            Nuevo
-          </Button>
-
-          <Button onClick={() => 
-            ExportToExcel({
-              data: PuestoFiltrados,
-              fileName: "Puesto.xlsx",
-              sheetName: "Puesto"
-            })
-          } className="bg-green-600"><FaFileExcel/>
-            Exportar
-          </Button>
-          
+        <div className="text-sm text-gray-600">
+            {puestosFiltrados.length} {puestosFiltrados.length !== 1? "registros" : "registro"} 
         </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        <SearchBar
+          value={busqueda}
+          onChange={setBusqueda}
+          placeholder="Buscar por puesto, descripcion..."/>
+          
+          <div className="flex gap-3">
+            <Button onClick={() => {  
+              setPuestoSeleccionado(null)
+              setModalPuestoAbierto(true)
+            }}
+              className="bg-blue-600"><FaPlusSquare />
+              Nuevo Puesto
+            </Button>
+
+            <Button onClick={() => 
+              ExportToExcel({
+                data: puestosFiltrados,
+                fileName: "Puesto.xlsx",
+                sheetName: "Puesto"
+              })
+            } className="bg-green-600"><FaFileExcel/>
+              Exportar
+            </Button>
+          </div>
       </div>
 
       {/* TARJETAS */}
       <div className="my-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {PuestoFiltrados.map((item) => (
+        {puestosFiltrados.map((item) => (
           <Card
             key={item.idPuesto}
             className="shadow-md hover:shadow-lg transition">
