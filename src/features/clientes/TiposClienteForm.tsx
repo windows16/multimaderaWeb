@@ -4,29 +4,27 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import ErrorAlert from "@/components/ErrorAlert"
-import type { Cliente, FormCliente } from "@/types/Clientes/Cliente"
-import { insertCliente, updateCliente } from "@/services/clientes-service"
 import { useForm } from "@/hooks/useForm"
+import type { FormTipoCliente, TipoCliente } from "@/types/Clientes/TipoCliente"
+import { insertTipoCliente, updateTipoCliente } from "@/services/tipos-cliente-service"
 
-interface ClientesFormProps {
+interface TiposClienteFormProps {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
-  clienteEditar: Cliente | null
+  tipoClienteEditar: TipoCliente | null
 }
 
-const FormVacio: FormCliente = {
-  numeroDeCliente: null,
-  nombre: "",
-  telefono: "",
-  idTipoCliente: null
+const FormVacio: FormTipoCliente = {
+  idTipoCliente: null,
+  descripcion: ""
 }
 
-export default function ClientesForm({ isOpen, onClose, onSuccess, clienteEditar }: ClientesFormProps) {
-  const esEdicion = !!clienteEditar
+export default function TiposClienteForm({ isOpen, onClose, onSuccess, tipoClienteEditar }: TiposClienteFormProps) {
+  const esEdicion = !!tipoClienteEditar
   const { form, setForm, cargando, setCargando, error, handleError, clearError, handleChange } = useForm({
     formVacio: FormVacio,
-    itemEditar: clienteEditar,
+    itemEditar: tipoClienteEditar,
     isOpen,
   })
 
@@ -35,10 +33,10 @@ export default function ClientesForm({ isOpen, onClose, onSuccess, clienteEditar
     clearError()
     setCargando(true)
     try {
-      if (esEdicion && clienteEditar) {
-        await updateCliente({ ...form })
+      if (esEdicion && tipoClienteEditar) {
+        await updateTipoCliente({ ...form })
       } else {
-        await insertCliente({...form})
+        await insertTipoCliente({...form})
       }
       onSuccess()
       onClose()
@@ -61,7 +59,7 @@ export default function ClientesForm({ isOpen, onClose, onSuccess, clienteEditar
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <div className="flex items-center gap-2 text-gray-800">
             {esEdicion ? <FaEdit className="text-amber-600" /> : <FaUserPlus className="text-blue-600" />}
-            <h2 className="text-lg font-semibold">{esEdicion ? "Editar Cliente" : "Nuevo Cliente"}</h2>
+            <h2 className="text-lg font-semibold">{esEdicion ? "Editar TipoCliente" : "Nuevo TipoCliente"}</h2>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">
             <FaTimes />
@@ -72,13 +70,8 @@ export default function ClientesForm({ isOpen, onClose, onSuccess, clienteEditar
         <form onSubmit={handleSubmit} className="px-6 py-5 grid grid-cols-2 gap-4">
 
           <div className="col-span-2">
-            <Label className="text-gray-700 mb-1">Nombre</Label>
-            <Input name="nombre" value={form.nombre} onChange={handleChange} required placeholder="Juan Carlos" />
-          </div>
-
-          <div>
-            <Label className="text-gray-700 mb-1">Teléfono</Label>
-            <Input name="telefono" value={form.telefono} onChange={handleChange} required placeholder="1234-7890" />
+            <Label className="text-gray-700 mb-1">Descripcion</Label>
+            <Input name="descripcion" value={form.descripcion} onChange={handleChange} required placeholder="propietario" />
           </div>
 
           <ErrorAlert error={error} title="Error al guardar" />

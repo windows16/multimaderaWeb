@@ -1,6 +1,6 @@
 
 import { useState } from "react"
-import { FaEdit,FaFileExcel, FaTrash, FaPlusSquare } from "react-icons/fa"
+import { FaEdit, FaUserPlus,FaFileExcel, FaTrash} from "react-icons/fa"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -10,53 +10,39 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-  ComboboxEmpty,
-} from "@/components/ui/combobox"
-import type { Puesto } from "@/types/Empleados/Puesto"
-import { getAllPuestos, deletePuesto } from "../../services/empleados-service"
+
 import { ExportToExcel } from "@/utils/ExportToExcel"
-import PuestosForm from "./PuestosForm"
 import ErrorAlert from "@/components/ErrorAlert"
+import type { Cliente } from "@/types/Clientes/Cliente"
+import { deleteCliente, getAllClientes } from "@/services/clientes-service"
+import ClientesForm from "./ClientesForm"
 import { useFetch } from "@/hooks/useFetch"
-import { useFiltro } from "@/hooks/useFiltro"
 import { useBusqueda } from "@/hooks/useBusqueda"
 import SearchBar from "@/components/SearchBar"
 
-export default function MaestroPuestos() {
+export default function ClientesMaestro() {
 
-  const { items: itemPuesto, error, recargar: obtenerPuesto, handleError } = useFetch<Puesto>(getAllPuestos)
-  const { busqueda, setBusqueda, itemsFiltrados: puestosFiltrados } = useBusqueda(itemPuesto)
+  const { items: itemCliente, error, recargar: obtenerClientes, handleError } = useFetch<Cliente>(getAllClientes)
+  const { busqueda, setBusqueda, itemsFiltrados: clientesFiltrados } = useBusqueda(itemCliente)
 
  // Modal crear / editar
-  const [modalPuestoAbierto, setModalPuestoAbierto] = useState(false)
-  const [PuestoSeleccionado, setPuestoSeleccionado] = useState<Puesto | null>(null)
+  const [modalClienteAbierto, setModalClienteAbierto] = useState(false)
+  const [ClienteSeleccionado, setClienteSeleccionado] = useState<Omit<Cliente,"tipoCliente"> | null>(null)
 
 
-  async function eliminarPuesto(puesto: Puesto) {
-    if (!puesto.idPuesto) return
-    if (!confirm(`¿Desea eliminar el puesto ${puesto.puesto}?`)) return
+  async function eliminarCliente(cliente: Cliente) {
+    if (!cliente.numeroDeCliente) return
+    if (!confirm(`¿Desea eliminar el cliente ${cliente.nombre}?`)) return
     try {
-      await deletePuesto(puesto.idPuesto)
-      await obtenerPuesto()
+      await deleteCliente(cliente.numeroDeCliente)
+      await obtenerClientes()
     } catch (error) {
       handleError(error)
     }
@@ -64,51 +50,51 @@ export default function MaestroPuestos() {
 
   return (
     <div>
-
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-gray-800">Puesto</h1>
+        <h1 className="text-xl font-semibold text-gray-800">Clientes</h1>
         <div className="text-sm text-gray-600">
-            {puestosFiltrados.length} {puestosFiltrados.length !== 1? "registros" : "registro"} 
+            {clientesFiltrados.length} {clientesFiltrados.length !== 1? "registros" : "registro"} 
         </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
+      
         <SearchBar
           value={busqueda}
           onChange={setBusqueda}
-          placeholder="Buscar por puesto, descripcion..."/>
+          placeholder="Buscar por nombre, teléfono, tipo..."/>
           
-          <div className="flex gap-3">
-            <Button onClick={() => {  
-              setPuestoSeleccionado(null)
-              setModalPuestoAbierto(true)
-            }}
-              className="bg-blue-600"><FaPlusSquare />
-              Nuevo Puesto
-            </Button>
+        <div className="flex gap-3">
 
-            <Button onClick={() => 
-              ExportToExcel({
-                data: puestosFiltrados,
-                fileName: "Puesto.xlsx",
-                sheetName: "Puesto"
-              })
-            } className="bg-green-600"><FaFileExcel/>
-              Exportar
-            </Button>
-          </div>
+          <Button onClick={() => {
+            setClienteSeleccionado(null)
+            setModalClienteAbierto(true)
+          }} className="bg-blue-600">
+            <FaUserPlus /> Nuevo Cliente
+          </Button>
+
+          <Button onClick={() =>
+            ExportToExcel({
+              data: clientesFiltrados,
+              fileName: "Cliente.xlsx",
+              sheetName: "Cliente"
+            })
+          } className="bg-green-600">
+            <FaFileExcel /> Exportar
+          </Button>
+        </div>
       </div>
 
       {/* TARJETAS */}
       <div className="my-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {puestosFiltrados.map((item) => (
+        {clientesFiltrados.map((item) => (
           <Card
-            key={item.idPuesto}
+            key={item.numeroDeCliente}
             className="shadow-md hover:shadow-lg transition">
             <CardHeader className="flex items-start justify-between">
               <CardTitle className="text-lg flex-1 truncate pr-2">
-                {item.idPuesto} - {item.puesto}
+                {item.numeroDeCliente} - {item.nombre}
               </CardTitle>
 
               <DropdownMenu>
@@ -121,10 +107,9 @@ export default function MaestroPuestos() {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
                     onClick={() => {
-                      setPuestoSeleccionado(item)
-                      setModalPuestoAbierto(true)
-                    }}
-                  >
+                      setClienteSeleccionado(item)
+                      setModalClienteAbierto(true)
+                    }}>
                     <FaEdit className="w-3.5 h-3.5 mr-2" />
                     Editar
                   </DropdownMenuItem>
@@ -134,7 +119,7 @@ export default function MaestroPuestos() {
                   <DropdownMenuItem
                     className="text-red-500 focus:text-red-500 focus:bg-red-50"
                     onClick={() => {
-                      eliminarPuesto(item)
+                      eliminarCliente(item)
                     }}>
                     <FaTrash className="w-3.5 h-3.5 mr-2" />
                     Eliminar
@@ -144,7 +129,8 @@ export default function MaestroPuestos() {
             </CardHeader>
 
             <CardContent className="space-y-1 text-sm text-gray-500">
-              <p>Descripcion: {item.descripcion}</p>
+                <p>Teléfono: {item.telefono}</p>
+                <p>Tipo de cliente: {item.tipoCliente}</p>
             </CardContent>
           </Card>
         ))}
@@ -153,11 +139,11 @@ export default function MaestroPuestos() {
       <ErrorAlert error={error} title="Error" />
 
       {/* MODALES */}
-      <PuestosForm
-        isOpen={modalPuestoAbierto}
-        onClose={() => { setModalPuestoAbierto(false); setPuestoSeleccionado(null) }}
-        onSuccess={obtenerPuesto}
-        puestoEditar={PuestoSeleccionado} />
+      <ClientesForm
+        isOpen={modalClienteAbierto}
+        onClose={() => { setModalClienteAbierto(false); setClienteSeleccionado(null) }}
+        onSuccess={obtenerClientes}
+        clienteEditar={ClienteSeleccionado} />
     </div>
   )
 }

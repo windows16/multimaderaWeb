@@ -1,10 +1,10 @@
 import { Route } from "react-router-dom"
-import MaestroEmpleados from "@/features/empleados/maestroEmpleados"
-import MaestroPuestos from "@/features/empleados/maestroPuestos"
+import EmpleadosMaestro from "@/features/empleados/EmpleadosMaestro"
+import PuestosMaestro from "@/features/empleados/PuestosMaestro"
 
 export const EmpleadosRoutes = (
   <>
-    <Route path="/empleados"element={<MaestroEmpleados />} />
-    <Route path="/empleados/puestos" element={<MaestroPuestos />} />
+    <Route path="/empleados"element={<EmpleadosMaestro />} />
+    <Route path="/empleados/puestos" element={<PuestosMaestro />} />
   </>
 )
