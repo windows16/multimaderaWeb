@@ -31,6 +31,7 @@ export default function MainLayout() {
         { name: "Clientes", 
             children: [
                 { name: "Clientes", path: "/clientes" },
+                { name: "Tipos de Cliente", path: "/tipos-cliente"}
             ],
         },
         { name: "Personal", 

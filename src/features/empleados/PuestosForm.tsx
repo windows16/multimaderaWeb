@@ -89,7 +89,7 @@ export default function PuestosForm({ isOpen, onClose, onSuccess, puestoEditar }
             </Button>
             <Button type="submit" disabled={cargando}
               className="bg-blue-600">
-              {cargando ? "Guardando..." : esEdicion ? "Actualizar" : "Grabar"}
+              {cargando ? "Guardando..." : esEdicion ? "Actualizar" : "Guardar"}
             </Button>
           </div>
 

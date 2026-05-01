@@ -1,9 +1,11 @@
 import { Route } from "react-router-dom"
 
-import MaestroClientes from "@/features/clientes/MaestroClientes"
+import ClientesMaestro from "@/features/clientes/ClientesMaestro"
+import TiposClienteMaestro from "@/features/clientes/TiposClienteMaestro"
 
 export const ClientesRoutes = (
     <>
-        <Route path="/clientes" element={<MaestroClientes />} />
+        <Route path="/clientes" element={<ClientesMaestro />} />
+        <Route path="/tipos-cliente" element={<TiposClienteMaestro />} />
     </>
 )

@@ -26,7 +26,7 @@ import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
 import SearchBar from "@/components/SearchBar"
 
-export default function MaestroEmpleados() {
+export default function EmpleadosMaestro() {
 
   const { items: itemEmpleados, error, recargar: obtenerEmpleados } = useFetch<Empleado>(getAllEmpleados)
   const { busqueda, setBusqueda, itemsFiltrados: empleadosFiltrados } = useBusqueda(itemEmpleados)

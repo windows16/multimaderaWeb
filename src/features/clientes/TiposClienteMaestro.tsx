@@ -20,29 +20,29 @@ import {
 
 import { ExportToExcel } from "@/utils/ExportToExcel"
 import ErrorAlert from "@/components/ErrorAlert"
-import type { Cliente } from "@/types/Clientes/Cliente"
-import { deleteCliente, getAllClientes } from "@/services/clientes-service"
-import ClientesForm from "./ClientesForm"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
 import SearchBar from "@/components/SearchBar"
+import type { TipoCliente } from "@/types/Clientes/TipoCliente"
+import { deleteTipoCliente, getAllTiposCliente } from "@/services/tipos-cliente-service"
+import TiposClienteForm from "./TiposClienteForm"
 
-export default function MaestroClientes() {
+export default function TiposClienteMaestro() {
 
-  const { items: itemCliente, error, recargar: obtenerClientes, handleError } = useFetch<Cliente>(getAllClientes)
-  const { busqueda, setBusqueda, itemsFiltrados: clientesFiltrados } = useBusqueda(itemCliente)
+  const { items: itemTipoCliente, error, recargar: obtenerTiposCliente, handleError } = useFetch<TipoCliente>(getAllTiposCliente)
+  const { busqueda, setBusqueda, itemsFiltrados: tiposClienteFiltrados } = useBusqueda(itemTipoCliente)
 
  // Modal crear / editar
-  const [modalClienteAbierto, setModalClienteAbierto] = useState(false)
-  const [ClienteSeleccionado, setClienteSeleccionado] = useState<Omit<Cliente,"tipoCliente"> | null>(null)
+  const [modalTipoClienteAbierto, setModalTipoClienteAbierto] = useState(false)
+  const [tipoClienteSeleccionado, setTipoClienteSeleccionado] = useState<TipoCliente | null>(null)
 
 
-  async function eliminarCliente(cliente: Cliente) {
-    if (!cliente.numeroDeCliente) return
-    if (!confirm(`¿Desea eliminar el cliente ${cliente.nombre}?`)) return
+  async function eliminarCliente(tipoCliente: TipoCliente) {
+    if (!tipoCliente.idTipoCliente) return
+    if (!confirm(`¿Desea eliminar el tipoCliente ${tipoCliente.descripcion}?`)) return
     try {
-      await deleteCliente(cliente.numeroDeCliente)
-      await obtenerClientes()
+      await deleteTipoCliente(tipoCliente.idTipoCliente)
+      await obtenerTiposCliente()
     } catch (error) {
       handleError(error)
     }
@@ -52,9 +52,9 @@ export default function MaestroClientes() {
     <div>
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-gray-800">Clientes</h1>
+        <h1 className="text-xl font-semibold text-gray-800">TiposCliente</h1>
         <div className="text-sm text-gray-600">
-            {clientesFiltrados.length} {clientesFiltrados.length !== 1? "registros" : "registro"} 
+            {tiposClienteFiltrados.length} {tiposClienteFiltrados.length !== 1? "registros" : "registro"} 
         </div>
       </div>
 
@@ -63,22 +63,22 @@ export default function MaestroClientes() {
         <SearchBar
           value={busqueda}
           onChange={setBusqueda}
-          placeholder="Buscar por nombre, teléfono, tipo..."/>
+          placeholder="Buscar por descripcion"/>
           
         <div className="flex gap-3">
 
           <Button onClick={() => {
-            setClienteSeleccionado(null)
-            setModalClienteAbierto(true)
+            setTipoClienteSeleccionado(null)
+            setModalTipoClienteAbierto(true)
           }} className="bg-blue-600">
-            <FaUserPlus /> Nuevo Cliente
+            <FaUserPlus /> Nuevo TipoCliente
           </Button>
 
           <Button onClick={() =>
             ExportToExcel({
-              data: clientesFiltrados,
-              fileName: "Cliente.xlsx",
-              sheetName: "Cliente"
+              data: tiposClienteFiltrados,
+              fileName: "TipoCliente.xlsx",
+              sheetName: "TipoCliente"
             })
           } className="bg-green-600">
             <FaFileExcel /> Exportar
@@ -88,13 +88,13 @@ export default function MaestroClientes() {
 
       {/* TARJETAS */}
       <div className="my-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {clientesFiltrados.map((item) => (
+        {tiposClienteFiltrados.map((item) => (
           <Card
-            key={item.numeroDeCliente}
+            key={item.idTipoCliente}
             className="shadow-md hover:shadow-lg transition">
             <CardHeader className="flex items-start justify-between">
               <CardTitle className="text-lg flex-1 truncate pr-2">
-                {item.nombre}
+                {item.idTipoCliente} - {item.descripcion}
               </CardTitle>
 
               <DropdownMenu>
@@ -107,8 +107,8 @@ export default function MaestroClientes() {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
                     onClick={() => {
-                      setClienteSeleccionado(item)
-                      setModalClienteAbierto(true)
+                      setTipoClienteSeleccionado(item)
+                      setModalTipoClienteAbierto(true)
                     }}>
                     <FaEdit className="w-3.5 h-3.5 mr-2" />
                     Editar
@@ -127,11 +127,6 @@ export default function MaestroClientes() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardHeader>
-
-            <CardContent className="space-y-1 text-sm text-gray-500">
-                <p>Teléfono: {item.telefono}</p>
-                <p>Tipo de cliente: {item.tipoCliente}</p>
-            </CardContent>
           </Card>
         ))}
       </div>
@@ -139,11 +134,11 @@ export default function MaestroClientes() {
       <ErrorAlert error={error} title="Error" />
 
       {/* MODALES */}
-      <ClientesForm
-        isOpen={modalClienteAbierto}
-        onClose={() => { setModalClienteAbierto(false); setClienteSeleccionado(null) }}
-        onSuccess={obtenerClientes}
-        clienteEditar={ClienteSeleccionado} />
+      <TiposClienteForm
+        isOpen={modalTipoClienteAbierto}
+        onClose={() => { setModalTipoClienteAbierto(false); setTipoClienteSeleccionado(null) }}
+        onSuccess={obtenerTiposCliente}
+        tipoClienteEditar={tipoClienteSeleccionado} />
     </div>
   )
 }

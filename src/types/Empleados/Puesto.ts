@@ -5,4 +5,4 @@ export interface Puesto {
     descripcion: string;
 }
 
-export type FormPuesto = Pick<Puesto, "idPuesto" | "puesto" | "descripcion">
+export type FormPuesto = Puesto

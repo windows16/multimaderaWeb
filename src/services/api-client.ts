@@ -2,8 +2,13 @@ import axios from "axios";
 import { supabase } from "../supabase/supabase-config";
 
 const apiMultimadera = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL_API,
+  baseURL: import.meta.env.VITE_BASE_URL_API_DESARROLLO,
 });
+
+export async function statusApi() {
+    const { data } = await apiMultimadera.get("/default");
+    return data;
+}
 
 // interceptor para agregar el token automaticamente
 apiMultimadera.interceptors.request.use(async (config) => {
