@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "@/components/ui/combobox"
 import { useForm } from "@/hooks/useForm"
+import { ComboboxField } from "@/components/ComboboxField"
 
 
 interface EmpleadosFormProps {
@@ -109,29 +110,16 @@ export default function EmpleadosForm({ isOpen, onClose, onSuccess, empleadoEdit
 
           <div>
             <Label className="block text-gray-700 mb-1">Puesto</Label>
-            <Combobox items={puestos}>
-              <ComboboxInput
-                placeholder="Selecciona un puesto"
-                value={
-                  puestos.find(p => p.idPuesto === form.idPuesto)?.puesto || ""
-                }/>
-
-              <ComboboxContent>
-                <ComboboxEmpty>{isLoading ? "Cargando..." : "No encontrado"}</ComboboxEmpty>
-                <ComboboxList>
-                  {puestos.map((item) => (
-                    <ComboboxItem
-                      key={item.idPuesto}
-                      value={item.puesto}
-                      onClick={() => {
-                        setForm((prev) => ({...prev,idPuesto: item.idPuesto}))
-                      }}>
-                      {item.idPuesto} - {item.puesto}
-                    </ComboboxItem>
-                  ))}
-                </ComboboxList>
-              </ComboboxContent>
-            </Combobox>
+            <ComboboxField
+              items={puestos}
+              selectedValue={form.idPuesto}
+              getValue={(p) => p.idPuesto}
+              getLabel={(p) => p.puesto}
+              renderItem={(p) => `${p.idPuesto} - ${p.puesto}`}
+              placeholder="Selecciona un puesto"
+              isLoading={isLoading}
+              onChange={(data) => setForm((prev) => ({ ...prev, idPuesto: data as number }))}
+            />
           </div>
 
           <ErrorAlert error={error} title="Error al guardar" />

@@ -7,6 +7,9 @@ import ErrorAlert from "@/components/ErrorAlert"
 import type { Cliente, FormCliente } from "@/types/Clientes/Cliente"
 import { insertCliente, updateCliente } from "@/services/clientes-service"
 import { useForm } from "@/hooks/useForm"
+import { ComboboxField } from "@/components/ComboboxField"
+import { useQuery } from "@tanstack/react-query"
+import { getAllTiposCliente } from "@/services/tipos-cliente-service"
 
 interface ClientesFormProps {
   isOpen: boolean
@@ -28,6 +31,12 @@ export default function ClientesForm({ isOpen, onClose, onSuccess, clienteEditar
     formVacio: FormVacio,
     itemEditar: clienteEditar,
     isOpen,
+  })
+
+  const { data: tiposCliente = [], isLoading } = useQuery({
+    queryKey: ["tiposCliente"],
+    queryFn: getAllTiposCliente,
+    enabled: isOpen 
   })
 
   async function handleSubmit(e: React.FormEvent) {
@@ -72,13 +81,27 @@ export default function ClientesForm({ isOpen, onClose, onSuccess, clienteEditar
         <form onSubmit={handleSubmit} className="px-6 py-5 grid grid-cols-2 gap-4">
 
           <div className="col-span-2">
-            <Label className="text-gray-700 mb-1">Nombre</Label>
+            <Label className="text-gray-700 mb-1">nombre</Label>
             <Input name="nombre" value={form.nombre} onChange={handleChange} required placeholder="Juan Carlos" />
           </div>
 
           <div>
-            <Label className="text-gray-700 mb-1">Teléfono</Label>
+            <Label className="text-gray-700 mb-1">teléfono</Label>
             <Input name="telefono" value={form.telefono} onChange={handleChange} required placeholder="1234-7890" />
+          </div>
+
+          <div>
+            <Label className="block text-gray-700 mb-1">tipo de cliente</Label>
+            <ComboboxField
+              items={tiposCliente}
+              selectedValue={form.idTipoCliente}
+              getValue={(p) => p.idTipoCliente}
+              getLabel={(p) => p.descripcion}
+              renderItem={(p) => `${p.idTipoCliente} - ${p.descripcion}`}
+              placeholder="Selecciona un tipo de cliente"
+              isLoading={isLoading}
+              onChange={(data) => setForm((prev) => ({ ...prev, idTipoCliente: data as number }))}
+            />
           </div>
 
           <ErrorAlert error={error} title="Error al guardar" />
