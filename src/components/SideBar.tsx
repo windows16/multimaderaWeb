@@ -27,7 +27,7 @@ export default function SideBar() {
             <button
               onClick={() => setOpenSubMenu(prev => prev === link.name ? null : link.name)}
               title={!mobile && collapsed ? link.name : undefined}
-              className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-slate-600 hover:bg-gray-100 ${!mobile && collapsed ? "justify-center" : "justify-between"}`}>
+              className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-slate-600 hover:bg-gray-100 ${!mobile && collapsed ? "justify-center" : "justify-between"}`}>
               <span className="flex items-center gap-2.5">
                 <MenuIcon name={link.name} />
                 {(mobile || !collapsed) && link.name}
@@ -52,11 +52,10 @@ export default function SideBar() {
           <NavLink key={link.path} to={link.path} onClick={closeAll}
             title={!mobile && collapsed ? link.name : undefined}
             className={({ isActive }) =>
-              `flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm
+              `flex items-center gap-2.5 px-2.5 py-2 rounded-lg
               ${!mobile && collapsed ? "justify-center" : ""}
               ${isActive ? "text-amber-700 bg-amber-50" : "text-slate-600 hover:bg-gray-100"}`
-            }
-          >
+            }>
             <MenuIcon name={link.name} />
             {(mobile || !collapsed) && link.name}
           </NavLink>

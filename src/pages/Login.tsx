@@ -47,7 +47,7 @@ export default function Login() {
   }
 
   return (
-   <div className="max-w-md mx-auto mt-24 bg-white shadow-xl rounded-2xl p-8">
+   <div className="max-w-md mx-auto mt-24 bg-white rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100">
 
       <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
         Iniciar sesión
