@@ -82,7 +82,7 @@ export default function ClientesForm({ isOpen, onClose, onSuccess, clienteEditar
 
           <div className="col-span-2">
             <Label className="text-gray-700 mb-1">nombre</Label>
-            <Input name="nombre" value={form.nombre} onChange={handleChange} required placeholder="Juan Carlos" />
+            <Input name="nombre" type="number" value={form.nombre} onChange={handleChange} required placeholder="Juan Carlos" />
           </div>
 
           <div>
