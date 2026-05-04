@@ -25,6 +25,9 @@ import ErrorAlert from "@/components/ErrorAlert"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
 import SearchBar from "@/components/SearchBar"
+import FabButton from "@/components/FabButton"
+import PageHeader from "@/components/PageHeader"
+import RecordCount from "@/components/RecordCount"
 
 export default function EmpleadosMaestro() {
 
@@ -43,28 +46,13 @@ export default function EmpleadosMaestro() {
   return (
     <div>
 
-      {/* HEADER */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-gray-800">Empleados</h1>
-          <div className="text-sm text-gray-600">
-            {empleadosFiltrados.length} {empleadosFiltrados.length !== 1? "registros" : "registro"} 
-          </div>
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <SearchBar
-            value={busqueda}
-            onChange={setBusqueda}
-            placeholder="Buscar por nombre, teléfono, fechaNac..."
-          />
-          <div className="flex gap-3">
-            <Button onClick={() => { setEmpleadoSeleccionado(null); setModalEmpleadosAbierto(true) }}
-              className="bg-blue-600"><FaUserPlus />
-              Nuevo Empleado
-            </Button>
-            
-            <Button onClick={() => 
-              ExportToExcel({
+      <PageHeader
+        title="Empleados"
+        menuOptions={[
+          {
+            label: "Exportar",
+            icon: <FaFileExcel className="mr-2 text-green-600" />,
+            onClick: () => ExportToExcel({
                 data: empleadosFiltrados,
                 fileName: "empleados.xlsx",
                 sheetName: "Empleados",
@@ -75,13 +63,19 @@ export default function EmpleadosMaestro() {
                   "Fecha Nacimiento": formatFecha(emp.fechaNacimiento),
                   "DPI": emp.dpi,
                 }),
-              })
-            } className="bg-green-600"><FaFileExcel/>
-              Exportar
-            </Button>
-          </div>
+              }),
+          }
+        ]}
+      />
+
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <SearchBar
+            value={busqueda}
+            onChange={setBusqueda}
+            placeholder="Buscar por nombre, teléfono, fechaNac..."
+          />
       </div>
-      
+      <RecordCount count={empleadosFiltrados.length} />
       {/* TARJETAS */}
       <div className="my-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {empleadosFiltrados.map((item) => (
@@ -135,6 +129,11 @@ export default function EmpleadosMaestro() {
             </CardContent>
           </Card>
         ))}
+        
+        <FabButton
+          onClick={() => { setEmpleadoSeleccionado(null); setModalEmpleadosAbierto(true) }}
+          icon={<FaUserPlus />}
+        />
       </div>
     
 

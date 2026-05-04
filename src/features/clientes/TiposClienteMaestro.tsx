@@ -1,6 +1,6 @@
 
 import { useState } from "react"
-import { FaEdit, FaUserPlus,FaFileExcel, FaTrash} from "react-icons/fa"
+import { FaEdit, FaUserPlus,FaFileExcel, FaTrash, FaPlus} from "react-icons/fa"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -26,6 +26,10 @@ import SearchBar from "@/components/SearchBar"
 import type { TipoCliente } from "@/types/Clientes/TipoCliente"
 import { deleteTipoCliente, getAllTiposCliente } from "@/services/tipos-cliente-service"
 import TiposClienteForm from "./TiposClienteForm"
+import FabButton from "@/components/FabButton"
+import RecordCount from "@/components/RecordCount"
+import PageHeader from "@/components/PageHeader"
+import { formatFecha } from "@/utils/Functions"
 
 export default function TiposClienteMaestro() {
 
@@ -50,13 +54,20 @@ export default function TiposClienteMaestro() {
 
   return (
     <div>
-      {/* HEADER */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-gray-800">TiposCliente</h1>
-        <div className="text-sm text-gray-600">
-            {tiposClienteFiltrados.length} {tiposClienteFiltrados.length !== 1? "registros" : "registro"} 
-        </div>
-      </div>
+      <PageHeader
+        title="Tipos de Cliente"
+        menuOptions={[
+          {
+            label: "Exportar a Excel",
+            icon: <FaFileExcel className="mr-2 text-green-600" />,
+            onClick: () => ExportToExcel({
+              data: tiposClienteFiltrados,
+              fileName: "TiposCliente.xlsx",
+              sheetName: "TiposCliente"
+            }),
+          }
+        ]}
+      />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
       
@@ -65,27 +76,8 @@ export default function TiposClienteMaestro() {
           onChange={setBusqueda}
           placeholder="Buscar por descripcion"/>
           
-        <div className="flex gap-3">
-
-          <Button onClick={() => {
-            setTipoClienteSeleccionado(null)
-            setModalTipoClienteAbierto(true)
-          }} className="bg-blue-600">
-            <FaUserPlus /> Nuevo TipoCliente
-          </Button>
-
-          <Button onClick={() =>
-            ExportToExcel({
-              data: tiposClienteFiltrados,
-              fileName: "TipoCliente.xlsx",
-              sheetName: "TipoCliente"
-            })
-          } className="bg-green-600">
-            <FaFileExcel /> Exportar
-          </Button>
-        </div>
       </div>
-
+      <RecordCount count={tiposClienteFiltrados.length} />
       {/* TARJETAS */}
       <div className="my-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {tiposClienteFiltrados.map((item) => (
@@ -131,6 +123,13 @@ export default function TiposClienteMaestro() {
         ))}
       </div>
 
+      <FabButton
+          onClick={() => { 
+            setTipoClienteSeleccionado(null)
+            setModalTipoClienteAbierto(true)
+          }}
+          icon={<FaPlus />}
+        />
       <ErrorAlert error={error} title="Error" />
 
       {/* MODALES */}

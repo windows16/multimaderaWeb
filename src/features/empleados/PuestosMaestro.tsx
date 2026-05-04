@@ -1,8 +1,7 @@
 
 import { useState } from "react"
-import { FaEdit,FaFileExcel, FaTrash, FaPlusSquare } from "react-icons/fa"
+import { FaEdit,FaFileExcel, FaTrash, FaPlusSquare, FaPlus } from "react-icons/fa"
 
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,27 +9,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-  ComboboxEmpty,
-} from "@/components/ui/combobox"
+
 import type { Puesto } from "@/types/Empleados/Puesto"
 import { getAllPuestos, deletePuesto } from "../../services/empleados-service"
 import { ExportToExcel } from "@/utils/ExportToExcel"
@@ -40,6 +26,9 @@ import { useFetch } from "@/hooks/useFetch"
 import { useFiltro } from "@/hooks/useFiltro"
 import { useBusqueda } from "@/hooks/useBusqueda"
 import SearchBar from "@/components/SearchBar"
+import FabButton from "@/components/FabButton"
+import PageHeader from "@/components/PageHeader"
+import RecordCount from "@/components/RecordCount"
 
 export default function PuestosMaestro() {
 
@@ -65,41 +54,29 @@ export default function PuestosMaestro() {
   return (
     <div>
 
-      {/* HEADER */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-gray-800">Puesto</h1>
-        <div className="text-sm text-gray-600">
-            {puestosFiltrados.length} {puestosFiltrados.length !== 1? "registros" : "registro"} 
-        </div>
-      </div>
+      <PageHeader
+        title="Puestos"
+        menuOptions={[
+          {
+            label: "Exportar",
+            icon: <FaFileExcel className="mr-2 text-green-600" />,
+            onClick: () => ExportToExcel({
+                data: puestosFiltrados,
+                fileName: "Puesto.xlsx",
+                sheetName: "Puesto"
+              }),
+          }
+        ]}
+      />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <SearchBar
           value={busqueda}
           onChange={setBusqueda}
           placeholder="Buscar por puesto, descripcion..."/>
-          
-          <div className="flex gap-3">
-            <Button onClick={() => {  
-              setPuestoSeleccionado(null)
-              setModalPuestoAbierto(true)
-            }}
-              className="bg-blue-600"><FaPlusSquare />
-              Nuevo Puesto
-            </Button>
-
-            <Button onClick={() => 
-              ExportToExcel({
-                data: puestosFiltrados,
-                fileName: "Puesto.xlsx",
-                sheetName: "Puesto"
-              })
-            } className="bg-green-600"><FaFileExcel/>
-              Exportar
-            </Button>
-          </div>
       </div>
 
+      <RecordCount count={puestosFiltrados.length} />
       {/* TARJETAS */}
       <div className="my-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {puestosFiltrados.map((item) => (
@@ -149,7 +126,13 @@ export default function PuestosMaestro() {
           </Card>
         ))}
       </div>
-
+      <FabButton
+        onClick={() => {  
+          setPuestoSeleccionado(null)
+          setModalPuestoAbierto(true) 
+        }}
+        icon={<FaPlus  size={20} />}
+      />
       <ErrorAlert error={error} title="Error" />
 
       {/* MODALES */}

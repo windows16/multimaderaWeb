@@ -1,8 +1,7 @@
 
 import { useState } from "react"
-import { FaEdit, FaUserPlus,FaFileExcel, FaTrash} from "react-icons/fa"
+import { FaEdit,FaFileExcel, FaTrash, FaPlus} from "react-icons/fa"
 
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +25,9 @@ import ClientesForm from "./ClientesForm"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
 import SearchBar from "@/components/SearchBar"
+import RecordCount from "@/components/RecordCount"
+import PageHeader from "@/components/PageHeader"
+import FabButton from "@/components/FabButton"
 
 export default function ClientesMaestro() {
 
@@ -50,41 +52,29 @@ export default function ClientesMaestro() {
 
   return (
     <div>
-      {/* HEADER */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-gray-800">Clientes</h1>
-        <div className="text-sm text-gray-600">
-            {clientesFiltrados.length} {clientesFiltrados.length !== 1? "registros" : "registro"} 
-        </div>
-      </div>
+      <PageHeader
+        title="Clientes"
+        menuOptions={[
+          {
+            label: "Exportar",
+            icon: <FaFileExcel className="mr-2 text-green-600" />,
+            onClick: () => ExportToExcel({
+              data: clientesFiltrados,
+              fileName: "Cliente.xlsx",
+              sheetName: "Cliente"
+            }),
+          }
+        ]}
+      />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
-      
         <SearchBar
           value={busqueda}
           onChange={setBusqueda}
           placeholder="Buscar por nombre, teléfono, tipo..."/>
-          
-        <div className="flex gap-3">
-
-          <Button onClick={() => {
-            setClienteSeleccionado(null)
-            setModalClienteAbierto(true)
-          }} className="bg-blue-600">
-            <FaUserPlus /> Nuevo Cliente
-          </Button>
-
-          <Button onClick={() =>
-            ExportToExcel({
-              data: clientesFiltrados,
-              fileName: "Cliente.xlsx",
-              sheetName: "Cliente"
-            })
-          } className="bg-green-600">
-            <FaFileExcel /> Exportar
-          </Button>
-        </div>
       </div>
+      
+      <RecordCount count={clientesFiltrados.length} />
 
       {/* TARJETAS */}
       <div className="my-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -130,12 +120,18 @@ export default function ClientesMaestro() {
 
             <CardContent className="space-y-1 text-sm text-gray-500">
                 <p>Teléfono: {item.telefono}</p>
-                <p>Tipo de cliente: {item.tipoCliente}</p>
+                <p>Tipo de cliente: {item.tipoCliente || "--"}</p>
             </CardContent>
           </Card>
         ))}
       </div>
-
+      <FabButton
+        onClick={() => {  
+          setClienteSeleccionado(null)
+          setModalClienteAbierto(true)
+        }}
+        icon={<FaPlus  size={20} />}
+      />
       <ErrorAlert error={error} title="Error" />
 
       {/* MODALES */}

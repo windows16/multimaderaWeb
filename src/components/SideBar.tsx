@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { NavLink } from "react-router-dom"
 import AppRoutes from "../routers/AppRoutes"
+import { FaChevronDown } from "react-icons/fa"
 
 const links = [
   { name: "Inicio", path: "/" },
@@ -33,7 +34,7 @@ export default function SideBar() {
                 {(mobile || !collapsed) && link.name}
               </span>
               {(mobile || !collapsed) && (
-                <span className={`text-[10px] text-slate-400 transition-transform ${openSubMenu === link.name ? "rotate-180" : ""}`}>▼</span>
+                <span className={`text-[10px] text-slate-400 transition-transform ${openSubMenu === link.name ? "rotate-180" : ""}`}><FaChevronDown /></span>
               )}
             </button>
             {(mobile || !collapsed) && openSubMenu === link.name && (
@@ -41,7 +42,7 @@ export default function SideBar() {
                 {link.children.map(child => (
                   <NavLink key={child.path} to={child.path} onClick={closeAll}
                     className={({ isActive }) =>
-                      `block px-3 py-1.5 rounded-md text-xs ${isActive ? "text-amber-700 font-medium bg-amber-50" : "text-slate-500 hover:bg-gray-100"}`
+                      `block px-3 py-1.5 rounded-md text-sm ${isActive ? "text-amber-700 font-medium bg-amber-50" : "text-slate-500 hover:bg-gray-100"}`
                     }
                   >{child.name}</NavLink>
                 ))}
@@ -76,14 +77,11 @@ export default function SideBar() {
         <div className="h-13 flex items-center gap-2 px-3 border-b border-gray-100 flex-shrink-0 h-[52px]">
           <button
             onClick={() => { setCollapsed(p => !p); setOpenSubMenu(null) }}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-gray-100 flex-shrink-0"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-gray-100 flex-shrink-0">
+            <HamburgerIcon />
           </button>
           {!collapsed && (
-            <span className="text-base font-semibold text-blue-500 whitespace-nowrap overflow-hidden">
+            <span className="font-semibold text-blue-500 whitespace-nowrap overflow-hidden">
               Multi<span className="text-slate-800">Madera</span>
             </span>
           )}
@@ -105,11 +103,9 @@ export default function SideBar() {
       `}>
         <div className="h-[52px] flex items-center gap-2 px-3 border-b border-gray-100 flex-shrink-0">
           <button onClick={closeAll} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-gray-100">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <CloseIcon />
           </button>
-          <span className="text-base font-semibold text-blue-500">
+          <span className="font-semibold text-blue-500">
             Multi<span className="text-slate-800">Madera</span>
           </span>
         </div>
@@ -119,11 +115,9 @@ export default function SideBar() {
       {/* ── TOPBAR MOVILA ── */}
       <header className="md:hidden fixed top-0 left-0 right-0 h-[52px] z-20 bg-white border-b border-gray-100 flex items-center px-3 gap-2">
         <button onClick={() => setMobileOpen(true)} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-gray-100">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <HamburgerIcon />
         </button>
-        <span className="text-base font-semibold text-blue-500">
+        <span className="font-semibold text-blue-500">
           Multi<span className="text-slate-800">Madera</span>
         </span>
       </header>
@@ -158,3 +152,15 @@ function MenuIcon({ name }: { name: string }) {
     </svg>
   )
 }
+
+const HamburgerIcon = () => (
+  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+  </svg>
+)
+
+const CloseIcon = () => (
+  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+)
