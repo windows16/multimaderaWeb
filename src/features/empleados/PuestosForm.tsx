@@ -1,10 +1,9 @@
-import { FaTimes, FaEdit, FaUserPlus } from "react-icons/fa"
 import { insertPuesto, updatePuesto } from "../../services/empleados-service"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import type { Puesto, FormPuesto } from "@/types/Empleados/Puesto"
 import { useForm } from "@/hooks/useForm"
-import ModalForm from "@/components/ModalForm"
+import ModalForm from "@/components/layout/ModalForm"
 
 interface PuestosFormProps {
   isOpen: boolean

@@ -1,16 +1,12 @@
-
-import { FaTimes, FaEdit, FaUserPlus } from "react-icons/fa"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import ErrorAlert from "@/components/ErrorAlert"
 import type { Cliente, FormCliente } from "@/types/Clientes/Cliente"
 import { insertCliente, updateCliente } from "@/services/clientes-service"
 import { useForm } from "@/hooks/useForm"
-import { ComboboxField } from "@/components/ComboboxField"
+import { ComboboxField } from "@/components/common/ComboboxField"
 import { useQuery } from "@tanstack/react-query"
 import { getAllTiposCliente } from "@/services/tipos-cliente-service"
-import ModalForm from "@/components/ModalForm"
+import ModalForm from "@/components/layout/ModalForm"
 
 interface ClientesFormProps {
   isOpen: boolean

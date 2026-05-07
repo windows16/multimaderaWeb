@@ -1,6 +1,6 @@
 import { FaTimes, FaEdit, FaPlus } from "react-icons/fa"
 import { Button } from "@/components/ui/button"
-import ErrorAlert from "@/components/ErrorAlert"
+import ErrorAlert from "@/components/common/ErrorAlert"
 
 interface ModalFormProps {
   isOpen: boolean

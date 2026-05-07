@@ -1,35 +1,18 @@
 
 import { useState } from "react"
-import { FaEdit, FaUserPlus,FaFileExcel, FaTrash, FaPlus} from "react-icons/fa"
-
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-
+import { FaEdit,FaFileExcel, FaTrash, FaPlus} from "react-icons/fa"
 import { ExportToExcel } from "@/utils/ExportToExcel"
-import ErrorAlert from "@/components/ErrorAlert"
+import ErrorAlert from "@/components/common/ErrorAlert"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
-import SearchBar from "@/components/SearchBar"
+import SearchBar from "@/components/common/SearchBar"
 import type { TipoCliente } from "@/types/Clientes/TipoCliente"
 import { deleteTipoCliente, getAllTiposCliente } from "@/services/tipos-cliente-service"
 import TiposClienteForm from "./TiposClienteForm"
-import FabButton from "@/components/FabButton"
-import RecordCount from "@/components/RecordCount"
-import PageHeader from "@/components/PageHeader"
-import { formatFecha } from "@/utils/Functions"
+import FabButton from "@/components/common/FabButton"
+import RecordCount from "@/components/common/RecordCount"
+import PageHeader from "@/components/layout/PageHeader"
+import CardGrid from "@/components/layout/CardGrid"
 
 export default function TiposClienteMaestro() {
 
@@ -69,70 +52,43 @@ export default function TiposClienteMaestro() {
         ]}
       />
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-      
-        <SearchBar
-          value={busqueda}
-          onChange={setBusqueda}
-          placeholder="Buscar por descripcion"/>
-          
-      </div>
+      <SearchBar
+        value={busqueda}
+        onChange={setBusqueda}
+        placeholder="Buscar por descripcion"/>
+
       <RecordCount count={tiposClienteFiltrados.length} />
-      {/* TARJETAS */}
-      <div className="my-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {tiposClienteFiltrados.map((item) => (
-          <Card
-            key={item.idTipoCliente}
-            className="shadow-md hover:shadow-lg transition">
-            <CardHeader className="flex items-start justify-between">
-              <CardTitle className="text-lg flex-1 truncate pr-2">
-                {item.idTipoCliente} - {item.descripcion}
-              </CardTitle>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="text-gray-400 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-100 transition text-xl leading-none tracking-widest">
-                    ⋮
-                  </button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setTipoClienteSeleccionado(item)
-                      setModalTipoClienteAbierto(true)
-                    }}>
-                    <FaEdit className="w-3.5 h-3.5 mr-2" />
-                    Editar
-                  </DropdownMenuItem>
-
-                  <DropdownMenuSeparator />
-
-                  <DropdownMenuItem
-                    className="text-red-500 focus:text-red-500 focus:bg-red-50"
-                    onClick={() => {
-                      eliminarCliente(item)
-                    }}>
-                    <FaTrash className="w-3.5 h-3.5 mr-2" />
-                    Eliminar
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </CardHeader>
-          </Card>
-        ))}
-      </div>
+      
+      <CardGrid
+        items={tiposClienteFiltrados}
+        getKey={(item) => item.idTipoCliente ?? 0}
+        getTitulo={(item) => `${item.idTipoCliente} - ${item.descripcion}`}
+        cardOptions={[
+          {
+            label: "Editar",
+            icon: <FaEdit className="w-3.5 h-3.5 mr-2" />,
+            onClick: (item) => { setTipoClienteSeleccionado(item); setModalTipoClienteAbierto(true) }
+          },
+          {
+            label: "Eliminar",
+            icon: <FaTrash className="w-3.5 h-3.5 mr-2" />,
+            className: "text-red-500 focus:text-red-500 focus:bg-red-50",
+            separator: true,
+            onClick: (item) => eliminarCliente(item)
+          }
+        ]}
+        renderContent={() => null}
+      />
 
       <FabButton
           onClick={() => { 
             setTipoClienteSeleccionado(null)
             setModalTipoClienteAbierto(true)
           }}
-          icon={<FaPlus />}
-        />
+          icon={<FaPlus />} />
+
       <ErrorAlert error={error} title="Error" />
 
-      {/* MODALES */}
       <TiposClienteForm
         isOpen={modalTipoClienteAbierto}
         onClose={() => { setModalTipoClienteAbierto(false); setTipoClienteSeleccionado(null) }}

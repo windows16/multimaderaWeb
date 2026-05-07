@@ -1,13 +1,9 @@
-
-import { FaTimes, FaEdit, FaUserPlus } from "react-icons/fa"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import ErrorAlert from "@/components/ErrorAlert"
 import { useForm } from "@/hooks/useForm"
 import type { FormTipoCliente, TipoCliente } from "@/types/Clientes/TipoCliente"
 import { insertTipoCliente, updateTipoCliente } from "@/services/tipos-cliente-service"
-import ModalForm from "@/components/ModalForm"
+import ModalForm from "@/components/layout/ModalForm"
 
 interface TiposClienteFormProps {
   isOpen: boolean

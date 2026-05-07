@@ -3,7 +3,7 @@ import { supabase } from "../supabase/supabase-config"
 import { useLocation, useNavigate, Navigate } from "react-router-dom"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { useAuth } from "../hooks/useAuth"
-import ErrorAlert from "../components/ErrorAlert"
+import ErrorAlert from "../components/common/ErrorAlert"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 

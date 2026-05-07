@@ -1,15 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
-import { FaTimes, FaEdit, FaUserPlus } from "react-icons/fa"
 import { getAllPuestos, insertEmpleado, updateEmpleado } from "../../services/empleados-service"
 import type { Empleado, FormEmpleado } from "../../types/Empleados/Empleado"
-import ErrorAlert from "../../components/ErrorAlert"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "@/components/ui/combobox"
 import { useForm } from "@/hooks/useForm"
-import { ComboboxField } from "@/components/ComboboxField"
-import ModalForm from "@/components/ModalForm"
+import { ComboboxField } from "@/components/common/ComboboxField"
+import ModalForm from "@/components/layout/ModalForm"
 
 
 interface EmpleadosFormProps {

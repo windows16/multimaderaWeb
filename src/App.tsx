@@ -1,6 +1,6 @@
 
 import { Route, Routes } from "react-router-dom"
-import SideBar from "./components/SideBar"
+import SideBar from "./components/layout/SideBar"
 import Login from "./pages/Login"
 
 export default function App() {

@@ -1,33 +1,18 @@
 
 import { useState } from "react"
 import { FaEdit,FaFileExcel, FaTrash, FaPlus} from "react-icons/fa"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-
 import { ExportToExcel } from "@/utils/ExportToExcel"
-import ErrorAlert from "@/components/ErrorAlert"
+import ErrorAlert from "@/components/common/ErrorAlert"
 import type { Cliente } from "@/types/Clientes/Cliente"
 import { deleteCliente, getAllClientes } from "@/services/clientes-service"
 import ClientesForm from "./ClientesForm"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
-import SearchBar from "@/components/SearchBar"
-import RecordCount from "@/components/RecordCount"
-import PageHeader from "@/components/PageHeader"
-import FabButton from "@/components/FabButton"
+import SearchBar from "@/components/common/SearchBar"
+import RecordCount from "@/components/common/RecordCount"
+import PageHeader from "@/components/layout/PageHeader"
+import FabButton from "@/components/common/FabButton"
+import CardGrid from "@/components/layout/CardGrid"
 
 export default function ClientesMaestro() {
 
@@ -56,7 +41,7 @@ export default function ClientesMaestro() {
         title="Clientes"
         menuOptions={[
           {
-            label: "Exportar",
+            label: "Exportar a Excel",
             icon: <FaFileExcel className="mr-2 text-green-600" />,
             onClick: () => ExportToExcel({
               data: clientesFiltrados,
@@ -67,64 +52,39 @@ export default function ClientesMaestro() {
         ]}
       />
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <SearchBar
-          value={busqueda}
-          onChange={setBusqueda}
-          placeholder="Buscar por nombre, teléfono, tipo..."/>
-      </div>
+      <SearchBar
+        value={busqueda}
+        onChange={setBusqueda}
+        placeholder="Buscar por nombre, teléfono, tipo..."/>
       
       <RecordCount count={clientesFiltrados.length} />
 
-      {/* TARJETAS */}
-      <div className="my-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {clientesFiltrados.map((item) => (
-          <Card
-            key={item.numeroDeCliente}
-            className="shadow-md hover:shadow-lg transition">
-            <CardHeader className="flex items-start justify-between">
-              <CardTitle className="text-lg flex-1 truncate pr-2">
-                {item.numeroDeCliente} - {item.nombre}
-              </CardTitle>
+      <CardGrid
+        items={clientesFiltrados}
+        getKey={(item) => item.numeroDeCliente ?? 0}
+        getTitulo={(item) => `${item.numeroDeCliente} - ${item.nombre}`}
+        cardOptions={[
+          {
+            label: "Editar",
+            icon: <FaEdit className="w-3.5 h-3.5 mr-2" />,
+            onClick: (item) => { setClienteSeleccionado(item); setModalClienteAbierto(true) }
+          },
+          {
+            label: "Eliminar",
+            icon: <FaTrash className="w-3.5 h-3.5 mr-2" />,
+            className: "text-red-500 focus:text-red-500 focus:bg-red-50",
+            separator: true,
+            onClick: (item) => eliminarCliente(item)
+          }
+        ]}
+        renderContent={(item) => (
+          <>
+            <p>Teléfono: {item.telefono}</p>
+            <p>Tipo de cliente: {item.tipoCliente || "--"}</p>
+          </>
+        )}
+      />
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="text-gray-400 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-100 transition text-xl leading-none tracking-widest">
-                    ⋮
-                  </button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setClienteSeleccionado(item)
-                      setModalClienteAbierto(true)
-                    }}>
-                    <FaEdit className="w-3.5 h-3.5 mr-2" />
-                    Editar
-                  </DropdownMenuItem>
-
-                  <DropdownMenuSeparator />
-
-                  <DropdownMenuItem
-                    className="text-red-500 focus:text-red-500 focus:bg-red-50"
-                    onClick={() => {
-                      eliminarCliente(item)
-                    }}>
-                    <FaTrash className="w-3.5 h-3.5 mr-2" />
-                    Eliminar
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </CardHeader>
-
-            <CardContent className="space-y-1 text-sm text-gray-500">
-                <p>Teléfono: {item.telefono}</p>
-                <p>Tipo de cliente: {item.tipoCliente || "--"}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
       <FabButton
         onClick={() => {  
           setClienteSeleccionado(null)

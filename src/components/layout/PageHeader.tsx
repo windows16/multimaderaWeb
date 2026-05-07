@@ -4,6 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import KebabButton from "../common/KebabButton"
 
 interface MenuOption {
   label: string
@@ -26,9 +27,7 @@ export default function PageHeader({ title, menuOptions }: PageHeaderProps) {
         {menuOptions && menuOptions.length > 0 && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="text-gray-400 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-100 transition text-xl leading-none">
-                ⋮
-              </button>
+              <KebabButton />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {menuOptions.map((option, i) => (

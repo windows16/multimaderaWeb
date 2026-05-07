@@ -34,7 +34,7 @@ import {
   ComboboxEmpty,
 } from "@/components/ui/combobox"
 import { ExportToExcel } from "../../utils/ExportToExcel"
-import ErrorAlert from "@/components/ErrorAlert"
+import ErrorAlert from "@/components/common/ErrorAlert"
 import type { RolConAccion } from "@/types/Usuarios/RoleConAccion"
 
 export default function MaestroRoles() {

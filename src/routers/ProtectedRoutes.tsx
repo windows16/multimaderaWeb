@@ -1,17 +1,14 @@
 
 import { Route } from "react-router-dom"
-import { ProtectedLayout } from "../components/ProtectedLayout"
+import { ProtectedLayout } from "../components/common/ProtectedLayout"
 import { EmpleadosRoutes } from "./EmpleadosRoutes"
 import { UsuariosRoutes } from "./UsuariosRoutes"
 import { ClientesRoutes } from "./ClientesRoutes"
 import Session from "@/pages/Session"
+import { MaterialesRoutes } from "./MaterialesRoutes"
 
 function Home() {
   return <div className="text-xl font-semibold">Bienvenido a MultiMadera</div>
-}
-
-function Herramientas() {
-  return <div className="text-xl font-semibold">Sección de Herramientas</div>
 }
 
 function Pedidos() {
@@ -21,11 +18,11 @@ function Pedidos() {
 export const ProtectedRoutes = (
   <Route element={<ProtectedLayout />}>
     <Route path="/" element={<Home />} />
-    <Route path="/herramientas" element={<Herramientas />} />
+    {MaterialesRoutes}
     <Route path="/pedidos" element={<Pedidos />} />
     {ClientesRoutes}
     {EmpleadosRoutes}
-    {UsuariosRoutes}´
+    {UsuariosRoutes}
     <Route path="/sesion" element={<Session />} />
   </Route>
 )
