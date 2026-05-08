@@ -1,8 +1,8 @@
-import HerramientasMaestro from "@/features/materiales/HerramientasMaestro"
+import MaterialesMaestro from "@/features/materiales/MaterialesMaestro"
 import { Route } from "react-router-dom"
 
 export const MaterialesRoutes = (
   <>
-    <Route path="/herramientas" element={<HerramientasMaestro />} />
+    <Route path="/materiales" element={<MaterialesMaestro />} />
   </>
 )

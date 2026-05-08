@@ -1,7 +1,7 @@
 
 
-export interface Herramienta {
-    idHerramienta: number | null
+export interface Material {
+    idMaterial: number | null
     descripcion: string 
     precioAlquiler: number | null
 }

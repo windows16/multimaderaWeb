@@ -2,27 +2,27 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useForm } from "@/hooks/useForm"
 import ModalForm from "@/components/layout/ModalForm"
-import type { Herramienta } from "@/types/Materiales/Herramientas"
-import { insertHerramienta, updateHerramienta } from "@/services/materiales-service"
+import type { Material } from "@/types/Materiales/Material"
+import { insertMaterial, updateMaterial } from "@/services/materiales-service"
 
-interface HerramientasFormProps {
+interface MaterialsFormProps {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
-  herramientaEditar: Herramienta | null
+  materialEditar: Material | null
 }
 
-const FormVacio: Herramienta = {
-  idHerramienta: null,
+const FormVacio: Material = {
+  idMaterial: null,
   descripcion: "",
   precioAlquiler: null,
 }
 
-export default function HerramientasForm({ isOpen, onClose, onSuccess, herramientaEditar }: HerramientasFormProps) {
-  const esEdicion = !!herramientaEditar
+export default function MaterialsForm({ isOpen, onClose, onSuccess, materialEditar }: MaterialsFormProps) {
+  const esEdicion = !!materialEditar
   const { form, setForm, cargando, setCargando, error, handleError, clearError, handleChange } = useForm({
     formVacio: FormVacio,
-    itemEditar: herramientaEditar,
+    itemEditar: materialEditar,
     isOpen,
   })
 
@@ -31,10 +31,10 @@ export default function HerramientasForm({ isOpen, onClose, onSuccess, herramien
     clearError()
     setCargando(true)
     try {
-      if (esEdicion && herramientaEditar) {
-        await updateHerramienta({ ...form })
+      if (esEdicion && materialEditar) {
+        await updateMaterial({ ...form })
       } else {
-        await insertHerramienta({...form})
+        await insertMaterial({...form})
       }
       onSuccess()
       onClose()
@@ -49,7 +49,7 @@ export default function HerramientasForm({ isOpen, onClose, onSuccess, herramien
 
   return (
     <ModalForm isOpen={isOpen} onClose={onClose} onSubmit={handleSubmit}
-      titulo="Herramienta" esEdicion={esEdicion} cargando={cargando} error={error}>
+      titulo="Material" esEdicion={esEdicion} cargando={cargando} error={error}>
 
       <div className="col-span-2">
         <Label className="text-gray-700 mb-1">descripcion</Label>

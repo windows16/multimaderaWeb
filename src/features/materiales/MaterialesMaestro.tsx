@@ -10,26 +10,26 @@ import RecordCount from "@/components/common/RecordCount"
 import PageHeader from "@/components/layout/PageHeader"
 import FabButton from "@/components/common/FabButton"
 import CardGrid from "@/components/layout/CardGrid"
-import type { Herramienta } from "@/types/Materiales/Herramientas"
-import { deleteHerramienta, getAllHerramientas } from "@/services/materiales-service"
-import HerramientasForm from "./HerramientasForm"
+import type { Material } from "@/types/Materiales/Material"
+import { deleteMaterial, getAllMateriales } from "@/services/materiales-service"
+import MaterialesForm from "./MaterialesForm"
 
-export default function HerramientasMaestro() {
+export default function MaterialesMaestro() {
 
-  const { items: itemHerramienta, error, recargar: obtenerHerramientas, handleError } = useFetch<Herramienta>(getAllHerramientas)
-  const { busqueda, setBusqueda, itemsFiltrados: herramientasFiltrados } = useBusqueda(itemHerramienta)
+  const { items: itemMaterial, error, recargar: obtenerMateriales, handleError } = useFetch<Material>(getAllMateriales)
+  const { busqueda, setBusqueda, itemsFiltrados: materialesFiltrados } = useBusqueda(itemMaterial)
 
  // Modal crear / editar
-  const [modalHerramientaAbierto, setModalHerramientaAbierto] = useState(false)
-  const [HerramientaSeleccionado, setHerramientaSeleccionado] = useState<Herramienta| null>(null)
+  const [modalMaterialAbierto, setModalMaterialAbierto] = useState(false)
+  const [MaterialSeleccionado, setMaterialSeleccionado] = useState<Material| null>(null)
 
 
-  async function eliminarHerramienta(herramienta: Herramienta) {
-    if (!herramienta.idHerramienta) return
-    if (!confirm(`¿Desea eliminar el herramienta ${herramienta.descripcion}?`)) return
+  async function eliminarMaterial(material: Material) {
+    if (!material.idMaterial) return
+    if (!confirm(`¿Desea eliminar el material ${material.descripcion}?`)) return
     try {
-      await deleteHerramienta(herramienta.idHerramienta)
-      await obtenerHerramientas()
+      await deleteMaterial(material.idMaterial)
+      await obtenerMateriales()
     } catch (error) {
       handleError(error)
     }
@@ -38,15 +38,15 @@ export default function HerramientasMaestro() {
   return (
     <div>
       <PageHeader
-        title="Herramientas"
+        title="Materiales"
         menuOptions={[
           {
             label: "Exportar a Excel",
             icon: <FaFileExcel className="mr-2 text-green-600" />,
             onClick: () => ExportToExcel({
-              data: herramientasFiltrados,
-              fileName: "Herramienta.xlsx",
-              sheetName: "Herramienta"
+              data: materialesFiltrados,
+              fileName: "Material.xlsx",
+              sheetName: "Material"
             }),
           }
         ]}
@@ -57,19 +57,19 @@ export default function HerramientasMaestro() {
         onChange={setBusqueda}
         placeholder="Buscar por descripcion, precio..."/>
       
-      <RecordCount count={herramientasFiltrados.length} />
+      <RecordCount count={materialesFiltrados.length} />
 
       <CardGrid
-        items={herramientasFiltrados}
-        getKey={(item) => item.idHerramienta ?? 0}
-        getTitulo={(item) => `${item.idHerramienta} - ${item.descripcion}`}
+        items={materialesFiltrados}
+        getKey={(item) => item.idMaterial ?? 0}
+        getTitulo={(item) => `${item.idMaterial} - ${item.descripcion}`}
         cardOptions={[
           {
             label: "Editar",
             icon: <FaEdit className="w-3.5 h-3.5 mr-2" />,
             onClick: (item) => { 
-              setHerramientaSeleccionado(item)
-              setModalHerramientaAbierto(true) 
+              setMaterialSeleccionado(item)
+              setModalMaterialAbierto(true) 
             }
           },
           {
@@ -77,7 +77,7 @@ export default function HerramientasMaestro() {
             icon: <FaTrash className="w-3.5 h-3.5 mr-2" />,
             className: "text-red-500 focus:text-red-500 focus:bg-red-50",
             separator: true,
-            onClick: (item) => eliminarHerramienta(item)
+            onClick: (item) => eliminarMaterial(item)
           }
         ]}
         renderContent={(item) => (
@@ -89,18 +89,18 @@ export default function HerramientasMaestro() {
 
       <FabButton
         onClick={() => {  
-          setHerramientaSeleccionado(null)
-          setModalHerramientaAbierto(true)
+          setMaterialSeleccionado(null)
+          setModalMaterialAbierto(true)
         }}
         icon={<FaPlus  size={20} />}
       />
       <ErrorAlert error={error} title="Error" />
 
-      <HerramientasForm
-        isOpen={modalHerramientaAbierto}
-        onClose={() => { setModalHerramientaAbierto(false); setHerramientaSeleccionado(null) }}
-        onSuccess={obtenerHerramientas}
-        herramientaEditar={HerramientaSeleccionado} />
+      <MaterialesForm
+        isOpen={modalMaterialAbierto}
+        onClose={() => { setModalMaterialAbierto(false); setMaterialSeleccionado(null) }}
+        onSuccess={obtenerMateriales}
+        materialEditar={MaterialSeleccionado} />
     </div>
   )
 }

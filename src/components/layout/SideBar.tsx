@@ -5,7 +5,7 @@ import { FaChevronDown } from "react-icons/fa"
 
 const links = [
   { name: "Inicio", path: "/" },
-  { name: "Materiales", children: [{ name: "Herramientas", path: "/herramientas" }] },
+  { name: "Materiales", children: [{ name: "Materiales", path: "/materiales" }] },
   { name: "Pedidos", path: "/pedidos" },
   { name: "Clientes", children: [{ name: "Clientes", path: "/clientes" }, { name: "Tipos de Cliente", path: "/tipos-cliente" }] },
   { name: "Empleados", children: [{ name: "Empleados", path: "/empleados" }, { name: "Puestos", path: "/empleados/puestos" }] },
@@ -81,7 +81,7 @@ export default function SideBar() {
             <HamburgerIcon />
           </button>
           {!collapsed && (
-            <span className="font-semibold text-xl text-blue-600 whitespace-nowrap overflow-hidden">
+            <span className="font-semibold text-lg text-blue-600 whitespace-nowrap overflow-hidden">
               Multi<span className="text-slate-800">Madera</span>
             </span>
           )}
@@ -105,7 +105,7 @@ export default function SideBar() {
           <button onClick={closeAll} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-gray-100">
             <CloseIcon />
           </button>
-          <span className="font-semibold text-xl text-blue-600">
+          <span className="font-semibold text-lg text-blue-600">
             Multi<span className="text-slate-800">Madera</span>
           </span>
         </div>
@@ -117,7 +117,7 @@ export default function SideBar() {
         <button onClick={() => setMobileOpen(true)} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-gray-100">
           <HamburgerIcon />
         </button>
-        <span className="font-semibold text-xl text-blue-600">
+        <span className="font-semibold text-lg text-blue-600">
           Multi<span className="text-slate-800">Madera</span>
         </span>
       </header>

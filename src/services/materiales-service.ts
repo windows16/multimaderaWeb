@@ -1,25 +1,26 @@
 
-import type { Herramienta } from '@/types/Materiales/Herramientas';
+import type { Material } from '@/types/Materiales/Material';
 import apiMultimadera from './api-client';
 
-// Herramientas
+const route = "/materiales";
+// Materiales
 
-export async function getAllHerramientas(): Promise<Herramienta[]> {
-    const { data } = await apiMultimadera.get("/herramientas");
+export async function getAllMateriales(): Promise<Material[]> {
+    const { data } = await apiMultimadera.get(`${route}`);
     return data;
 }
 
-export async function insertHerramienta({idHerramienta, ...clienteData}: Herramienta) {
-    const { data } = await apiMultimadera.post("/herramientas", clienteData);
+export async function insertMaterial({idMaterial, ...clienteData}: Material) {
+    const { data } = await apiMultimadera.post(`${route}`, clienteData);
     return data;
 }
 
-export async function updateHerramienta({idHerramienta, ...clienteData}: Herramienta) {
-    const { data } = await apiMultimadera.patch(`/herramientas/${idHerramienta}`, clienteData);
+export async function updateMaterial({idMaterial, ...clienteData}: Material) {
+    const { data } = await apiMultimadera.patch(`${route}/${idMaterial}`, clienteData);
     return data;
 }
 
-export async function deleteHerramienta(idHerramienta: number): Promise<boolean> {
-   const { data } = await apiMultimadera.delete(`/herramientas/${idHerramienta}`);
+export async function deleteMaterial(idMaterial: number): Promise<boolean> {
+   const { data } = await apiMultimadera.delete(`${route}/${idMaterial}`);
    return data;
 }
