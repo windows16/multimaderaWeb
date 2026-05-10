@@ -5,7 +5,7 @@ import { insertCliente, updateCliente } from "@/services/clientes-service"
 import { useForm } from "@/hooks/useForm"
 import { ComboboxField } from "@/components/common/ComboboxField"
 import { useQuery } from "@tanstack/react-query"
-import { getAllTiposCliente } from "@/services/tipos-cliente-service"
+import { getAllTiposCliente } from "@/services/clientes-service"
 import ModalForm from "@/components/layout/ModalForm"
 
 interface ClientesFormProps {
@@ -66,12 +66,12 @@ export default function ClientesForm({ isOpen, onClose, onSuccess, clienteEditar
         <Input name="nombre" value={form.nombre} onChange={handleChange} required placeholder="Juan Carlos" />
       </div>
 
-      <div>
+      <div className="col-span-2">
         <Label className="text-gray-700 mb-1">teléfono</Label>
         <Input name="telefono" type="number" value={form.telefono} onChange={handleChange} required placeholder="1234-7890" />
       </div>
 
-      <div>
+      <div className="col-span-2">
         <Label className="block text-gray-700 mb-1">tipo de cliente</Label>
         <ComboboxField
           items={tiposCliente}

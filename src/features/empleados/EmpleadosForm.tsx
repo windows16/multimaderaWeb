@@ -74,22 +74,22 @@ export default function EmpleadosForm({ isOpen, onClose, onSuccess, empleadoEdit
         <Input name="nombre" value={form.nombre} onChange={handleChange} required placeholder="Gerber Valencia" />
       </div>
 
-      <div>
+      <div className="col-span-2">
         <Label className="text-gray-700 mb-1">Teléfono</Label>
         <Input name="telefono" type="number" value={form.telefono} onChange={handleChange} required placeholder="5555-1234" />
       </div>
 
-      <div>
+      <div className="col-span-2">
         <Label className="text-gray-700 mb-1">Fecha de Nacimiento</Label>
         <Input name="fechaNacimiento" type="date" value={form.fechaNacimiento} onChange={handleChange} required />
       </div>
 
-      <div>
+      <div className="col-span-2">
         <Label className="block text-gray-700 mb-1">DPI</Label>
         <Input name="dpi" type="number" value={form.dpi} onChange={handleChange} required placeholder="0000 00000 0000" />
       </div>
 
-      <div>
+      <div className="col-span-2">
         <Label className="block text-gray-700 mb-1">Puesto</Label>
         <ComboboxField
           items={puestos}

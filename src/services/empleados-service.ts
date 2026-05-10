@@ -25,13 +25,13 @@ export async function deleteEmpleado(
   return data;
 }
  
-export async function insertEmpleado({numeroDeEmpleado, ...personalData}: FormEmpleado) {
-  const { data } = await apiMultimadera.post("/empleados", personalData);
+export async function insertEmpleado({numeroDeEmpleado, ...Data}: FormEmpleado) {
+  const { data } = await apiMultimadera.post("/empleados", Data);
   return data;
 }
 
-export async function updateEmpleado({numeroDeEmpleado, ...personalData}: FormEmpleado) {
-  const { data } = await apiMultimadera.patch(`/empleados/${numeroDeEmpleado}`, personalData);
+export async function updateEmpleado({numeroDeEmpleado, ...Data}: FormEmpleado) {
+  const { data } = await apiMultimadera.patch(`/empleados/${numeroDeEmpleado}`, Data);
   return data;
 }
 
@@ -47,13 +47,13 @@ export async function getPuestoById(idPuesto: number): Promise<Puesto> {
   return data;
 }
 
-export async function insertPuesto({ idPuesto, ...puestoData }: FormPuesto) {
-  const { data } = await apiMultimadera.post("/puestos", puestoData);
+export async function insertPuesto({ idPuesto, ...Data }: FormPuesto) {
+  const { data } = await apiMultimadera.post("/puestos", Data);
   return data;
 }
 
-export async function updatePuesto({ idPuesto, ...puestoData }: FormPuesto) {
-  const { data } = await apiMultimadera.patch(`/puestos/${idPuesto}`, puestoData);
+export async function updatePuesto({ idPuesto, ...Data }: FormPuesto) {
+  const { data } = await apiMultimadera.patch(`/puestos/${idPuesto}`, Data);
   return data;
 }
 

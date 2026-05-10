@@ -5,7 +5,7 @@ import { FaChevronDown } from "react-icons/fa"
 
 const links = [
   { name: "Inicio", path: "/" },
-  { name: "Materiales", children: [{ name: "Materiales", path: "/materiales" }] },
+  { name: "Materiales", children: [{ name: "Materiales", path: "/materiales" }, { name: "Inventario", path: "/inventario" }] },
   { name: "Pedidos", path: "/pedidos" },
   { name: "Clientes", children: [{ name: "Clientes", path: "/clientes" }, { name: "Tipos de Cliente", path: "/tipos-cliente" }] },
   { name: "Empleados", children: [{ name: "Empleados", path: "/empleados" }, { name: "Puestos", path: "/empleados/puestos" }] },

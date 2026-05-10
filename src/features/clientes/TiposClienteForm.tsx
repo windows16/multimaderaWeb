@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useForm } from "@/hooks/useForm"
 import type { FormTipoCliente, TipoCliente } from "@/types/Clientes/TipoCliente"
-import { insertTipoCliente, updateTipoCliente } from "@/services/tipos-cliente-service"
+import { insertTipoCliente, updateTipoCliente } from "@/services/clientes-service"
 import ModalForm from "@/components/layout/ModalForm"
 
 interface TiposClienteFormProps {
