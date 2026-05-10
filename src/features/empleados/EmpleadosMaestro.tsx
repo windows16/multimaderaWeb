@@ -86,7 +86,7 @@ export default function EmpleadosMaestro() {
             <p>Tel: {item.telefono}</p>
             <p>Fecha de Nacimiento: {formatFecha(item.fechaNacimiento)}</p>
             <p>DPI: {item.dpi}</p>
-            <p>Puesto: {item.idPuesto} - {item.puesto}</p>
+            <p>Puesto: {item.puesto}</p>
           </>
         )}
       />
