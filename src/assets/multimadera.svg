@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120 120"
+  width="80"
+  height="80"
+  fill="none">
+
+  <title>Multimadera</title>
+
+  <!-- Fondo -->
+  <rect width="120" height="120" rx="24" fill="#0F172A"/>
+
+  <!-- M moderna -->
+  <path
+    d="M25 85V35H38L60 62L82 35H95V85H82V55L60 78L38 55V85H25Z"
+    fill="#2563EB"/>
+
+  <!-- Línea inferior -->
+  <rect
+    x="25"
+    y="92"
+    width="70"
+    height="4"
+    rx="2"
+    fill="#60A5FA"/>
+
+</svg>

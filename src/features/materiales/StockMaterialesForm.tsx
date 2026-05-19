@@ -6,6 +6,7 @@ import type { StockMaterial, StockMaterialForm } from "@/types/Materiales/StockM
 import { getAllMateriales, insertStockMaterial, updateStockMaterial } from "@/services/materiales-service"
 import { ComboboxField } from "@/components/common/ComboboxField"
 import { useQuery } from "@tanstack/react-query"
+import { HiddenRequired } from "@/components/common/HiddenRequired"
 
 interface StockMaterialesFormProps {
   isOpen: boolean
@@ -71,6 +72,7 @@ export default function StockMaterialesForm({ isOpen, onClose, onSuccess, stockM
                 isLoading={isLoading}
                 onChange={(data) => setForm((prev) => ({ ...prev, idMaterial: data as number }))}
             />
+           <HiddenRequired value={form.idMaterial} />
         </div>
 
       <div className="col-span-2">

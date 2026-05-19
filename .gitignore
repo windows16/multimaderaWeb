@@ -22,6 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-# entorno virtual
 
+# Variables de entorno
+config/
+.env
+.env.*
 *.env
