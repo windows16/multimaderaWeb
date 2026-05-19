@@ -2,7 +2,7 @@ import axios from "axios";
 import { supabase } from "../supabase/supabase-config";
 
 const apiMultimadera = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL_API_DESARROLLO,
+  baseURL: import.meta.env.VITE_BASE_URL_API,
 });
 
 // interceptor para agregar el token automaticamente
