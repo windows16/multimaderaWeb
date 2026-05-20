@@ -54,11 +54,16 @@ export default function DetallesPedidosMaestro() {
       />
 
       <RecordCount count={itemDetalles.length} />
-
+      {/* Subtotal */}
+      <div className="flex justify-end mb-4">
+          <p className="text-md font-semibold text-right">
+            SubTotal: Q{itemDetalles.reduce((acc, item) => acc + (item.total || 0), 0).toFixed(2)}
+          </p>
+      </div>
       <CardGrid
         items={itemDetalles}
         getKey={(item) => item.idDetallePedido ?? 0}
-        getTitulo={(item) => `Material: ${item.material}`}
+        getTitulo={(item) => `${item.material}`}
         cardOptions={[
           {
             label: "Editar",
@@ -75,11 +80,12 @@ export default function DetallesPedidosMaestro() {
         ]}
         renderContent={(item) => (
           <>
-            <p>Material: {item.material}</p>
             <p>Cantidad: {item.cantidad}</p>
+            <p>Total: Q{item.total}</p>
           </>
         )}
       />
+
 
       <FabButton
         onClick={() => {

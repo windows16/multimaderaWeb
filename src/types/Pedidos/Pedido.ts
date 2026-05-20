@@ -15,7 +15,8 @@ export interface DetallePedido {
   idDetallePedido: number | null;
   idPedido: number;
   idMaterial: number | null;
-  cantidad: number | null;
+  cantidad?: number | null;
+  total?: number | null;
   material?: string | null;
 }
 
