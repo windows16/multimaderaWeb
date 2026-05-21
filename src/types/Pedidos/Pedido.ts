@@ -26,8 +26,8 @@ export interface CreatePedidoDto {
   fechaInicio: string;
   fechaFin: string;
   direccion: string;
-  propietario: number;
-  albanil: number;
+  propietario?: number;
+  albanil?: number;
 }
 
 export interface UpdatePedidoDto {
