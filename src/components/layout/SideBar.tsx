@@ -4,7 +4,7 @@ import AppRoutes from "../../routers/AppRoutes"
 import { FaChevronDown } from "react-icons/fa"
 
 const links = [
-  { name: "Inicio", path: "/" },
+  { name: "Inicio", path: "/reporteria" },
   { name: "Materiales", children: [{ name: "Materiales", path: "/materiales" }, { name: "Inventario", path: "/inventario" }] },
   { name: "Pedidos", path: "/pedidos" },
   { name: "Clientes", children: [{ name: "Clientes", path: "/clientes" }, { name: "Tipos de Cliente", path: "/tipos-cliente" }] },

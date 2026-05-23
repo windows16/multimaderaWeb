@@ -5,8 +5,9 @@ import { format } from "date-fns"
  * Formatea "YYYY-MM-DD" a "dd/MM/yyyy"
  */
 export function formatFecha(fecha: string): string {
-  const date = new Date(fecha) // funciona con "YYYY-MM-DD"
-  return isNaN(date.getTime()) ? "" : format(date, "dd/MM/yyyy")
+  return new Date(fecha).toLocaleDateString("es-GT", {
+      day: "2-digit", month: "short", year: "numeric"
+    })
 }
 
 /**

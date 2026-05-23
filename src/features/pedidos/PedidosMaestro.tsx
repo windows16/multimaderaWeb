@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { FaEdit, FaFileExcel, FaTrash, FaPlus } from "react-icons/fa"
 import { ExportToExcel } from "@/utils/ExportToExcel"
 import ErrorAlert from "@/components/common/ErrorAlert"
@@ -6,23 +6,41 @@ import type { Pedido } from "@/types/Pedidos/Pedido"
 import { deletePedido, getAllPedidos } from "@/services/pedidos-service"
 import PedidosForm from "./PedidosForm"
 import { useFetch } from "@/hooks/useFetch"
-import { useBusqueda } from "@/hooks/useBusqueda"
-import SearchBar from "@/components/common/SearchBar"
+import { useFiltros } from "@/hooks/useFiltros"
 import RecordCount from "@/components/common/RecordCount"
 import PageHeader from "@/components/layout/PageHeader"
 import FabButton from "@/components/common/FabButton"
 import CardGrid from "@/components/layout/CardGrid"
 import { useNavigate } from "react-router-dom"
+import { formatFecha } from "@/utils/Functions"
+import { PanelFiltros } from "@/components/common/PanelFiltros"
+import { usePanelFiltros } from "@/hooks/usePanelFiltros"
+import { FiltroSelect } from "@/components/common/FiltroSelect"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 
 export default function PedidosMaestro() {
 
   const { items: itemPedidos, error, recargar: obtenerPedidos, handleError } = useFetch<Pedido>(getAllPedidos)
-  const { busqueda, setBusqueda, itemsFiltrados: pedidosFiltrados } = useBusqueda(itemPedidos)
+  
+  const { filtros, filtrosActivos, itemsFiltrados: pedidosFiltrados, setFiltro, limpiarTodos: limpiarFiltros } =
+      useFiltros<Pedido>(itemPedidos)
   const navigate = useNavigate()
+
+  const opcionesAlbanil = useMemo(() =>
+      [...new Set(itemPedidos.map(p => p.nombreAlbanil).filter(Boolean))] as string[],
+      [itemPedidos]
+    )
+    const opcionesPropietario = useMemo(() =>
+      [...new Set(itemPedidos.map(p => p.nombrePropietario).filter(Boolean))] as string[],
+      [itemPedidos]
+    )
+  const { abierto, toggle } = usePanelFiltros()
+  
   // Modal crear / editar
   const [modalPedidoAbierto, setModalPedidoAbierto] = useState(false)
   const [PedidoSeleccionado, setPedidoSeleccionado] = useState<Pedido | null>(null)
-  // Estado para el detalle
+  
 
   async function eliminarPedido(pedido: Pedido) {
     if (!pedido.idPedido) return
@@ -48,17 +66,52 @@ export default function PedidosMaestro() {
               fileName: "Pedidos.xlsx",
               sheetName: "Pedidos"
             }),
-          }
+          },
+          
         ]}
       />
 
-      <SearchBar
-        value={busqueda}
-        onChange={setBusqueda}
-        placeholder="Buscar por dirección, propietario, albañil..." />
-
-      <RecordCount count={pedidosFiltrados.length} />
-
+      <div className="flex gap-4 mb-4">
+        <RecordCount count={pedidosFiltrados.length} />
+        <PanelFiltros.Trigger
+            className="ml-auto"
+            abierto={abierto}
+            onToggle={toggle}
+            cantidadActivos={filtrosActivos.length}
+          />
+      </div>
+      <PanelFiltros.Panel abierto={abierto} onLimpiar={limpiarFiltros} cantidadActivos={filtrosActivos.length}>
+        <FiltroSelect
+          label="Albañil"
+          opciones={opcionesAlbanil}
+          value={filtros.find(f => f.campo === "nombreAlbanil")?.valor ?? ""}
+          onChange={v => setFiltro({ campo: "nombreAlbanil", operador: "equals", valor: v })}
+        />
+        <FiltroSelect
+          label="Propietario"
+          opciones={opcionesPropietario}
+          value={filtros.find(f => f.campo === "nombrePropietario")?.valor ?? ""}
+          onChange={v => setFiltro({ campo: "nombrePropietario", operador: "equals", valor: v })}
+        />
+        <div className="space-y-1.5">
+          <Label className="text-xs">Fecha inicio (desde)</Label>
+          <Input
+            type="date"
+            value={filtros.find(f => f.campo === "fechaInicio")?.valor ?? ""}
+            onChange={e => setFiltro({ campo: "fechaInicio", operador: "gte", valor: e.target.value })}
+            className="h-8 text-sm"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs">Fecha fin (hasta)</Label>
+          <Input
+            type="date"
+            value={filtros.find(f => f.campo === "fechaFin")?.valor ?? ""}
+            onChange={e => setFiltro({ campo: "fechaFin", operador: "lte", valor: e.target.value })}
+            className="h-8 text-sm"
+          />
+        </div>
+      </PanelFiltros.Panel>
       <CardGrid
         items={pedidosFiltrados}
         getKey={(item) => item.idPedido ?? 0}
@@ -81,8 +134,8 @@ export default function PedidosMaestro() {
           <>
             <p>Albañil: {item.nombreAlbanil}</p>
             <p>Propietario: {item.nombrePropietario}</p>
-            <p>Fecha inicio: {new Date(item.fechaInicio).toLocaleDateString()}</p>
-            <p>Fecha fin: {new Date(item.fechaFin).toLocaleDateString()}</p>
+            <p>Fecha inicio: {formatFecha(item.fechaInicio)}</p>
+            <p>Fecha fin: {formatFecha(item.fechaFin)}</p>
             <p>{item.cancelado ? "Cancelado" : ""}</p>
           </>
         )}
@@ -104,8 +157,6 @@ export default function PedidosMaestro() {
         onClose={() => { setModalPedidoAbierto(false); setPedidoSeleccionado(null) }}
         onSuccess={obtenerPedidos}
         pedidoEditar={PedidoSeleccionado} />
-      
-      
     </div>
   )
 }
