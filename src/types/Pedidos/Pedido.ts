@@ -26,16 +26,16 @@ export interface CreatePedidoDto {
   fechaInicio: string;
   fechaFin: string;
   direccion: string;
-  propietario?: number;
-  albanil?: number;
+  propietario?: number | null;
+  albanil?: number | null;
 }
 
 export interface UpdatePedidoDto {
   fechaInicio?: string;
   fechaFin?: string;
   direccion?: string;
-  propietario?: number;
-  albanil?: number;
+  propietario?: number | null;
+  albanil?: number | null;
   activo?: boolean;
   cancelado?: boolean;
 }

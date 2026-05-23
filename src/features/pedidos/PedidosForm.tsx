@@ -19,8 +19,8 @@ const FormVacio: CreatePedidoDto = {
   fechaInicio: "",
   fechaFin: "",
   direccion: "",
-  propietario: 0,
-  albanil: 0
+  propietario: null,
+  albanil: null
 }
 
 export default function PedidosForm({ isOpen, onClose, onSuccess, pedidoEditar }: PedidosFormProps) {
@@ -100,7 +100,7 @@ export default function PedidosForm({ isOpen, onClose, onSuccess, pedidoEditar }
         <ComboboxField
           items={clientes}
           selectedValue={form.propietario}
-          getValue={(p) => p.numeroDeCliente ?? 0}
+          getValue={(p) => p.numeroDeCliente}
           getLabel={(p) => p.nombre}
           renderItem={(p) => `${p.numeroDeCliente} - ${p.nombre}`}
           placeholder="Selecciona un cliente"
