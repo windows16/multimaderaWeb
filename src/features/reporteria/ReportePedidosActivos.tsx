@@ -109,9 +109,9 @@ export default function ReportePedidosActivos() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 print:py-2">
+    <div>
 
-      <h1 className="text-2xl font-semibold tracking-tight">Reporte de pedidos activos</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">Pedidos activos</h1>
       
       <div className="flex gap-2 mt-4 mb-2 justify-end">
         {/* ── Trigger del panel ── */}
