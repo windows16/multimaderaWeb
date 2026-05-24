@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input"
 
 export default function PedidosMaestro() {
 
-  const { items: itemPedidos, error, recargar: obtenerPedidos, handleError } = useFetch<Pedido>(getAllPedidos)
+  const { items: itemPedidos, error, recargar: obtenerPedidos, handleError, loading } = useFetch<Pedido>(getAllPedidos)
   
   const { filtros, filtrosActivos, itemsFiltrados: pedidosFiltrados, setFiltro, limpiarTodos: limpiarFiltros } =
       useFiltros<Pedido>(itemPedidos)
@@ -72,7 +72,7 @@ export default function PedidosMaestro() {
       />
 
       <div className="flex gap-4 mb-4">
-        <RecordCount count={pedidosFiltrados.length} />
+        <RecordCount count={loading ? 0 : pedidosFiltrados.length} />
         <PanelFiltros.Trigger
             className="ml-auto"
             abierto={abierto}
@@ -114,6 +114,7 @@ export default function PedidosMaestro() {
       </PanelFiltros.Panel>
       <CardGrid
         items={pedidosFiltrados}
+        isLoading={loading}
         getKey={(item) => item.idPedido ?? 0}
         getTitulo={(item) => `${item.direccion}`}
         cardOptions={[
@@ -139,9 +140,9 @@ export default function PedidosMaestro() {
             <p>{item.cancelado ? "Cancelado" : ""}</p>
           </>
         )}
-        onItemClick={(item) => navigate(`/pedidos/${item.idPedido}`)}
+        onItemClick={(item) => navigate(`/pedidos/${item.idPedido}`, { state: { pedido: item } })}
       />
-
+      
       <FabButton
         onClick={() => {
           setPedidoSeleccionado(null)

@@ -4,13 +4,17 @@ import { useError } from "./useError"
 export function useFetch<TData>(fetchFn: () => Promise<TData[]>) {
   const [items, setItems] = useState<TData[]>([])
   const { error, handleError } = useError()
+  const [loading, setLoading] = useState<boolean>(true)
 
   async function recargar() {
+    setLoading(true)
     try {
       const data = await fetchFn()
       setItems(data)
     } catch (err) {
       handleError(err)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -18,5 +22,5 @@ export function useFetch<TData>(fetchFn: () => Promise<TData[]>) {
     recargar()
   }, [])
 
-  return { items, error, recargar, handleError }
+  return { items, error, recargar, handleError, loading }
 }

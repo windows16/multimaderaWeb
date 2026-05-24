@@ -16,7 +16,7 @@ import CardGrid from "@/components/layout/CardGrid"
 
 export default function PuestosMaestro() {
 
-  const { items: itemPuesto, error, recargar: obtenerPuesto, handleError } = useFetch<Puesto>(getAllPuestos)
+  const { items: itemPuesto, error, recargar: obtenerPuesto, handleError, loading } = useFetch<Puesto>(getAllPuestos)
   const { busqueda, setBusqueda, itemsFiltrados: puestosFiltrados } = useBusqueda(itemPuesto)
 
  // Modal crear / editar
@@ -58,10 +58,11 @@ export default function PuestosMaestro() {
         onChange={setBusqueda}
         placeholder="Buscar por puesto, descripcion..."/>
 
-      <RecordCount count={puestosFiltrados.length} />
+      <RecordCount count={loading ? 0 : puestosFiltrados.length} />
       
       <CardGrid
         items={puestosFiltrados}
+        isLoading={loading}
         getKey={(item) => item.idPuesto ?? 0}
         getTitulo={(item) => `${item.idPuesto} - ${item.puesto}`}
         cardOptions={[

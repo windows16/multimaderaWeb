@@ -16,7 +16,7 @@ import StockMaterialesForm from "./StockMaterialesForm"
 
 export default function StockMaterialesMaestro() {
 
-  const { items: itemStock, error, recargar: obtenerStockMateriales, handleError } = useFetch<StockMaterial>(getAllStockMateriales)
+  const { items: itemStock, error, recargar: obtenerStockMateriales, handleError, loading } = useFetch<StockMaterial>(getAllStockMateriales)
   const { busqueda, setBusqueda, itemsFiltrados: stockFiltrados } = useBusqueda(itemStock)
 
  // Modal crear / editar
@@ -57,10 +57,11 @@ export default function StockMaterialesMaestro() {
         onChange={setBusqueda}
         placeholder="Buscar por material"/>
       
-      <RecordCount count={stockFiltrados.length} />
+      <RecordCount count={loading ? 0 : stockFiltrados.length} />
 
       <CardGrid
         items={stockFiltrados}
+        isLoading={loading}
         getKey={(item) => item.idMaterial ?? 0}
         getTitulo={(item) => `${item.idMaterial} - ${item.material}`}
         cardOptions={[

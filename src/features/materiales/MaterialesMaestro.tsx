@@ -16,7 +16,7 @@ import MaterialesForm from "./MaterialesForm"
 
 export default function MaterialesMaestro() {
 
-  const { items: itemMaterial, error, recargar: obtenerMateriales, handleError } = useFetch<Material>(getAllMateriales)
+  const { items: itemMaterial, error, recargar: obtenerMateriales, handleError, loading } = useFetch<Material>(getAllMateriales)
   const { busqueda, setBusqueda, itemsFiltrados: materialesFiltrados } = useBusqueda(itemMaterial)
 
  // Modal crear / editar
@@ -57,10 +57,11 @@ export default function MaterialesMaestro() {
         onChange={setBusqueda}
         placeholder="Buscar por descripcion, precio..."/>
       
-      <RecordCount count={materialesFiltrados.length} />
+      <RecordCount count={loading ? 0 : materialesFiltrados.length} />
 
       <CardGrid
         items={materialesFiltrados}
+        isLoading={loading}
         getKey={(item) => item.idMaterial ?? 0}
         getTitulo={(item) => `${item.idMaterial} - ${item.descripcion}`}
         cardOptions={[

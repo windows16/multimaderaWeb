@@ -18,7 +18,7 @@ import CardGrid from "@/components/layout/CardGrid"
 
 export default function EmpleadosMaestro() {
 
-  const { items: itemEmpleados, error, recargar: obtenerEmpleados } = useFetch<Empleado>(getAllEmpleados)
+  const { items: itemEmpleados, error, recargar: obtenerEmpleados, loading } = useFetch<Empleado>(getAllEmpleados)
   const { busqueda, setBusqueda, itemsFiltrados: empleadosFiltrados } = useBusqueda(itemEmpleados)
 
   // Modal crear / editar
@@ -61,10 +61,11 @@ export default function EmpleadosMaestro() {
         placeholder="Buscar por nombre, teléfono, fechaNac..."
       />
 
-      <RecordCount count={empleadosFiltrados.length} />
+      <RecordCount count={loading ? 0 : empleadosFiltrados.length} />
       
       <CardGrid
         items={empleadosFiltrados}
+        isLoading={loading}
         getKey={(item) => item.numeroDeEmpleado ?? 0}
         getTitulo={(item) => `${item.numeroDeEmpleado} - ${item.nombre}`}
         cardOptions={[

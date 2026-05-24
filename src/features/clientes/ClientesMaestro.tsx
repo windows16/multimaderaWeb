@@ -16,7 +16,7 @@ import CardGrid from "@/components/layout/CardGrid"
 
 export default function ClientesMaestro() {
 
-  const { items: itemCliente, error, recargar: obtenerClientes, handleError } = useFetch<Cliente>(getAllClientes)
+  const { items: itemCliente, error, recargar: obtenerClientes, handleError, loading } = useFetch<Cliente>(getAllClientes)
   const { busqueda, setBusqueda, itemsFiltrados: clientesFiltrados } = useBusqueda(itemCliente)
 
  // Modal crear / editar
@@ -57,10 +57,11 @@ export default function ClientesMaestro() {
         onChange={setBusqueda}
         placeholder="Buscar por nombre, teléfono, tipo..."/>
       
-      <RecordCount count={clientesFiltrados.length} />
+      <RecordCount count={loading ? 0 : clientesFiltrados.length} />
 
       <CardGrid
         items={clientesFiltrados}
+        isLoading={loading}
         getKey={(item) => item.numeroDeCliente ?? 0}
         getTitulo={(item) => `${item.numeroDeCliente} - ${item.nombre}`}
         cardOptions={[

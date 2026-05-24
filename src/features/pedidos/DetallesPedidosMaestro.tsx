@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa"
 import ErrorAlert from "@/components/common/ErrorAlert"
-import type { DetallePedido } from "@/types/Pedidos/Pedido"
+import type { DetallePedido, Pedido } from "@/types/Pedidos/Pedido"
 import { deleteDetallePedido, getDetallesPedido } from "@/services/pedidos-service"
 import DetallesPedidosForm from "./DetallesPedidosForm"
 import { useFetch } from "@/hooks/useFetch"
@@ -9,7 +9,7 @@ import RecordCount from "@/components/common/RecordCount"
 import PageHeader from "@/components/layout/PageHeader"
 import FabButton from "@/components/common/FabButton"
 import CardGrid from "@/components/layout/CardGrid"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 
@@ -18,9 +18,14 @@ export default function DetallesPedidosMaestro() {
   const { idPedido } = useParams()
   const pedidoId = Number(idPedido)
   const navigate = useNavigate()
-  const { items: itemDetalles, error, recargar: obtenerDetalles, handleError } = useFetch(
+  const { items: itemDetalles, error, recargar: obtenerDetalles, handleError, loading } = useFetch(
     () => getDetallesPedido(pedidoId)
   )
+
+  // 1. Obtenemos el estado de la navegación
+  const location = useLocation()
+  // 2. Extraemos el pedido (añadiendo tipado seguro)
+  const pedidoCompleto = location.state?.pedido as Pedido | undefined
 
   // Modal crear / editar
   const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false)
@@ -49,11 +54,11 @@ export default function DetallesPedidosMaestro() {
       
       </Button>
       <PageHeader
-        title="Detalles del Pedido"
+        title={`${pedidoCompleto?.direccion ?? "--"}`}
         menuOptions={[]}
       />
 
-      <RecordCount count={itemDetalles.length} />
+      <RecordCount count={loading ? 0 : itemDetalles.length} />
       {/* Subtotal */}
       <div className="flex justify-end mb-4">
           <p className="text-md font-semibold text-right">
@@ -64,6 +69,7 @@ export default function DetallesPedidosMaestro() {
         items={itemDetalles}
         getKey={(item) => item.idDetallePedido ?? 0}
         getTitulo={(item) => `${item.material}`}
+        isLoading={loading}
         cardOptions={[
           {
             label: "Editar",

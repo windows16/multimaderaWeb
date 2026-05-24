@@ -18,7 +18,7 @@ import { useState } from "react"
 
 export default function MaestroRoles() {
 
-   const { items: itemRolConAcciones, error, recargar: obtenerRolesConAcciones, handleError } = useFetch<RolConAccion>(getAllRolesWithAcciones)
+   const { items: itemRolConAcciones, error, recargar: obtenerRolesConAcciones, handleError, loading } = useFetch<RolConAccion>(getAllRolesWithAcciones)
     const { busqueda, setBusqueda, itemsFiltrados: rolesFiltrados } = useBusqueda(itemRolConAcciones)
   
 
@@ -55,10 +55,11 @@ export default function MaestroRoles() {
               onChange={setBusqueda}
               placeholder="Buscar por descripcion, precio..."/>
 
-      <RecordCount count={rolesFiltrados.length} />
+      <RecordCount count={loading ? 0 : rolesFiltrados.length} />
 
       <CardGrid
             items={rolesFiltrados}
+            isLoading={loading}
             getKey={(item) => item.idRol ?? 0}
             getTitulo={(item) => `${item.idRol} - ${item.rol}`}
             cardOptions={[
