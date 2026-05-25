@@ -32,9 +32,12 @@ export default function PedidosForm({ isOpen, onClose, onSuccess, pedidoEditar }
   })
 
   const { data: clientes = [], isLoading: loadingClientes } = useQuery({
-    queryKey: ["clientes"],
-    queryFn: getAllClientes,
-    enabled: isOpen
+    queryKey: ["clientes-dropdown"], 
+    // Le pasamos un límite alto por defecto (ej. 100) para que el dropdown tenga suficientes opciones
+    queryFn: () => getAllClientes(1, 100), 
+    enabled: isOpen,
+    // La magia: extraemos únicamente el array de clientes para abastecer los Combobox
+    select: (resultadoPaginado) => resultadoPaginado.data
   })
 
   async function handleSubmit(e: React.FormEvent) {

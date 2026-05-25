@@ -1,11 +1,14 @@
 import type { Cliente } from '@/types/Clientes/Cliente';
 import apiMultimadera from './api-client';
 import type { TipoCliente } from '@/types/Clientes/TipoCliente';
+import type { PagedResponse } from './paged-response';
 
 // Clientes
 
-export async function getAllClientes(): Promise<Cliente[]> {
-    const { data } = await apiMultimadera.get("/clientes");
+export async function getAllClientes(page: number = 1, limit: number = 10): Promise<PagedResponse<Cliente>> {
+    const { data } = await apiMultimadera.get("/clientes", {
+        params: { page, limit }
+    });
     return data;
 }
 

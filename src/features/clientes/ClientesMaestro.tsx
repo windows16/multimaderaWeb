@@ -6,17 +6,28 @@ import ErrorAlert from "@/components/common/ErrorAlert"
 import type { Cliente } from "@/types/Clientes/Cliente"
 import { deleteCliente, getAllClientes } from "@/services/clientes-service"
 import ClientesForm from "./ClientesForm"
-import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
 import SearchBar from "@/components/common/SearchBar"
 import RecordCount from "@/components/common/RecordCount"
 import PageHeader from "@/components/layout/PageHeader"
 import FabButton from "@/components/common/FabButton"
 import CardGrid from "@/components/layout/CardGrid"
+import { usePaginacion } from "@/hooks/usePaginacion"
 
 export default function ClientesMaestro() {
 
-  const { items: itemCliente, error, recargar: obtenerClientes, handleError, loading } = useFetch<Cliente>(getAllClientes)
+  
+
+  const { 
+    items: itemCliente, 
+    loading, 
+    error, 
+    page, 
+    setPage, 
+    meta, 
+    recargar: obtenerClientes,
+    setError 
+  } = usePaginacion<Cliente>({ fetchFn: getAllClientes, initialLimit: 10 })
   const { busqueda, setBusqueda, itemsFiltrados: clientesFiltrados } = useBusqueda(itemCliente)
 
  // Modal crear / editar
@@ -31,7 +42,7 @@ export default function ClientesMaestro() {
       await deleteCliente(cliente.numeroDeCliente)
       await obtenerClientes()
     } catch (error) {
-      handleError(error)
+      setError(error)
     }
   }
 
@@ -57,7 +68,7 @@ export default function ClientesMaestro() {
         onChange={setBusqueda}
         placeholder="Buscar por nombre, teléfono, tipo..."/>
       
-      <RecordCount count={loading ? 0 : clientesFiltrados.length} />
+      <RecordCount count={loading ? 0 : meta.total} />
 
       <CardGrid
         items={clientesFiltrados}
