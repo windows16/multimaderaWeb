@@ -5,7 +5,6 @@ import ErrorAlert from "@/components/common/ErrorAlert"
 import type { Pedido } from "@/types/Pedidos/Pedido"
 import { deletePedido, getAllPedidos } from "@/services/pedidos-service"
 import PedidosForm from "./PedidosForm"
-import { useFetch } from "@/hooks/useFetch"
 import { useFiltros } from "@/hooks/useFiltros"
 import RecordCount from "@/components/common/RecordCount"
 import PageHeader from "@/components/layout/PageHeader"
@@ -18,11 +17,20 @@ import { usePanelFiltros } from "@/hooks/usePanelFiltros"
 import { FiltroSelect } from "@/components/common/FiltroSelect"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { useError } from "@/hooks/useError"
+import { usePaginacion } from "@/hooks/usePaginacion"
+import { Paginacion } from "@/components/common/Paginacion"
 
 export default function PedidosMaestro() {
 
-  const { items: itemPedidos, error, recargar: obtenerPedidos, handleError, loading } = useFetch<Pedido>(getAllPedidos)
-  
+    const { 
+      items: itemPedidos, loading, page, setPage, meta, recargar: obtenerPedidos 
+    } = usePaginacion<Pedido>({ 
+      fetchFn: getAllPedidos, 
+      initialLimit: 10
+    })
+    const { error, handleError } = useError()
+    
   const { filtros, filtrosActivos, itemsFiltrados: pedidosFiltrados, setFiltro, limpiarTodos: limpiarFiltros } =
       useFiltros<Pedido>(itemPedidos)
   const navigate = useNavigate()
@@ -142,7 +150,11 @@ export default function PedidosMaestro() {
         )}
         onItemClick={(item) => navigate(`/pedidos/${item.idPedido}`, { state: { pedido: item } })}
       />
-      
+      <Paginacion
+            page={page}
+            totalPages={meta.totalPages > 0 ? meta.totalPages : Math.ceil((meta.total || 1) / 10)}
+            onChange={setPage}
+          />
       <FabButton
         onClick={() => {
           setPedidoSeleccionado(null)

@@ -5,9 +5,15 @@ import type { PagedResponse } from './paged-response';
 
 // Clientes
 
-export async function getAllClientes(page: number = 1, limit: number = 10): Promise<PagedResponse<Cliente>> {
+export async function getAllClientes(
+  page: number, 
+  limit: number
+): Promise<PagedResponse<Cliente>> {
     const { data } = await apiMultimadera.get("/clientes", {
-        params: { page, limit }
+        params: { 
+            page, 
+            limit
+        }
     });
     return data;
 }

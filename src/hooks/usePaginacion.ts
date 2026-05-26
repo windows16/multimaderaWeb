@@ -1,54 +1,67 @@
 import { useState, useEffect, useCallback } from "react"
 
-// Definimos lo que requiere el hook para operar
 interface UsePaginacionProps<T> {
-  fetchFn: (page: number, limit: number) => Promise<{ data: T[]; meta: { total: number; totalPages: number } }>
+  fetchFn: (page: number, limit: number, search: string) => Promise<{ 
+    data: T[]; 
+    meta: { total: number; totalPages: number } 
+  }>
   initialLimit?: number
+  search?: string
 }
 
-export function usePaginacion<T>({ fetchFn, initialLimit = 10 }: UsePaginacionProps<T>) {
+export function usePaginacion<T>({ fetchFn, initialLimit = 10, search = "" }: UsePaginacionProps<T>) {
   const [page, setPage] = useState(1)
-  const [limit] = useState(initialLimit)
   const [items, setItems] = useState<T[]>([])
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<any>(null)
+  const [errorPaginacion, setErrorPaginacion] = useState<any>(null)
   const [meta, setMeta] = useState({ total: 0, totalPages: 0 })
 
-  // Función para obtener los datos de la API
-  const cargarDatos = useCallback(async () => {
+  // 1. Una única función encargada de pedir los datos al servidor
+  const cargarDatos = useCallback(async (paginaDestino: number, textoBusqueda: string) => {
     setLoading(true)
-    setError(null)
+    setErrorPaginacion(null)
     try {
-      const respuesta = await fetchFn(page, limit)
-      setItems(respuesta.data)
-      setMeta({
-        total: respuesta.meta.total,
-        totalPages: respuesta.meta.totalPages,
-      })
+      const respuesta = await fetchFn(paginaDestino, initialLimit, textoBusqueda.trim())
+      
+      if (respuesta && Array.isArray(respuesta.data)) {
+        setItems(respuesta.data)
+        setMeta({
+          total: respuesta.meta?.total ?? 0,
+          totalPages: respuesta.meta?.totalPages ?? 0,
+        })
+      }
     } catch (err: any) {
-      setError(err)
+      setErrorPaginacion(err)
+      setItems([])
     } finally {
       setLoading(false)
     }
-  }, [fetchFn, page, limit])
+  }, [fetchFn, initialLimit])
 
-  // Ejecutar la carga cada vez que cambie la página o el límite
+  // 2. EFECTO A: Escucha ÚNICAMENTE cuando el usuario cambia de página
   useEffect(() => {
-    cargarDatos()
-  }, [cargarDatos])
+    cargarDatos(page, search)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]) // Moverse entre páginas NO debe depender de 'search'
 
-  // Resetear a la página 1 si es necesario (útil si se aplican filtros externos)
+  // 3. EFECTO B: Escucha ÚNICAMENTE cuando el usuario escribe en la barra de búsqueda
+  useEffect(() => {
+    setPage(1) // Regresa a la página 1
+    cargarDatos(1, search) // Carga la página 1 con el nuevo texto
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]) // Buscar NO debe depender de 'page'
+
   const resetPagina = () => setPage(1)
 
   return {
     items,
     loading,
-    error,
+    errorPaginacion,
     page,
     setPage,
     meta,
-    recargar: cargarDatos,
+    recargar: () => cargarDatos(page, search),
     resetPagina,
-    setError
+    setErrorPaginacion
   }
 }

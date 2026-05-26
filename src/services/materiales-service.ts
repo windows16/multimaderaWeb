@@ -2,13 +2,24 @@
 import type { Material } from '@/types/Materiales/Material';
 import apiMultimadera from './api-client';
 import type { StockMaterial } from '@/types/Materiales/StockMaterial';
+import type { PagedResponse } from './paged-response';
 
 const routeMateriales = "/materiales";
 const routeStock = "/stock-materiales";
 // Materiales
 
-export async function getAllMateriales(): Promise<Material[]> {
-    const { data } = await apiMultimadera.get(`${routeMateriales}`);
+export async function getAllMateriales(
+  page: number, 
+  limit: number, 
+  search: string = ""
+): Promise<PagedResponse<Material>> {
+    const { data } = await apiMultimadera.get(`${routeMateriales}`,{
+        params: { 
+            page, 
+            limit,
+            search: search.trim() || undefined 
+        }
+    });
     return data;
 }
 

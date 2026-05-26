@@ -36,13 +36,22 @@ export default function ReportePedidosActivos() {
     try {
       setLoading(true)
       setError(null)
-      const todos = await getAllPedidos()
+      
+      // Pasamos argumentos explícitos o vacíos controlados para evitar el undefined
+      const respuesta = await getAllPedidos() 
+      const todos = respuesta.data || []
+      
       const activos = todos.filter((p: Pedido) => !p.cancelado)
+      
       const conDetalles: PedidoConDetalles[] = await Promise.all(
         activos.map(async (pedido: Pedido) => {
-          const detalles = await getDetallesPedido(pedido.idPedido!)
-          const subtotal = detalles.reduce((acc: number, d: DetallePedido) => acc + (d.total || 0), 0)
-          return { ...pedido, detalles, subtotal }
+          try {
+            const detalles = await getDetallesPedido(pedido.idPedido!)
+            const subtotal = detalles.reduce((acc: number, d: DetallePedido) => acc + (d.total || 0), 0)
+            return { ...pedido, detalles, subtotal }
+          } catch {
+            return { ...pedido, detalles: [], subtotal: 0 } // Safe fallback si un detalle falla
+          }
         })
       )
       setPedidosConDetalles(conDetalles)

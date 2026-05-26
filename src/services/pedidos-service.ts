@@ -1,10 +1,21 @@
-import type { Pedido, DetallePedido, CreatePedidoDto, UpdatePedidoDto, CreateDetallePedidoDto, UpdateDetallePedidoDto } from '@/types/Pedidos/Pedido';
+import type { Pedido, DetallePedido, CreatePedidoDto, UpdatePedidoDto } from '@/types/Pedidos/Pedido';
 import apiMultimadera from './api-client';
+import type { PagedResponse } from './paged-response';
 
 // Pedidos
 
-export async function getAllPedidos(): Promise<Pedido[]> {
-    const { data } = await apiMultimadera.get("/pedidos");
+export async function getAllPedidos(
+    page?: number, 
+    limit?: number, 
+    search?: string): Promise<PagedResponse<Pedido>> {
+    const { data } = await apiMultimadera.get("/pedidos",{
+        params: { 
+            page, 
+            limit,
+            search
+        }
+    }
+    );
     return data;
 }
 

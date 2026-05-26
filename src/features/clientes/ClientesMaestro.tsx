@@ -6,34 +6,31 @@ import ErrorAlert from "@/components/common/ErrorAlert"
 import type { Cliente } from "@/types/Clientes/Cliente"
 import { deleteCliente, getAllClientes } from "@/services/clientes-service"
 import ClientesForm from "./ClientesForm"
-import { useBusqueda } from "@/hooks/useBusqueda"
 import SearchBar from "@/components/common/SearchBar"
 import RecordCount from "@/components/common/RecordCount"
 import PageHeader from "@/components/layout/PageHeader"
 import FabButton from "@/components/common/FabButton"
 import CardGrid from "@/components/layout/CardGrid"
 import { usePaginacion } from "@/hooks/usePaginacion"
+import { Paginacion } from "@/components/common/Paginacion"
+import { useError } from "@/hooks/useError"
+import { useBusqueda } from "@/hooks/useBusqueda"
 
 export default function ClientesMaestro() {
 
-  
-
   const { 
-    items: itemCliente, 
-    loading, 
-    error, 
-    page, 
-    setPage, 
-    meta, 
-    recargar: obtenerClientes,
-    setError 
-  } = usePaginacion<Cliente>({ fetchFn: getAllClientes, initialLimit: 10 })
-  const { busqueda, setBusqueda, itemsFiltrados: clientesFiltrados } = useBusqueda(itemCliente)
+    items: itemCliente, loading, page, setPage, meta, recargar: obtenerClientes 
+  } = usePaginacion<Cliente>({ 
+    fetchFn: getAllClientes, 
+    initialLimit: 10
+  })
+  const { error, handleError } = useError()
 
+  const { busqueda, setBusqueda, itemsFiltrados: clientesFiltrados } = useBusqueda(itemCliente)
+  
  // Modal crear / editar
   const [modalClienteAbierto, setModalClienteAbierto] = useState(false)
   const [ClienteSeleccionado, setClienteSeleccionado] = useState<Omit<Cliente,"tipoCliente"> | null>(null)
-
 
   async function eliminarCliente(cliente: Cliente) {
     if (!cliente.numeroDeCliente) return
@@ -42,7 +39,7 @@ export default function ClientesMaestro() {
       await deleteCliente(cliente.numeroDeCliente)
       await obtenerClientes()
     } catch (error) {
-      setError(error)
+      handleError(error)
     }
   }
 
@@ -96,6 +93,11 @@ export default function ClientesMaestro() {
           </>
         )}
       />
+    <Paginacion 
+      page={page}
+      totalPages={meta.totalPages > 0 ? meta.totalPages : Math.ceil((meta.total || 1) / 10)}
+      onChange={setPage}
+    />
 
       <FabButton
         onClick={() => {  
