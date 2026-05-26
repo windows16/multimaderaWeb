@@ -25,10 +25,10 @@ export default function StockMaterialesMaestro() {
 
 
   async function eliminarMaterial(stock: StockMaterial) {
-    if (!stock.idMaterial) return
+    if (!stock.idStock) return
     if (!confirm(`¿Desea eliminar el stock de ${stock.material}?`)) return
     try {
-      await deleteStockMaterial(stock.idMaterial)
+      await deleteStockMaterial(stock.idStock)
       await obtenerStockMateriales()
     } catch (error) {
       handleError(error)
