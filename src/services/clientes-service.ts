@@ -7,12 +7,14 @@ import type { PagedResponse } from './paged-response';
 
 export async function getAllClientes(
   page: number, 
-  limit: number
+  limit: number,
+  search?: string
 ): Promise<PagedResponse<Cliente>> {
     const { data } = await apiMultimadera.get("/clientes", {
         params: { 
             page, 
-            limit
+            limit,
+            search
         }
     });
     return data;

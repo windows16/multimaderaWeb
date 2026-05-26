@@ -29,10 +29,11 @@ export default function StockMaterialesForm({ isOpen, onClose, onSuccess, stockM
     isOpen,
   })
 
-  const { data: materiales = [], isLoading } = useQuery({
-    queryKey: ["materiales"],
-    queryFn: getAllMateriales,
-    enabled: isOpen 
+  const { data: materiales = [], isLoading: loadingMateriales } = useQuery({
+    queryKey: ["materiales-dropdown"],
+    queryFn: () => getAllMateriales(),
+    enabled: isOpen,
+    select: (resultadoPaginado) => resultadoPaginado.data
   })
 
   async function handleSubmit(e: React.FormEvent) {
@@ -69,7 +70,7 @@ export default function StockMaterialesForm({ isOpen, onClose, onSuccess, stockM
                 getLabel={(p) => p.descripcion}
                 renderItem={(p) => `${p.idMaterial} - ${p.descripcion}`}
                 placeholder="Selecciona un material"
-                isLoading={isLoading}
+                isLoading={loadingMateriales}
                 onChange={(data) => setForm((prev) => ({ ...prev, idMaterial: data as number }))}
             />
            <HiddenRequired value={form.idMaterial} />

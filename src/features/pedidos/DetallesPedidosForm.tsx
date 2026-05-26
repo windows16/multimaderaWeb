@@ -31,12 +31,12 @@ export default function DetallesPedidosForm({ isOpen, onClose, onSuccess, detall
     isOpen,
   })
 
-  const { data: materiales = [], isLoading } = useQuery({
-    queryKey: ["materiales"],
-    queryFn: getAllMateriales,
-    enabled: isOpen
+  const { data: materiales = [], isLoading: loadingMateriales } = useQuery({
+    queryKey: ["materiales-dropdown"],
+    queryFn: () => getAllMateriales(),
+    enabled: isOpen,
+    select: (resultadoPaginado) => resultadoPaginado.data
   })
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     clearError()
@@ -71,7 +71,7 @@ export default function DetallesPedidosForm({ isOpen, onClose, onSuccess, detall
           getLabel={(m) => m.descripcion}
           renderItem={(m) => `${m.idMaterial} - ${m.descripcion}`}
           placeholder="Selecciona un material"
-          isLoading={isLoading}
+          isLoading={loadingMateriales}
           onChange={(data) => setForm((prev) => ({ ...prev, idMaterial: data as number }))}
         />
       </div>
