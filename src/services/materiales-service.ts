@@ -9,8 +9,8 @@ const routeStock = "/stock-materiales";
 // Materiales
 
 export async function getAllMateriales(
-  page: number, 
-  limit: number, 
+  page?: number, 
+  limit?: number, 
   search?: string 
 ): Promise<PagedResponse<Material>> {
     const { data } = await apiMultimadera.get(`${routeMateriales}`,{

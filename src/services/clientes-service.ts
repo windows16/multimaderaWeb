@@ -6,8 +6,8 @@ import type { PagedResponse } from './paged-response';
 // Clientes
 
 export async function getAllClientes(
-  page: number, 
-  limit: number,
+  page?: number, 
+  limit?: number,
   search?: string
 ): Promise<PagedResponse<Cliente>> {
     const { data } = await apiMultimadera.get("/clientes", {
