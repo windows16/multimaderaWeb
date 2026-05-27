@@ -119,6 +119,14 @@ export default function PedidosMaestro() {
             className="h-8 text-sm"
           />
         </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs">Direccion</Label>
+          <Input
+            value={filtros.find(f => f.campo === "direccion")?.valor ?? ""}
+            onChange={e => setFiltro({ campo: "direccion", operador: "includes", valor: e.target.value })}
+            className="h-8 text-sm"
+          />
+        </div>
       </PanelFiltros.Panel>
       <CardGrid
         items={pedidosFiltrados}
