@@ -53,7 +53,7 @@ export default function MaterialsForm({ isOpen, onClose, onSuccess, materialEdit
 
       <div className="col-span-2">
         <Label className="text-gray-700 mb-1">descripcion</Label>
-        <Input name="descripcion" value={form.descripcion} onChange={handleChange} required placeholder="Juan Carlos" />
+        <Input name="descripcion" value={form.descripcion} onChange={handleChange} required placeholder="tabla de 10 pies" />
       </div>
 
       <div>

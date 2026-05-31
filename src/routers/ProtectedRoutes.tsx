@@ -8,12 +8,11 @@ import { PedidosRoutes } from "./PedidosRoutes"
 import { ReporteriaRoutes } from "./ReporteriaRoutes"
 import Session from "@/pages/Session"
 import { MaterialesRoutes } from "./MaterialesRoutes"
-import ReporteMaestro from "@/features/reporteria/ReporteMaestro"
-
+import PedidosMaestro from "@/features/pedidos/PedidosMaestro"
 
 export const ProtectedRoutes = (
   <Route element={<ProtectedLayout />}>
-    <Route path="/" element={<ReporteMaestro />} />
+    <Route path="/" element={<PedidosMaestro />} />
     {MaterialesRoutes}
     {PedidosRoutes}
     {ClientesRoutes}

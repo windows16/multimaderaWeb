@@ -4,12 +4,13 @@ import AppRoutes from "../../routers/AppRoutes"
 import { FaChevronDown } from "react-icons/fa"
 
 const links = [
-  { name: "Inicio", path: "/reporteria" },
+  { name: "Inicio", path: "/" },
   { name: "Materiales", children: [{ name: "Materiales", path: "/materiales" }, { name: "Inventario", path: "/inventario" }] },
   { name: "Pedidos", path: "/pedidos" },
   { name: "Clientes", children: [{ name: "Clientes", path: "/clientes" }, { name: "Tipos de Cliente", path: "/tipos-cliente" }] },
   { name: "Empleados", children: [{ name: "Empleados", path: "/empleados" }, { name: "Puestos", path: "/empleados/puestos" }] },
   { name: "Usuarios", children: [{ name: "Roles", path: "/usuarios/roles" }] },
+  { name: "Reportes", path: "/reporteria" },
   { name: "Inicio de Sesión", path: "/sesion" },
 ]
 
@@ -143,6 +144,7 @@ function MenuIcon({ name }: { name: string }) {
     "Clientes": "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0",
     "Empleados": "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
     "Usuarios": "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z",
+    "Reportes": "M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
     "Inicio de Sesión": "M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1",
   }
   const d = icons[name] ?? "M4 6h16M4 12h16M4 18h16"
