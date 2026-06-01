@@ -5,9 +5,10 @@ import { format } from "date-fns"
  * Formatea "YYYY-MM-DD" a "dd/MM/yyyy"
  */
 export function formatFecha(fecha: string): string {
-  return new Date(fecha).toLocaleDateString("es-GT", {
-      day: "2-digit", month: "short", year: "numeric"
-    })
+  const [year, month, day] = fecha.split("-").map(Number)
+  return new Date(year, month - 1, day).toLocaleDateString("es-GT", {
+    day: "2-digit", month: "short", year: "numeric"
+  })
 }
 
 /**

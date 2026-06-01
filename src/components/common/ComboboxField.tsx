@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-
 import {
   Combobox,
   ComboboxContent,
@@ -15,7 +14,7 @@ interface ComboboxFieldProps<T> {
   getLabel: (item: T) => string
   renderItem?: (item: T) => React.ReactNode
   selectedValue: any
-  onChange: (value: any ) => void
+  onChange: (value: any) => void
   placeholder?: string
   isLoading?: boolean
 }
@@ -30,22 +29,29 @@ export function ComboboxField<T>({
   placeholder = "Selecciona una opción",
   isLoading = false,
 }: ComboboxFieldProps<T>) {
-  const selected = items.find(
-    (item) => getValue(item) === selectedValue
+  const selected = items.find((item) => getValue(item) === selectedValue)
+
+  const [search, setSearch] = useState(() =>
+    selected ? getLabel(selected) : ""
   )
 
-  const [search, setSearch] = useState("")
-
+  // Sincroniza el label cuando selectedValue cambia desde afuera (guardar, reset, etc.)
   useEffect(() => {
-    if (selected) {
-      setSearch(getLabel(selected))
+    setSearch(selected ? getLabel(selected) : "")
+  }, [selectedValue])
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setSearch(value)
+
+    // Si el usuario borra todo el texto, limpiar la selección
+    if (value === "") {
+      onChange(null)
     }
-  }, [selected])
+  }
 
   const filteredItems = items.filter((item) =>
-    getLabel(item)
-      .toLowerCase()
-      .includes(search.toLowerCase())
+    getLabel(item).toLowerCase().includes(search.toLowerCase())
   )
 
   return (
@@ -53,21 +59,20 @@ export function ComboboxField<T>({
       <ComboboxInput
         placeholder={placeholder}
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={handleSearchChange}
       />
-
       <ComboboxContent>
         <ComboboxEmpty>
           {isLoading ? "Cargando..." : "No encontrado"}
         </ComboboxEmpty>
-        
         <ComboboxList>
           <ComboboxItem
             value=""
             onClick={() => {
               onChange(null)
               setSearch("")
-            }}>
+            }}
+          >
             Ninguno
           </ComboboxItem>
           {filteredItems.map((item) => (
@@ -79,9 +84,7 @@ export function ComboboxField<T>({
                 setSearch(getLabel(item))
               }}
             >
-              {renderItem
-                ? renderItem(item)
-                : getLabel(item)}
+              {renderItem ? renderItem(item) : getLabel(item)}
             </ComboboxItem>
           ))}
         </ComboboxList>
