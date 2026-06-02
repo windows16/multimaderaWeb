@@ -140,7 +140,7 @@ export default function ReporteClientesActivos() {
                   .sort((a, b) => b.pedidosCount - a.pedidosCount)
                   .slice(0, 5)
                   .map(c => ({
-                    name: c.nombre.split(" ")[0] || c.nombre,
+                    name: c.nombre,
                     Pedidos: c.pedidosCount
                   }))}
                 layout="vertical"
