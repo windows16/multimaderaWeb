@@ -219,7 +219,7 @@ export default function ReporteClientesActivos() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
-                      {cliente.tipoCliente || "Estandard"}
+                      {cliente.tipoCliente || "sin asignar"}
                     </span>
                   </td>
                 </tr>

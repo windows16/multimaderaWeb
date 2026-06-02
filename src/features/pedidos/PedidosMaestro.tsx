@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react"
-import { FaEdit, FaFileExcel, FaTrash, FaPlus } from "react-icons/fa"
+import { FaEdit, FaFileExcel, FaTrash, FaPlus, FaMoneyCheck } from "react-icons/fa"
 import { ExportToExcel } from "@/utils/ExportToExcel"
 import ErrorAlert from "@/components/common/ErrorAlert"
 import type { Pedido } from "@/types/Pedidos/Pedido"
-import { deletePedido, getAllPedidos } from "@/services/pedidos-service"
+import { deletePedido, getAllPedidos, cancelarPedido } from "@/services/pedidos-service"
 import PedidosForm from "./PedidosForm"
 import { useFiltros } from "@/hooks/useFiltros"
 import RecordCount from "@/components/common/RecordCount"
@@ -55,6 +55,17 @@ export default function PedidosMaestro() {
     if (!confirm(`¿Desea eliminar el pedido #${pedido.idPedido}?`)) return
     try {
       await deletePedido(pedido.idPedido)
+      await obtenerPedidos()
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  async function cancelarPedidoHandler(pedido: Pedido) {
+    if (!pedido.idPedido) return
+    if (!confirm(`¿Desea marcar como cancelado el pedido #${pedido.idPedido}?`)) return
+    try {
+      await cancelarPedido(pedido.idPedido)
       await obtenerPedidos()
     } catch (error) {
       handleError(error)
@@ -145,6 +156,11 @@ export default function PedidosMaestro() {
             className: "text-red-500 focus:text-red-500 focus:bg-red-50",
             separator: true,
             onClick: (item) => eliminarPedido(item)
+          },
+          {
+            label: "Marcar cancelado",
+            icon: <FaMoneyCheck  className="w-3.5 h-3.5 mr-2" />,
+            onClick: (item) => cancelarPedidoHandler(item)
           }
         ]}
         renderContent={(item) => (
@@ -153,7 +169,7 @@ export default function PedidosMaestro() {
             <p>Propietario: {item.nombrePropietario}</p>
             <p>Fecha inicio: {formatFecha(item.fechaInicio)}</p>
             <p>Fecha fin: {formatFecha(item.fechaFin)}</p>
-            <p>{item.cancelado ? "Cancelado" : ""}</p>
+            <p>{item.cancelado ? <span className="text-emerald-600">Cancelado</span> : ""}</p>
           </>
         )}
         onItemClick={(item) => navigate(`/pedidos/${item.idPedido}`, { state: { pedido: item } })}

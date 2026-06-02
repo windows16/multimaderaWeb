@@ -19,6 +19,21 @@ export async function getAllPedidos(
     return data;
 }
 
+export async function getAllPedidosCerrados(
+    page?: number, 
+    limit?: number, 
+    search?: string): Promise<PagedResponse<Pedido>> {
+    const { data } = await apiMultimadera.get("/pedidos/cerrados",{
+        params: { 
+            page, 
+            limit,
+            search
+        }
+    }
+    );
+    return data;
+}
+
 export async function getPedidoById(idPedido: number): Promise<Pedido> {
     const { data } = await apiMultimadera.get(`/pedidos/${idPedido}`);
     return data;
@@ -48,6 +63,13 @@ export async function cancelarPedido(idPedido: number): Promise<Pedido> {
 
 export async function getDetallesPedido(idPedido: number): Promise<DetallePedido[]> {
     const { data } = await apiMultimadera.get("/detalles-pedidos", {
+        params: { idPedido }
+    });
+    return data;
+}
+
+export async function getDetallesPedidosCerrados(idPedido: number): Promise<DetallePedido[]> {
+    const { data } = await apiMultimadera.get("/detalles-pedidos/cerrados", {
         params: { idPedido }
     });
     return data;

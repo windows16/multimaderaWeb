@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react"
 import { Printer, ChevronDown, ChevronUp, ClipboardList, CheckCircle, TrendingUp } from "lucide-react"
-import { getAllPedidos, getDetallesPedido } from "@/services/pedidos-service"
+import { getAllPedidosCerrados, getDetallesPedidosCerrados } from "@/services/pedidos-service"
 import type { Pedido, DetallePedido } from "@/types/Pedidos/Pedido"
 import { formatFecha } from "@/utils/Functions"
 import { Button } from "@/components/ui/button"
@@ -20,12 +20,10 @@ interface PedidoConDetalles extends Pedido {
   subtotal: number
 }
 
-// Historial incluye pedidos cancelados o aquellos con fecha de fin anterior o igual a la actual
-async function fetchHistorialPaginados(page: number, limit: number) {
-  const respuesta = await getAllPedidos(page, limit)
+async function fetchHistorialPaginados(page: number, limit: number, search: string) {
+  const respuesta = await getAllPedidosCerrados(page, limit, search)
   return {
-    // Filtramos para mostrar los que ya finalizaron o están cancelados
-    data: (respuesta.data || []).filter((p: Pedido) => p.cancelado || new Date(p.fechaFin) <= new Date()),
+    data: respuesta.data || [],
     meta: respuesta.meta,
   }
 }
@@ -61,7 +59,7 @@ export default function ReporteHistorialPedidos() {
       const conDetalles: PedidoConDetalles[] = await Promise.all(
         pedidosPaginados.map(async (pedido) => {
           try {
-            const detalles = await getDetallesPedido(pedido.idPedido!)
+            const detalles = await getDetallesPedidosCerrados(pedido.idPedido!)
             const subtotal = detalles.reduce((acc: number, d: DetallePedido) => acc + (d.total || 0), 0)
             return { ...pedido, detalles, subtotal }
           } catch {
@@ -139,7 +137,7 @@ export default function ReporteHistorialPedidos() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-800">Historial de Pedidos Finalizados</h1>
+      <h1 className="text-2xl font-semibold tracking-tight text-slate-800">Historial de Pedidos Cerrados</h1>
 
       <div className="flex gap-2 mt-4 mb-2 justify-end">
         <PanelFiltros.Trigger
@@ -191,12 +189,13 @@ export default function ReporteHistorialPedidos() {
         <div className="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm mb-6 print:hidden">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="w-5 h-5 text-emerald-600" />
-            <h3 className="text-sm font-semibold text-slate-800">Tendencia de Ingresos por Fecha de Cierre</h3>
+            <h3 className="text-sm font-semibold text-slate-800">Tendencia de Pedidos Cerrados y Cancelados</h3>
           </div>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={pedidosFiltrados
+                  .filter(p => p.cancelado) 
                   .slice()
                   .sort((a, b) => new Date(a.fechaFin).getTime() - new Date(b.fechaFin).getTime())
                   .map((p) => ({
@@ -235,7 +234,7 @@ export default function ReporteHistorialPedidos() {
         <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-1">
             <CheckCircle className="w-4 h-4 text-emerald-600" />
-            <p className="text-xs text-emerald-800 font-medium">Pedidos Finalizados</p>
+            <p className="text-xs text-emerald-800 font-medium">Pedidos Cerrados</p>
           </div>
           <p className="text-2xl font-bold text-emerald-950">
             {meta.total}
@@ -278,13 +277,13 @@ export default function ReporteHistorialPedidos() {
           {pedidosFiltrados.map(pedido => {
             const estaAbierto = expandidos.has(pedido.idPedido!)
             return (
-              <div key={pedido.idPedido} className={`border rounded-lg overflow-hidden ${pedido.cancelado ? 'border-red-100 bg-red-50/10' : 'border-slate-200'}`}>
+              <div key={pedido.idPedido} className={`border rounded-lg overflow-hidden ${pedido.cancelado ? 'border-emerald-100 bg-emerald-50/10' : 'border-slate-200'}`}>
                 <button
                   onClick={() => togglePedido(pedido.idPedido!)}
                   className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-muted/40 transition-colors"
                 >
                   <span className="flex-1 text-sm font-medium truncate text-slate-700">{pedido.direccion}</span>
-                  {pedido.cancelado && <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold shrink-0 mr-2">CANCELADO</span>}
+                  {pedido.cancelado && <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-bold shrink-0 mr-2">CANCELADO</span>}
                   <span className="text-sm font-semibold shrink-0 text-slate-900">{fmtMonto(pedido.subtotal)}</span>
                   {estaAbierto
                     ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" />
