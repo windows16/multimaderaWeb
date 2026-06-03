@@ -17,19 +17,18 @@ import { usePanelFiltros } from "@/hooks/usePanelFiltros"
 import { FiltroSelect } from "@/components/common/FiltroSelect"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { useError } from "@/hooks/useError"
 import { usePaginacion } from "@/hooks/usePaginacion"
 import { Paginacion } from "@/components/common/Paginacion"
 
 export default function PedidosMaestro() {
 
     const { 
-      items: itemPedidos, loading, page, setPage, meta, recargar: obtenerPedidos 
+      items: itemPedidos, loading, page, setPage, meta, recargar: obtenerPedidos,
+       error, handleError
     } = usePaginacion<Pedido>({ 
       fetchFn: getAllPedidos, 
       initialLimit: 10
     })
-    const { error, handleError } = useError()
     
   const { filtros, filtrosActivos, itemsFiltrados: pedidosFiltrados, setFiltro, limpiarTodos: limpiarFiltros } =
       useFiltros<Pedido>(itemPedidos)

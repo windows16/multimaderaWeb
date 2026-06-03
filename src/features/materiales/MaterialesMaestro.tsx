@@ -11,7 +11,6 @@ import CardGrid from "@/components/layout/CardGrid"
 import type { Material } from "@/types/Materiales/Material"
 import { deleteMaterial, getAllMateriales } from "@/services/materiales-service"
 import MaterialesForm from "./MaterialesForm"
-import { useError } from "@/hooks/useError"
 import { usePaginacion } from "@/hooks/usePaginacion"
 import { Paginacion } from "@/components/common/Paginacion"
 import { useBusqueda } from "@/hooks/useBusqueda"
@@ -19,12 +18,12 @@ import { useBusqueda } from "@/hooks/useBusqueda"
 export default function MaterialesMaestro() {
   
   const { 
-      items: itemMaterial, loading, page, setPage, meta, recargar: obtenerMateriales 
+      items: itemMaterial, loading, page, setPage, meta, recargar: obtenerMateriales,
+       error, handleError
     } = usePaginacion<Material>({ 
       fetchFn: getAllMateriales, 
       initialLimit: 10
     })
-  const { error, handleError } = useError()
   const { busqueda, setBusqueda, itemsFiltrados: materialesFiltrados } = useBusqueda(itemMaterial)
     
     

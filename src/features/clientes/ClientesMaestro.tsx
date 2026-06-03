@@ -13,18 +13,17 @@ import FabButton from "@/components/common/FabButton"
 import CardGrid from "@/components/layout/CardGrid"
 import { usePaginacion } from "@/hooks/usePaginacion"
 import { Paginacion } from "@/components/common/Paginacion"
-import { useError } from "@/hooks/useError"
 import { useBusqueda } from "@/hooks/useBusqueda"
 
 export default function ClientesMaestro() {
 
   const { 
-    items: itemCliente, loading, page, setPage, meta, recargar: obtenerClientes 
+    items: itemCliente, loading, page, setPage, meta, recargar: obtenerClientes,
+    error, handleError
   } = usePaginacion<Cliente>({ 
     fetchFn: getAllClientes, 
     initialLimit: 10
   })
-  const { error, handleError } = useError()
 
   const { busqueda, setBusqueda, itemsFiltrados: clientesFiltrados } = useBusqueda(itemCliente)
   

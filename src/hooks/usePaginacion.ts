@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import { useError } from "./useError";
 
 interface UsePaginacionProps<T> {
   fetchFn: (page: number, limit: number, search: string) => Promise<{ 
@@ -13,13 +14,13 @@ export function usePaginacion<T>({ fetchFn, initialLimit = 10, search = "" }: Us
   const [page, setPage] = useState(1)
   const [items, setItems] = useState<T[]>([])
   const [loading, setLoading] = useState(false)
-  const [errorPaginacion, setErrorPaginacion] = useState<any>(null)
+  const { error, handleError } = useError()
   const [meta, setMeta] = useState({ total: 0, totalPages: 0 })
+
 
   // 1. Una única función encargada de pedir los datos al servidor
   const cargarDatos = useCallback(async (paginaDestino: number, textoBusqueda: string) => {
     setLoading(true)
-    setErrorPaginacion(null)
     try {
       const respuesta = await fetchFn(paginaDestino, initialLimit, textoBusqueda.trim())
       
@@ -31,7 +32,7 @@ export function usePaginacion<T>({ fetchFn, initialLimit = 10, search = "" }: Us
         })
       }
     } catch (err: any) {
-      setErrorPaginacion(err)
+      handleError(err)
       setItems([])
     } finally {
       setLoading(false)
@@ -56,12 +57,12 @@ export function usePaginacion<T>({ fetchFn, initialLimit = 10, search = "" }: Us
   return {
     items,
     loading,
-    errorPaginacion,
+    error,
     page,
     setPage,
     meta,
     recargar: () => cargarDatos(page, search),
     resetPagina,
-    setErrorPaginacion
+    handleError
   }
 }
