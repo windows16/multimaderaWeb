@@ -1,13 +1,13 @@
 
 
-import { getAllRolesWithAcciones} from "../../services/usuarios-service"
+import { getAllRoles} from "../../services/usuarios-service"
 
 import { FaEdit, FaUserMinus, FaUserPlus,FaFileExcel, FaTrash } from "react-icons/fa"
 import { Button } from "@/components/ui/button"
 
 import { ExportToExcel } from "../../utils/ExportToExcel"
 import ErrorAlert from "@/components/common/ErrorAlert"
-import type { RolConAccion } from "@/types/Usuarios/RoleConAccion"
+import type { Rol } from "@/types/Usuarios/RoleConAccion"
 import PageHeader from "@/components/layout/PageHeader"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
@@ -18,17 +18,17 @@ import { useState } from "react"
 
 export default function MaestroRoles() {
 
-   const { items: itemRolConAcciones, error, recargar: obtenerRolesConAcciones, handleError, loading } = useFetch<RolConAccion>(getAllRolesWithAcciones)
-    const { busqueda, setBusqueda, itemsFiltrados: rolesFiltrados } = useBusqueda(itemRolConAcciones)
+   const { items: itemRol, error, recargar: obtenerRolesConAcciones, handleError, loading } = useFetch<Rol>(getAllRoles)
+    const { busqueda, setBusqueda, itemsFiltrados: rolesFiltrados } = useBusqueda(itemRol)
   
 
   // Modal crear / editar
-  const [modalRolConAccionesAbierto, setModalRolConAccionesAbierto] = useState(false)
-  const [rolConAccionSeleccionado, setRolConAccionSeleccionado] = useState<RolConAccion | null>(null)
+  const [modalRolAbierto, setModalRolAbierto] = useState(false)
+  const [rolSeleccionado, setRolSeleccionado] = useState<Rol | null>(null)
 
   // Modal baja
   const [bajaModalAbierto, setBajaModalAbierto] = useState(false)
-  const [empleadoParaBaja, setEmpleadoParaBaja] = useState<RolConAccion | null>(null)
+  const [rolParaBaja, setRolParaBaja] = useState<Rol | null>(null)
 
 
 
@@ -61,13 +61,12 @@ export default function MaestroRoles() {
             items={rolesFiltrados}
             isLoading={loading}
             getKey={(item) => item.idRol ?? 0}
-            getTitulo={(item) => `${item.idRol} - ${item.rol}`}
+            getTitulo={(item) => `${item.idRol} - ${item.descripcion}`}
             cardOptions={[
               {
                 label: "Editar",
                 icon: <FaEdit className="w-3.5 h-3.5 mr-2" />,
                 onClick: (item) => { 
-                  
                 }
               },
               {
@@ -82,7 +81,6 @@ export default function MaestroRoles() {
             ]}
             renderContent={(item) => (
               <>
-                <p>Acción: {item.idAccion} - {item.accion}</p>
               </>
             )}
           />
