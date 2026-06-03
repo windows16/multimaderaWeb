@@ -185,7 +185,7 @@ export default function PedidosMaestro() {
         }}
         icon={<FaPlus size={20} />}
       />
-      <ErrorAlert error={error} title="Error" />
+      <ErrorAlert error={error}/>
 
       {/* MODALES */}
       <PedidosForm

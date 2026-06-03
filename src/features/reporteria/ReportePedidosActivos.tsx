@@ -130,6 +130,9 @@ export default function ReportePedidosActivos() {
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-3">
         <p className="text-sm text-destructive">No se pudo cargar el reporte. Intente de nuevo.</p>
+        <p className="text-sm text-destructive">
+          {error}
+        </p>
         <button onClick={recargar} className="text-sm underline text-muted-foreground hover:text-foreground">
           Reintentar
         </button>

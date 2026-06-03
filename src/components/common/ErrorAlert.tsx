@@ -5,7 +5,7 @@ interface ErrorAlertProps {
   className?: string
 }
 
-export default function ErrorAlert({ error, title = "Error al guardar", className = "col-span-2" }: ErrorAlertProps) {
+export default function ErrorAlert({ error, title = "", className = "col-span-2" }: ErrorAlertProps) {
   if (!error) return null
   return (
     <div className={`${className} bg-red-50 border border-red-200 rounded-lg px-3 py-2`}>

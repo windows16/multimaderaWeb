@@ -108,7 +108,7 @@ export default function MaterialesMaestro() {
         }}
         icon={<FaPlus  size={20} />}
       />
-      <ErrorAlert error={error} title="Error" />
+      <ErrorAlert error={error}/>
 
       <MaterialesForm
         isOpen={modalMaterialAbierto}

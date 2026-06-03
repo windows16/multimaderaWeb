@@ -87,7 +87,7 @@ export default function MaestroRoles() {
             )}
           />
       
-      <ErrorAlert error={error} title="Error" />
+      <ErrorAlert error={error}/>
       
       {/* MODALES */}
       {/* <EmpleadosForm

@@ -88,7 +88,7 @@ export default function TiposClienteMaestro() {
           }}
           icon={<FaPlus />} />
 
-      <ErrorAlert error={error} title="Error" />
+      <ErrorAlert error={error}/>
 
       <TiposClienteForm
         isOpen={modalTipoClienteAbierto}

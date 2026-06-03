@@ -97,7 +97,7 @@ export default function EmpleadosMaestro() {
         icon={<FaUserPlus />}
       />
 
-      <ErrorAlert error={error} title="Error" />
+      <ErrorAlert error={error} />
       
       {/* MODALES */}
       <EmpleadosForm

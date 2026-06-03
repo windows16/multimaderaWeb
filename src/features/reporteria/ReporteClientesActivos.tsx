@@ -31,6 +31,7 @@ export default function ReporteClientesActivos() {
     setPage,
     meta,
     recargar,
+    handleError
   } = usePaginacion<Cliente>({
     fetchFn: fetchClientesPaginados,
     initialLimit: 10,
@@ -59,10 +60,11 @@ export default function ReporteClientesActivos() {
         if (activo) {
           setClientesConPedidos(enriquecidos)
         }
-      } catch {
+      } catch (err) {
         if (activo) {
           setClientesConPedidos(clientes.map(c => ({ ...c, pedidosCount: 0 })))
         }
+        handleError(err)
       } finally {
         setLoadingPedidos(false)
       }
@@ -98,6 +100,9 @@ export default function ReporteClientesActivos() {
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-3">
         <p className="text-sm text-destructive">No se pudo cargar el reporte. Intente de nuevo.</p>
+        <p className="text-sm text-destructive">
+          {error}
+        </p>
         <button onClick={recargar} className="text-sm underline text-muted-foreground hover:text-foreground">
           Reintentar
         </button>
