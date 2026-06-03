@@ -1,8 +1,4 @@
-
-export interface RolConAccion {
-    rol: string
+export interface Rol {
+    descripcion: string
     idRol?: number | null
-    accion: string
-    idAccion?: number | null
 }
-

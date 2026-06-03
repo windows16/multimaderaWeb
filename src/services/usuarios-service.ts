@@ -1,29 +1,29 @@
 import apiMultimadera from './api-client';
-import type { RolConAccion } from '../types/Usuarios/RoleConAccion';
+import type { Rol } from '../types/Usuarios/RoleConAccion';
 
 // ── ROLES ──────────────────────────────────────────────
 
-export async function getAllRoles(): Promise<RolConAccion[]> {
-    const { data } = await apiMultimadera.get('/usuarios');
+export async function getAllRoles(): Promise<Rol[]> {
+    const { data } = await apiMultimadera.get('/roles');
     return data;
 }
 
-export async function getAllRolesWithAcciones(): Promise<RolConAccion[]> {
-    const { data } = await apiMultimadera.get('/usuarios/roles/acciones');
+export async function getAllRolesWithAcciones(): Promise<Rol[]> {
+    const { data } = await apiMultimadera.get('/roles/roles/acciones');
     return data;
 }
 
-export async function insertRol(modelo: Omit<RolConAccion, 'idRol'>): Promise<RolConAccion> {
-    const { data } = await apiMultimadera.post('/usuarios', modelo);
+export async function insertRol(modelo: Omit<Rol, 'idRol'>): Promise<Rol> {
+    const { data } = await apiMultimadera.post('/roles', modelo);
     return data;
 }
 
-export async function updateRol(idRol: number, modelo: Partial<RolConAccion>): Promise<RolConAccion> {
-    const { data } = await apiMultimadera.patch(`/usuarios/${idRol}`, modelo);
+export async function updateRol(idRol: number, modelo: Partial<Rol>): Promise<Rol> {
+    const { data } = await apiMultimadera.patch(`/roles/${idRol}`, modelo);
     return data;
 }
 
 export async function deleteRol(idRol: number): Promise<{ mensaje: string }> {
-    const { data } = await apiMultimadera.delete(`/usuarios/${idRol}`);
+    const { data } = await apiMultimadera.delete(`/roles/${idRol}`);
     return data;
 }
