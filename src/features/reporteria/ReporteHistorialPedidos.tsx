@@ -35,7 +35,7 @@ export default function ReporteHistorialPedidos() {
   const {
     items: pedidosPaginados,
     loading,
-    errorPaginacion,
+    error,
     page,
     setPage,
     meta,
@@ -124,7 +124,7 @@ export default function ReporteHistorialPedidos() {
     )
   }
 
-  if (errorPaginacion) {
+  if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-3">
         <p className="text-sm text-destructive">No se pudo cargar el historial. Intente de nuevo.</p>

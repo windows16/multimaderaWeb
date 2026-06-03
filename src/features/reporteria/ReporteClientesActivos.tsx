@@ -26,7 +26,7 @@ export default function ReporteClientesActivos() {
   const {
     items: clientes,
     loading,
-    errorPaginacion,
+    error,
     page,
     setPage,
     meta,
@@ -94,7 +94,7 @@ export default function ReporteClientesActivos() {
     )
   }
 
-  if (errorPaginacion) {
+  if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-3">
         <p className="text-sm text-destructive">No se pudo cargar el reporte. Intente de nuevo.</p>
