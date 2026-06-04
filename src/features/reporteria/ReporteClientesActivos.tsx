@@ -1,14 +1,14 @@
 import { useState, useEffect, useMemo } from "react"
-import { Printer, Users, Search, Phone, BarChart3 } from "lucide-react"
+import { Printer, Users,Phone, BarChart3 } from "lucide-react"
 import { getAllClientes } from "@/services/clientes-service"
 import type { Cliente } from "@/types/Clientes/Cliente"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { usePaginacion } from "@/hooks/usePaginacion"
 import RecordCount from "@/components/common/RecordCount"
 import { Paginacion } from "@/components/common/Paginacion"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts"
 import { getAllPedidos } from "@/services/pedidos-service"
+import SearchBar from "@/components/common/SearchBar"
 
 async function fetchClientesPaginados(page: number, limit: number) {
   const respuesta = await getAllClientes(page, limit)
@@ -112,24 +112,18 @@ export default function ReporteClientesActivos() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-800">Reporte de Clientes Activos</h1>
-
-      <div className="flex flex-col sm:flex-row gap-3 mt-4 mb-4 justify-between items-center">
-        <div className="relative w-full sm:w-80">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar por nombre, teléfono o tipo..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 h-9"
-          />
-        </div>
-        <Button variant="outline" onClick={() => window.print()} className="w-full sm:w-auto">
+      <h1 className="text-xl font-semibold">Clientes activos</h1>
+      <div className="flex gap-2 mt-4 justify-end">
+        <SearchBar 
+          placeholder="Buscar por nombre, teléfono o tipo..."
+          value={searchTerm}
+          onChange={setSearchTerm}
+        />
+        <Button variant="outline" onClick={() => window.print()} >
           <Printer className="w-4 h-4" />
-          Imprimir Reporte
+          Imprimir
         </Button>
       </div>
-
       {/* Gráfica de Clientes con Mayor Cantidad de Pedidos */}
       {clientesFiltrados.length > 0 && (
         <div className="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm mb-6 print:hidden">
@@ -200,30 +194,26 @@ export default function ReporteClientesActivos() {
         </div>
       ) : (
         <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
-          <table className="w-full text-sm text-left divide-y divide-slate-200">
-            <thead className="bg-slate-50">
-              <tr>
-                <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">No. Cliente</th>
-                <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Nombre Completo</th>
-                <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Teléfono</th>
-                <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Tipo Cliente</th>
+          <table className="w-full text-sm text-left divide-x divide-border">
+            <thead>
+              <tr className="bg-muted/30 text-xs text-muted-foreground ">
+                <th className="px-4 py-2 font-medium">Nombre Completo</th>
+                <th className="px-4 py-2 font-medium">Teléfono</th>
+                <th className="px-4 py-2 font-medium">Tipo Cliente</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-slate-200">
               {clientesFiltrados.map((cliente) => (
                 <tr key={cliente.numeroDeCliente} className="hover:bg-slate-50/50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-800">
-                    #{cliente.numeroDeCliente}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700 font-medium">
+                  <td className="px-4 py-2">
                     {cliente.nombre}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 flex items-center gap-1.5">
+                  <td className="px-4 py-2 text-sm text-slate-600 flex gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-slate-400" />
                     {cliente.telefono || "Sin registrar"}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                  <td className="px-4 py-2 text-sm text-slate-600">
+                    <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
                       {cliente.tipoCliente || "sin asignar"}
                     </span>
                   </td>

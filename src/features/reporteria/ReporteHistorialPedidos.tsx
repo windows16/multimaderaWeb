@@ -140,9 +140,8 @@ export default function ReporteHistorialPedidos() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-800">Historial de Pedidos Cerrados</h1>
-
-      <div className="flex gap-2 mt-4 mb-2 justify-end">
+      <h1 className="text-xl font-semibold">Pedidos cerrados</h1>
+      <div className="flex gap-2 mt-4 mb-4 justify-end">
         <PanelFiltros.Trigger
           abierto={abierto}
           onToggle={toggle}
@@ -150,7 +149,7 @@ export default function ReporteHistorialPedidos() {
         />
         <Button variant="outline" onClick={() => window.print()}>
           <Printer className="w-4 h-4" />
-          Imprimir Reporte
+          Imprimir
         </Button>
       </div>
 
@@ -285,7 +284,7 @@ export default function ReporteHistorialPedidos() {
                   onClick={() => togglePedido(pedido.idPedido!)}
                   className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-muted/40 transition-colors"
                 >
-                  <span className="flex-1 text-sm font-medium truncate text-slate-700">{pedido.direccion}</span>
+                  <span className="flex-1 text-sm font-medium text-slate-700">{pedido.direccion}</span>
                   {pedido.cancelado && <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-bold shrink-0 mr-2">CANCELADO</span>}
                   <span className="text-sm font-semibold shrink-0 text-slate-900">{fmtMonto(pedido.subtotal)}</span>
                   {estaAbierto

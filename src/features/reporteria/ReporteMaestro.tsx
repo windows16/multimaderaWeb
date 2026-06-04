@@ -54,7 +54,7 @@ export default function ReporteMaestro() {
       </div>
 
       {/* Renderizado Condicional del Reporte */}
-      <div className="bg-white/50 backdrop-blur-sm p-2 rounded-xl transition-all duration-300">
+      <div>
         {tabActiva === "activos" && <ReportePedidosActivos />}
         {tabActiva === "historial" && <ReporteHistorialPedidos />}
         {tabActiva === "clientes" && <ReporteClientesActivos />}
