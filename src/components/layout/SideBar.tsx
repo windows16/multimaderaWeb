@@ -8,7 +8,12 @@ const links = [
   { name: "Materiales", children: [{ name: "Materiales", path: "/materiales" }, { name: "Inventario", path: "/inventario" }] },
   { name: "Pedidos", path: "/pedidos" },
   { name: "Clientes", children: [{ name: "Clientes", path: "/clientes" }, { name: "Tipos de Cliente", path: "/tipos-cliente" }] },
-  { name: "Empleados", children: [{ name: "Empleados", path: "/empleados" }, { name: "Puestos", path: "/empleados/puestos" }] },
+  { name: "Empleados", 
+    children: [
+      { name: "Empleados", path: "/empleados" }, 
+      { name: "Puestos", path: "/empleados/puestos" }
+    ] 
+  },
   { name: "Usuarios", children: [{ name: "Roles", path: "/usuarios/roles" }] },
   { name: "Reportes", 
     children: [
@@ -26,7 +31,11 @@ export default function SideBar() {
   const [mobileOpen, setMobileOpen] = useState(false) // solo móvil
   const [openSubMenu, setOpenSubMenu] = useState<string | null>(null)
 
-  const closeAll = () => { setMobileOpen(false); setOpenSubMenu(null) }
+  const handleMenuClick = () => { setMobileOpen(false); setOpenSubMenu(null) }
+
+  const handleChildMenuClick = () => {
+    setMobileOpen(false)
+  }
 
   const NavContent = ({ mobile = false }: { mobile?: boolean }) => (
     <nav className="flex-1 overflow-y-auto p-2 space-y-0.5">
@@ -48,7 +57,7 @@ export default function SideBar() {
             {(mobile || !collapsed) && openSubMenu === link.name && (
               <div className="ml-8 space-y-0.5 mt-0.5">
                 {link.children.map(child => (
-                  <NavLink key={child.path} to={child.path} onClick={closeAll}
+                  <NavLink key={child.path} to={child.path} onClick={handleChildMenuClick}
                     className={({ isActive }) =>
                       `block px-3 py-1.5 rounded-md text-sm ${isActive ? "text-amber-700 font-medium bg-amber-50" : "text-slate-500 hover:bg-gray-100"}`
                     }
@@ -58,7 +67,7 @@ export default function SideBar() {
             )}
           </div>
         ) : (
-          <NavLink key={link.path} to={link.path} onClick={closeAll}
+          <NavLink key={link.path} to={link.path} onClick={handleMenuClick}
             title={!mobile && collapsed ? link.name : undefined}
             className={({ isActive }) =>
               `flex items-center gap-2.5 px-2.5 py-2 rounded-lg
@@ -99,7 +108,7 @@ export default function SideBar() {
 
       {/* ── OVERLAY EN MOVIL ── */}
       {mobileOpen && (
-        <div className="md:hidden fixed inset-0 bg-black/30 z-30" onClick={closeAll} />
+        <div className="md:hidden fixed inset-0 bg-black/30 z-30" onClick={handleMenuClick} />
       )}
 
       {/* ── SIDEBAR Movil (drawer) ── */}
@@ -110,7 +119,7 @@ export default function SideBar() {
         ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
       `}>
         <div className="h-[52px] flex items-center gap-2 px-3 border-b border-gray-100 flex-shrink-0">
-          <button onClick={closeAll} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-gray-100">
+          <button onClick={handleMenuClick} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-gray-100">
             <CloseIcon />
           </button>
           <span className="font-semibold text-lg text-blue-600">

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
-import { Printer, ChevronDown, ChevronUp, Package, ClipboardList } from "lucide-react"
+import { Printer, ChevronDown, ChevronUp, Package, ClipboardList, TrendingUp } from "lucide-react"
 import { getAllPedidos, getDetallesPedido } from "@/services/pedidos-service"
 import type { Pedido, DetallePedido } from "@/types/Pedidos/Pedido"
 import { formatFecha } from "@/utils/Functions"
@@ -13,6 +13,7 @@ import { FiltroSelect } from "@/components/common/FiltroSelect"
 import { PanelFiltros } from "@/components/common/PanelFiltros"
 import RecordCount from "@/components/common/RecordCount"
 import { Paginacion } from "@/components/common/Paginacion"
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 
 interface PedidoConDetalles extends Pedido {
   detalles: DetallePedido[]
@@ -22,7 +23,7 @@ interface PedidoConDetalles extends Pedido {
 async function fetchPedidosPaginados(page: number, limit: number) {
   const respuesta = await getAllPedidos(page, limit)
   return {
-    data: (respuesta.data || []).filter((p: Pedido) => !p.cancelado),
+    data: (respuesta.data || []),
     meta: respuesta.meta,
   }
 }
@@ -189,6 +190,51 @@ export default function ReportePedidosActivos() {
         </div>
       </PanelFiltros.Panel>
 
+      {/* Gráfica de Histórico de Ingresos */}
+      {pedidosFiltrados.length > 0 && (
+        <div className="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm mb-6 print:hidden">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp className="w-5 h-5 text-emerald-600" />
+            <h3 className="text-sm font-semibold text-slate-800">Tendencia de Pedidos Cancelados</h3>
+          </div>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={pedidosFiltrados
+                  .filter(p => p.cancelado) 
+                  .slice()
+                  .sort((a, b) => new Date(a.fechaFin).getTime() - new Date(b.fechaFin).getTime())
+                  .map((p) => ({
+                    direccion: p.direccion,
+                    Monto: p.subtotal,
+                  }))}
+                margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="colorMonto" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="direccion" stroke="#64748b" fontSize={11} tickLine={false} />
+                <YAxis
+                  stroke="#64748b"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(val) => `Q${val}`}
+                />
+                <Tooltip
+                  contentStyle={{ backgroundColor: "#fff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
+                />
+                <Area type="monotone" dataKey="Monto" stroke="#10b981" fillOpacity={1} fill="url(#colorMonto)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
       {/* Estadísticas */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         <div className="bg-muted/50 rounded-lg p-4">
@@ -243,6 +289,7 @@ export default function ReportePedidosActivos() {
                   className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-muted/40 transition-colors"
                 >
                   <span className="flex-1 text-sm font-medium">{pedido.direccion}</span>
+                  {pedido.cancelado && <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-bold shrink-0 mr-2">CANCELADO</span>}
                   <span className="text-sm font-semibold shrink-0">{fmtMonto(pedido.subtotal)}</span>
                   {estaAbierto
                     ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" />

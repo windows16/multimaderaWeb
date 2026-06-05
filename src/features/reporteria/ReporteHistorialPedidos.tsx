@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
-import { Printer, ChevronDown, ChevronUp, ClipboardList, CheckCircle, TrendingUp } from "lucide-react"
+import { Printer, ChevronDown, ChevronUp, ClipboardList, CheckCircle, TrendingUp, Package } from "lucide-react"
 import { getAllPedidosCerrados, getDetallesPedidosCerrados } from "@/services/pedidos-service"
 import type { Pedido, DetallePedido } from "@/types/Pedidos/Pedido"
 import { formatFecha } from "@/utils/Functions"
@@ -201,7 +201,7 @@ export default function ReporteHistorialPedidos() {
                   .slice()
                   .sort((a, b) => new Date(a.fechaFin).getTime() - new Date(b.fechaFin).getTime())
                   .map((p) => ({
-                    fecha: formatFecha(p.fechaFin),
+                    direccion: p.direccion,
                     Monto: p.subtotal,
                   }))}
                 margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
@@ -213,7 +213,7 @@ export default function ReporteHistorialPedidos() {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="fecha" stroke="#64748b" fontSize={11} tickLine={false} />
+                <XAxis dataKey="direccion" stroke="#64748b" fontSize={11} tickLine={false} />
                 <YAxis
                   stroke="#64748b"
                   fontSize={11}
@@ -233,13 +233,22 @@ export default function ReporteHistorialPedidos() {
 
       {/* Estadísticas */}
       <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="bg-muted/50 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Package className="w-4 h-4 text-muted-foreground" />
+            <p className="text-xs text-muted-foreground">Pedidos cerrados</p>
+          </div>
+          <p className="text-2xl font-semibold">
+            {meta.total}
+          </p>
+        </div>
         <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-1">
             <CheckCircle className="w-4 h-4 text-emerald-600" />
-            <p className="text-xs text-emerald-800 font-medium">Pedidos Cerrados</p>
+            <p className="text-xs text-emerald-800 font-medium">Pedidos Cerrados y Cancelados</p>
           </div>
           <p className="text-2xl font-bold text-emerald-950">
-            {meta.total}
+            {pedidosFiltrados.filter(p => p.cancelado).length}
           </p>
         </div>
         <div className="bg-muted/50 rounded-lg p-4">
@@ -279,7 +288,7 @@ export default function ReporteHistorialPedidos() {
           {pedidosFiltrados.map(pedido => {
             const estaAbierto = expandidos.has(pedido.idPedido!)
             return (
-              <div key={pedido.idPedido} className={`border rounded-lg overflow-hidden ${pedido.cancelado ? 'border-emerald-100 bg-emerald-50/10' : 'border-slate-200'}`}>
+              <div key={pedido.idPedido} className="border rounded-lg overflow-hidden">
                 <button
                   onClick={() => togglePedido(pedido.idPedido!)}
                   className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-muted/40 transition-colors"
