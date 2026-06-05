@@ -149,7 +149,7 @@ export default function ReporteClientesActivos() {
                 <XAxis type="number" stroke="#64748b" fontSize={11} tickLine={false} />
                 <YAxis dataKey="name" type="category" stroke="#64748b" fontSize={11} tickLine={false} width={80} />
                 <Tooltip
-                  formatter={(val) => [`${val} Pedidos`, "Cantidad"]}
+                  formatter={(val) => [val === 1 ? `${val} Pedido` : `${val} Pedidos`, "Cantidad"]}
                   contentStyle={{ backgroundColor: "#fff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                 />
                 <Bar dataKey="Pedidos" radius={[0, 4, 4, 0]}>
