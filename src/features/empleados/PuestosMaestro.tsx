@@ -59,6 +59,8 @@ export default function PuestosMaestro() {
         placeholder="Buscar por puesto, descripcion..."/>
 
       <RecordCount count={loading ? 0 : puestosFiltrados.length} />
+
+      <ErrorAlert error={error}/>
       
       <CardGrid
         items={puestosFiltrados}
@@ -91,7 +93,6 @@ export default function PuestosMaestro() {
         }}
         icon={<FaPlus  size={20} />}
       />
-      <ErrorAlert error={error}/>
 
       {/* MODALES */}
       <PuestosForm

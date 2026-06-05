@@ -88,7 +88,7 @@ export default function PedidosMaestro() {
           
         ]}
       />
-
+      
       <div className="flex gap-4 mb-4">
         <RecordCount count={loading ? 0 : pedidosFiltrados.length} />
         <PanelFiltros.Trigger
@@ -98,6 +98,9 @@ export default function PedidosMaestro() {
             cantidadActivos={filtrosActivos.length}
           />
       </div>
+
+      <ErrorAlert error={error}/>
+      
       <PanelFiltros.Panel abierto={abierto} onLimpiar={limpiarFiltros} cantidadActivos={filtrosActivos.length}>
         <FiltroSelect
           label="Albañil"
@@ -168,6 +171,8 @@ export default function PedidosMaestro() {
             <p>Propietario: {item.nombrePropietario}</p>
             <p>Fecha inicio: {formatFecha(item.fechaInicio)}</p>
             <p>Fecha fin: {formatFecha(item.fechaFin)}</p>
+            <p>Abono: Q{item.abono?.toFixed(2)}</p>
+            <p>Depósito: Q{item.deposito?.toFixed(2)}</p>
             <p>{item.cancelado ? <span className="text-emerald-600">Cancelado</span> : ""}</p>
           </>
         )}
@@ -185,7 +190,6 @@ export default function PedidosMaestro() {
         }}
         icon={<FaPlus size={20} />}
       />
-      <ErrorAlert error={error}/>
 
       {/* MODALES */}
       <PedidosForm

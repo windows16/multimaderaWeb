@@ -59,6 +59,8 @@ export default function StockMaterialesMaestro() {
       
       <RecordCount count={loading ? 0 : stockFiltrados.length} />
 
+      <ErrorAlert error={error}/>
+
       <CardGrid
         items={stockFiltrados}
         isLoading={loading}
@@ -95,7 +97,6 @@ export default function StockMaterialesMaestro() {
         }}
         icon={<FaPlus  size={20} />}
       />
-      <ErrorAlert error={error} />
 
       <StockMaterialesForm
         isOpen={modalStockMaterialAbierto}

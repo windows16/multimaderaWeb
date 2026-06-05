@@ -67,6 +67,8 @@ export default function MaterialesMaestro() {
       
       <RecordCount count={loading ? 0 : materialesFiltrados.length} />
 
+      <ErrorAlert error={error}/>
+
       <CardGrid
         items={materialesFiltrados}
         isLoading={loading}
@@ -108,7 +110,6 @@ export default function MaterialesMaestro() {
         }}
         icon={<FaPlus  size={20} />}
       />
-      <ErrorAlert error={error}/>
 
       <MaterialesForm
         isOpen={modalMaterialAbierto}

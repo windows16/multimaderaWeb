@@ -66,6 +66,8 @@ export default function ClientesMaestro() {
       
       <RecordCount count={loading ? 0 : meta.total} />
 
+      <ErrorAlert error={error}/>
+      
       <CardGrid
         items={clientesFiltrados}
         isLoading={loading}
@@ -105,7 +107,6 @@ export default function ClientesMaestro() {
         }}
         icon={<FaPlus  size={20} />}
       />
-      <ErrorAlert error={error}/>
 
       {/* MODALES */}
       <ClientesForm

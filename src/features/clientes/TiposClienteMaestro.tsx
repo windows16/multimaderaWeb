@@ -57,6 +57,8 @@ export default function TiposClienteMaestro() {
         onChange={setBusqueda}
         placeholder="Buscar por descripcion"/>
 
+      <ErrorAlert error={error}/>
+
       <RecordCount count={loading ? 0 : tiposClienteFiltrados.length} />
       
       <CardGrid
@@ -87,8 +89,6 @@ export default function TiposClienteMaestro() {
             setModalTipoClienteAbierto(true)
           }}
           icon={<FaPlus />} />
-
-      <ErrorAlert error={error}/>
 
       <TiposClienteForm
         isOpen={modalTipoClienteAbierto}

@@ -59,6 +59,9 @@ export default function DetallesPedidosMaestro() {
       />
 
       <RecordCount count={loading ? 0 : itemDetalles.length} />
+
+      <ErrorAlert error={error}/>
+      
       {/* Subtotal */}
       <div className="flex justify-end mb-4">
           <p className="text-md font-semibold text-right">
@@ -100,7 +103,6 @@ export default function DetallesPedidosMaestro() {
         }}
         icon={<FaPlus size={20} />}
       />
-      <ErrorAlert error={error} />
 
       {/* MODALES */}
       <DetallesPedidosForm

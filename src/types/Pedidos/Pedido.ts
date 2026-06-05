@@ -8,6 +8,8 @@ export interface Pedido {
   albanil: number;
   nombreAlbanil: string;
   cancelado: boolean;
+  abono: number;
+  deposito: number;
   activo?: boolean;
 }
 
@@ -28,6 +30,8 @@ export interface CreatePedidoDto {
   direccion: string;
   propietario?: number | null;
   albanil?: number | null;
+  abono?: number;
+  deposito?: number;
 }
 
 export interface UpdatePedidoDto {
@@ -36,6 +40,8 @@ export interface UpdatePedidoDto {
   direccion?: string;
   propietario?: number | null;
   albanil?: number | null;
+  abono?: number;
+  deposito?: number;
   activo?: boolean;
   cancelado?: boolean;
 }

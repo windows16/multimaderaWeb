@@ -62,7 +62,7 @@ export default function EmpleadosMaestro() {
       />
 
       <RecordCount count={loading ? 0 : empleadosFiltrados.length} />
-      
+      <ErrorAlert error={error} />
       <CardGrid
         items={empleadosFiltrados}
         isLoading={loading}
@@ -96,8 +96,6 @@ export default function EmpleadosMaestro() {
         onClick={() => { setEmpleadoSeleccionado(null); setModalEmpleadosAbierto(true) }}
         icon={<FaUserPlus />}
       />
-
-      <ErrorAlert error={error} />
       
       {/* MODALES */}
       <EmpleadosForm

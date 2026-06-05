@@ -20,7 +20,9 @@ const FormVacio: CreatePedidoDto = {
   fechaFin: "",
   direccion: "",
   propietario: null,
-  albanil: null
+  albanil: null,
+  abono: 0,
+  deposito: 0,
 }
 
 export default function PedidosForm({ isOpen, onClose, onSuccess, pedidoEditar }: PedidosFormProps) {
@@ -125,6 +127,32 @@ export default function PedidosForm({ isOpen, onClose, onSuccess, pedidoEditar }
           onChange={(data) => setForm((prev) => ({ ...prev, albanil: data as number }))}
         />
       </div>
+
+      {esEdicion && (
+          <>
+            <div className="col-span-2">
+              <Label className="text-gray-700 mb-1">Abono</Label>
+              <Input
+                name="abono"
+                type="number"
+                value={form.abono}
+                onChange={handleChange}
+                placeholder="0.00"
+              />
+            </div>
+
+            <div className="col-span-2">
+              <Label className="text-gray-700 mb-1">Depósito</Label>
+              <Input
+                name="deposito"
+                type="number"
+                value={form.deposito}
+                onChange={handleChange}
+                placeholder="0.00"
+              />
+            </div>
+          </>
+        )}
 
     </ModalForm>
   )
