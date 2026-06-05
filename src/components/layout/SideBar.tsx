@@ -10,7 +10,14 @@ const links = [
   { name: "Clientes", children: [{ name: "Clientes", path: "/clientes" }, { name: "Tipos de Cliente", path: "/tipos-cliente" }] },
   { name: "Empleados", children: [{ name: "Empleados", path: "/empleados" }, { name: "Puestos", path: "/empleados/puestos" }] },
   { name: "Usuarios", children: [{ name: "Roles", path: "/usuarios/roles" }] },
-  { name: "Reportes", path: "/reporteria" },
+  { name: "Reportes", 
+    children: [
+      { name: "Pedidos Activos", path: "/reportes/pedidos-activos" },
+      { name: "Historial de Pedidos", path: "/reportes/historial-pedidos" },
+      { name: "Clientes Activos", path: "/reportes/clientes-activos" },
+    ]
+    
+  },
   { name: "Inicio de Sesión", path: "/sesion" },
 ]
 

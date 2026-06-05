@@ -301,9 +301,9 @@ export default function ReporteHistorialPedidos() {
                     <span className="font-medium text-slate-700">{pedido.nombrePropietario || "No asignado"}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Fecha Cierre: </span>
-                    <span className="font-medium text-slate-700">
-                      {formatFecha(pedido.fechaFin)}
+                    <span className="text-muted-foreground">Período: </span>
+                    <span className="font-medium">
+                      {formatFecha(pedido.fechaInicio)} – {formatFecha(pedido.fechaFin)}
                     </span>
                   </div>
                 </div>

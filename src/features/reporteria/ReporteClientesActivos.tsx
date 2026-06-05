@@ -193,34 +193,53 @@ export default function ReporteClientesActivos() {
           </p>
         </div>
       ) : (
-        <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
-          <table className="w-full text-sm text-left divide-x divide-border">
-            <thead>
-              <tr className="bg-muted/30 text-xs text-muted-foreground ">
-                <th className="px-4 py-2 font-medium">Nombre Completo</th>
-                <th className="px-4 py-2 font-medium">Teléfono</th>
-                <th className="px-4 py-2 font-medium">Tipo Cliente</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-slate-200">
-              {clientesFiltrados.map((cliente) => (
-                <tr key={cliente.numeroDeCliente} className="hover:bg-slate-50/50">
-                  <td className="px-4 py-2">
-                    {cliente.nombre}
-                  </td>
-                  <td className="px-4 py-2 text-sm text-slate-600 flex gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-slate-400" />
-                    {cliente.telefono || "Sin registrar"}
-                  </td>
-                  <td className="px-4 py-2 text-sm text-slate-600">
-                    <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
-                      {cliente.tipoCliente || "sin asignar"}
-                    </span>
-                  </td>
+        <div className="space-y-3">
+          {/* Tabla para pantallas medianas y grandes */}
+          <div className="hidden md:block overflow-x-auto rounded-lg border border-border">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-muted/30 text-xs text-muted-foreground">
+                  <th className="px-4 py-2 font-medium text-left">Nombre Completo</th>
+                  <th className="px-4 py-2 font-medium text-left">Teléfono</th>
+                  <th className="px-4 py-2 font-medium text-left">Tipo Cliente</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {clientesFiltrados.map((cliente) => (
+                  <tr key={cliente.numeroDeCliente} className="border-t hover:bg-muted/20">
+                    <td className="px-4 py-2">{cliente.nombre}</td>
+                    <td className="px-4 py-2 flex gap-1.5 items-center">
+                      <Phone className="w-3.5 h-3.5 text-slate-400" />
+                      {cliente.telefono || "Sin registrar"}
+                    </td>
+                    <td className="px-4 py-2">
+                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                        {cliente.tipoCliente || "sin asignar"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Cards para móvil */}
+          <div className="md:hidden space-y-2">
+            {clientesFiltrados.map((cliente) => (
+              <div key={cliente.numeroDeCliente} className="bg-white border border-border rounded-lg p-4 space-y-2 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <p className="font-medium text-sm">{cliente.nombre}</p>
+                  <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                    {cliente.tipoCliente || "sin asignar"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-sm text-slate-500">
+                  <Phone className="w-3.5 h-3.5 text-slate-400" />
+                  {cliente.telefono || "Sin registrar"}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
