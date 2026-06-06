@@ -7,6 +7,7 @@ import { insertDetallePedido, updateDetallePedido } from "@/services/pedidos-ser
 import { getAllMateriales } from "@/services/materiales-service"
 import { ComboboxField } from "@/components/common/ComboboxField"
 import { useQuery } from "@tanstack/react-query"
+import { HiddenRequired } from "@/components/common/HiddenRequired"
 
 interface DetallesPedidosFormProps {
   isOpen: boolean
@@ -20,7 +21,7 @@ const FormVacio: DetallesPedidoForm = {
   idDetallePedido: null,
   idPedido: 0,
   idMaterial: null,
-  cantidad: null
+  cantidad: 0
 }
 
 export default function DetallesPedidosForm({ isOpen, onClose, onSuccess, detalleEditar, idPedidoActual }: DetallesPedidosFormProps) {
@@ -74,6 +75,7 @@ export default function DetallesPedidosForm({ isOpen, onClose, onSuccess, detall
           isLoading={loadingMateriales}
           onChange={(data) => setForm((prev) => ({ ...prev, idMaterial: data as number }))}
         />
+        <HiddenRequired value={form.idMaterial} />
       </div>
 
       <div className="col-span-2">
@@ -86,6 +88,7 @@ export default function DetallesPedidosForm({ isOpen, onClose, onSuccess, detall
           required
           placeholder="0"
         />
+        <HiddenRequired value={form.cantidad} />
       </div>
 
     </ModalForm>
