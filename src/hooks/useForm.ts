@@ -23,12 +23,9 @@ export function useForm<TData>({ formVacio, itemEditar, isOpen, mapearItem }: Us
   }, [isOpen, itemEditar])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-  const { name, value, type } = e.target as HTMLInputElement
-  setForm((prev) => ({
-    ...prev,
-    [name]: type === "number" ? (value === "" ? 0 : Number(value)) : value,
-  }))
-}
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
+  }
 
   return { form, setForm, cargando, setCargando, error, handleError, clearError, handleChange }
 }
