@@ -1,12 +1,6 @@
-
 import { useState } from "react"
-import { FaEdit,FaFileExcel, FaTrash, FaPlus} from "react-icons/fa"
+import { FaEdit,FaFileExcel, FaTrash} from "react-icons/fa"
 import { ExportToExcel } from "@/utils/ExportToExcel"
-import ErrorAlert from "@/components/common/ErrorAlert"
-import SearchBar from "@/components/common/SearchBar"
-import RecordCount from "@/components/common/RecordCount"
-import PageHeader from "@/components/layout/PageHeader"
-import FabButton from "@/components/common/FabButton"
 import CardGrid from "@/components/layout/CardGrid"
 import type { Material } from "@/types/Materiales/Material"
 import { deleteMaterial, getAllMateriales } from "@/services/materiales-service"
@@ -14,6 +8,7 @@ import MaterialesForm from "./MaterialesForm"
 import { usePaginacion } from "@/hooks/usePaginacion"
 import { Paginacion } from "@/components/common/Paginacion"
 import { useBusqueda } from "@/hooks/useBusqueda"
+import MaestroLayout from "@/components/layout/MaestroLayout"
 
 export default function MaterialesMaestro() {
   
@@ -44,31 +39,37 @@ export default function MaterialesMaestro() {
   }
 
   return (
-    <div>
-      <PageHeader
-        title="Materiales"
-        menuOptions={[
-          {
-            label: "Exportar a Excel",
-            icon: <FaFileExcel className="mr-2 text-green-600" />,
-            onClick: () => ExportToExcel({
-              data: materialesFiltrados,
-              fileName: "Material.xlsx",
-              sheetName: "Material"
-            }),
-          }
-        ]}
-      />
-
-      <SearchBar
-        value={busqueda}
-        onChange={setBusqueda}
-        placeholder="Buscar por descripcion, precio..."/>
-      
-      <RecordCount count={loading ? 0 : materialesFiltrados.length} />
-
-      <ErrorAlert error={error}/>
-
+    <MaestroLayout
+      title="Materiales"
+      menuOptions={[
+        {
+          label: "Exportar a Excel",
+          icon: <FaFileExcel className="mr-2 text-green-600" />,
+          onClick: () => ExportToExcel({
+            data: materialesFiltrados,
+            fileName: "Material.xlsx",
+            sheetName: "Material"
+          }),
+        }
+      ]}
+      busqueda={busqueda}
+      onBusquedaChange={setBusqueda}
+      searchPlaceholder="Buscar por descripcion, precio..."
+      recordCount={materialesFiltrados.length}
+      error={error}
+      loading={loading}
+      paginacion={
+        <Paginacion
+          page={page}
+          totalPages={meta.totalPages > 0 ? meta.totalPages : Math.ceil((meta.total || 1) / 10)}
+          onChange={setPage}
+        />
+      }
+      onAgregar={() => {
+        setMaterialSeleccionado(null)
+        setModalMaterialAbierto(true)
+      }}
+    >
       <CardGrid
         items={materialesFiltrados}
         isLoading={loading}
@@ -78,9 +79,9 @@ export default function MaterialesMaestro() {
           {
             label: "Editar",
             icon: <FaEdit className="w-3.5 h-3.5 mr-2" />,
-            onClick: (item) => { 
+            onClick: (item) => {
               setMaterialSeleccionado(item)
-              setModalMaterialAbierto(true) 
+              setModalMaterialAbierto(true)
             }
           },
           {
@@ -92,30 +93,16 @@ export default function MaterialesMaestro() {
           }
         ]}
         renderContent={(item) => (
-          <>
-            <p>Precio de alquiler: Q{item.precioAlquiler}</p>
-          </>
+          <p>Precio de alquiler: Q{item.precioAlquiler}</p>
         )}
-      />
-      <Paginacion 
-            page={page}
-            totalPages={meta.totalPages > 0 ? meta.totalPages : Math.ceil((meta.total || 1) / 10)}
-            onChange={setPage}
-          />
-
-      <FabButton
-        onClick={() => {  
-          setMaterialSeleccionado(null)
-          setModalMaterialAbierto(true)
-        }}
-        icon={<FaPlus  size={20} />}
       />
 
       <MaterialesForm
         isOpen={modalMaterialAbierto}
         onClose={() => { setModalMaterialAbierto(false); setMaterialSeleccionado(null) }}
         onSuccess={obtenerMateriales}
-        materialEditar={MaterialSeleccionado} />
-    </div>
+        materialEditar={MaterialSeleccionado}
+      />
+    </MaestroLayout>
   )
 }

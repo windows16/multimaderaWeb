@@ -1,18 +1,14 @@
 
 import { useState } from "react"
-import { FaEdit,FaFileExcel, FaTrash, FaPlus} from "react-icons/fa"
+import { FaEdit,FaFileExcel, FaTrash} from "react-icons/fa"
 import { ExportToExcel } from "@/utils/ExportToExcel"
-import ErrorAlert from "@/components/common/ErrorAlert"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
-import SearchBar from "@/components/common/SearchBar"
-import RecordCount from "@/components/common/RecordCount"
-import PageHeader from "@/components/layout/PageHeader"
-import FabButton from "@/components/common/FabButton"
 import CardGrid from "@/components/layout/CardGrid"
 import { deleteStockMaterial, getAllStockMateriales } from "@/services/materiales-service"
 import type { StockMaterial } from "@/types/Materiales/StockMaterial"
 import StockMaterialesForm from "./StockMaterialesForm"
+import MaestroLayout from "@/components/layout/MaestroLayout"
 
 export default function StockMaterialesMaestro() {
 
@@ -36,31 +32,30 @@ export default function StockMaterialesMaestro() {
   }
 
   return (
-    <div>
-      <PageHeader
-        title="StockMateriales"
-        menuOptions={[
-          {
-            label: "Exportar a Excel",
-            icon: <FaFileExcel className="mr-2 text-green-600" />,
-            onClick: () => ExportToExcel({
-              data: stockFiltrados,
-              fileName: "StockMaterial.xlsx",
-              sheetName: "StockMaterial"
-            }),
-          }
-        ]}
-      />
-
-      <SearchBar
-        value={busqueda}
-        onChange={setBusqueda}
-        placeholder="Buscar por material"/>
-      
-      <RecordCount count={loading ? 0 : stockFiltrados.length} />
-
-      <ErrorAlert error={error}/>
-
+    <MaestroLayout
+      title="StockMateriales"
+      menuOptions={[
+        {
+          label: "Exportar a Excel",
+          icon: <FaFileExcel className="mr-2 text-green-600" />,
+          onClick: () => ExportToExcel({
+            data: stockFiltrados,
+            fileName: "StockMaterial.xlsx",
+            sheetName: "StockMaterial"
+          }),
+        }
+      ]}
+      busqueda={busqueda}
+      onBusquedaChange={setBusqueda}
+      searchPlaceholder="Buscar por material"
+      recordCount={stockFiltrados.length}
+      error={error}
+      loading={loading}
+      onAgregar={() => {
+        setStockMaterialSeleccionado(null)
+        setModalStockMaterialAbierto(true)
+      }}
+    >
       <CardGrid
         items={stockFiltrados}
         isLoading={loading}
@@ -90,19 +85,11 @@ export default function StockMaterialesMaestro() {
         )}
       />
 
-      <FabButton
-        onClick={() => {  
-          setStockMaterialSeleccionado(null)
-          setModalStockMaterialAbierto(true)
-        }}
-        icon={<FaPlus  size={20} />}
-      />
-
       <StockMaterialesForm
         isOpen={modalStockMaterialAbierto}
         onClose={() => { setModalStockMaterialAbierto(false); setStockMaterialSeleccionado(null) }}
         onSuccess={obtenerStockMateriales}
         stockMaterialEditar={StockMaterialSeleccionado} />
-    </div>
+    </MaestroLayout>
   )
 }

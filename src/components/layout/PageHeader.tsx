@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import KebabButton from "../common/KebabButton"
 
-interface MenuOption {
+export interface MenuOption {
   label: string
   icon?: React.ReactNode
   onClick: () => void

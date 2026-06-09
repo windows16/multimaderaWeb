@@ -1,19 +1,15 @@
 
 import { useState } from "react"
-import { FaEdit,FaFileExcel, FaTrash, FaPlus} from "react-icons/fa"
+import { FaEdit, FaFileExcel, FaTrash } from "react-icons/fa"
 import { ExportToExcel } from "@/utils/ExportToExcel"
-import ErrorAlert from "@/components/common/ErrorAlert"
+import CardGrid from "@/components/layout/CardGrid"
 import type { Cliente } from "@/types/Clientes/Cliente"
 import { deleteCliente, getAllClientes } from "@/services/clientes-service"
 import ClientesForm from "./ClientesForm"
-import SearchBar from "@/components/common/SearchBar"
-import RecordCount from "@/components/common/RecordCount"
-import PageHeader from "@/components/layout/PageHeader"
-import FabButton from "@/components/common/FabButton"
-import CardGrid from "@/components/layout/CardGrid"
 import { usePaginacion } from "@/hooks/usePaginacion"
 import { Paginacion } from "@/components/common/Paginacion"
 import { useBusqueda } from "@/hooks/useBusqueda"
+import MaestroLayout from "@/components/layout/MaestroLayout"
 
 export default function ClientesMaestro() {
 
@@ -43,31 +39,37 @@ export default function ClientesMaestro() {
   }
 
   return (
-    <div>
-      <PageHeader
-        title="Clientes"
-        menuOptions={[
-          {
-            label: "Exportar a Excel",
-            icon: <FaFileExcel className="mr-2 text-green-600" />,
-            onClick: () => ExportToExcel({
-              data: clientesFiltrados,
-              fileName: "Cliente.xlsx",
-              sheetName: "Cliente"
-            }),
-          }
-        ]}
-      />
-
-      <SearchBar
-        value={busqueda}
-        onChange={setBusqueda}
-        placeholder="Buscar por nombre, teléfono, tipo..."/>
-      
-      <RecordCount count={loading ? 0 : meta.total} />
-
-      <ErrorAlert error={error}/>
-      
+    <MaestroLayout
+      title="Clientes"
+      menuOptions={[
+        {
+          label: "Exportar a Excel",
+          icon: <FaFileExcel className="mr-2 text-green-600" />,
+          onClick: () => ExportToExcel({
+            data: clientesFiltrados,
+            fileName: "Cliente.xlsx",
+            sheetName: "Cliente"
+          }),
+        }
+      ]}
+      busqueda={busqueda}
+      onBusquedaChange={setBusqueda}
+      searchPlaceholder="Buscar por nombre, teléfono, tipo..."
+      recordCount={meta.total}
+      error={error}
+      loading={loading}
+      paginacion={
+        <Paginacion
+          page={page}
+          totalPages={meta.totalPages > 0 ? meta.totalPages : Math.ceil((meta.total || 1) / 10)}
+          onChange={setPage}
+        />
+      }
+      onAgregar={() => {
+        setClienteSeleccionado(null)
+        setModalClienteAbierto(true)
+      }}
+    >
       <CardGrid
         items={clientesFiltrados}
         isLoading={loading}
@@ -94,26 +96,12 @@ export default function ClientesMaestro() {
           </>
         )}
       />
-    <Paginacion 
-      page={page}
-      totalPages={meta.totalPages > 0 ? meta.totalPages : Math.ceil((meta.total || 1) / 10)}
-      onChange={setPage}
-    />
 
-      <FabButton
-        onClick={() => {  
-          setClienteSeleccionado(null)
-          setModalClienteAbierto(true)
-        }}
-        icon={<FaPlus  size={20} />}
-      />
-
-      {/* MODALES */}
       <ClientesForm
         isOpen={modalClienteAbierto}
         onClose={() => { setModalClienteAbierto(false); setClienteSeleccionado(null) }}
         onSuccess={obtenerClientes}
         clienteEditar={ClienteSeleccionado} />
-    </div>
+    </MaestroLayout>
   )
 }

@@ -2,19 +2,15 @@
 
 import { getAllRoles} from "../../services/usuarios-service"
 
-import { FaEdit, FaUserMinus, FaUserPlus,FaFileExcel, FaTrash } from "react-icons/fa"
-import { Button } from "@/components/ui/button"
+import { FaEdit, FaFileExcel, FaTrash } from "react-icons/fa"
 
 import { ExportToExcel } from "../../utils/ExportToExcel"
-import ErrorAlert from "@/components/common/ErrorAlert"
 import type { Rol } from "@/types/Usuarios/RoleConAccion"
-import PageHeader from "@/components/layout/PageHeader"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
-import SearchBar from "@/components/common/SearchBar"
-import RecordCount from "@/components/common/RecordCount"
 import CardGrid from "@/components/layout/CardGrid"
 import { useState } from "react"
+import MaestroLayout from "@/components/layout/MaestroLayout"
 
 export default function MaestroRoles() {
 
@@ -33,29 +29,30 @@ export default function MaestroRoles() {
 
 
   return (
-    <div>
-
-      <PageHeader
-              title="Roles"
-              menuOptions={[
-                {
-                  label: "Exportar a Excel",
-                  icon: <FaFileExcel className="mr-2 text-green-600" />,
-                  onClick: () => ExportToExcel({
-                    data: rolesFiltrados,
-                    fileName: "Roles.xlsx",
-                    sheetName: "Roles"
-                  }),
-                }
-              ]}
-            />
-
-      <SearchBar
-              value={busqueda}
-              onChange={setBusqueda}
-              placeholder="Buscar por descripcion, precio..."/>
-
-      <RecordCount count={loading ? 0 : rolesFiltrados.length} />
+    <MaestroLayout
+      title="Roles"
+      menuOptions={[
+        {
+          label: "Exportar a Excel",
+          icon: <FaFileExcel className="mr-2 text-green-600" />,
+          onClick: () => ExportToExcel({
+            data: rolesFiltrados,
+            fileName: "Roles.xlsx",
+            sheetName: "Roles"
+          }),
+        }
+      ]}
+      busqueda={busqueda}
+      onBusquedaChange={setBusqueda}
+      searchPlaceholder="Buscar por descripcion, precio..."
+      recordCount={rolesFiltrados.length}
+      error={error}
+      loading={loading}
+      onAgregar={() => {
+        setRolSeleccionado(null)
+        setModalRolAbierto(true)
+      }}
+    >
 
       <CardGrid
             items={rolesFiltrados}
@@ -85,8 +82,6 @@ export default function MaestroRoles() {
             )}
           />
       
-      <ErrorAlert error={error}/>
-      
       {/* MODALES */}
       {/* <EmpleadosForm
         isOpen={modalEmpleadosAbierto}
@@ -100,6 +95,6 @@ export default function MaestroRoles() {
         onSuccess={obtenerRolesConAcciones}
         empleado={empleadoParaBaja} /> */}
 
-    </div>
+    </MaestroLayout>
   )
 }

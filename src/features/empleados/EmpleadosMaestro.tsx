@@ -3,18 +3,14 @@ import { useState } from "react"
 import { getAllEmpleados } from "../../services/empleados-service"
 import type { Empleado } from "../../types/Empleados/Empleado"
 import { formatFecha } from "../../utils/Functions"
-import { FaEdit, FaUserMinus, FaUserPlus,FaFileExcel } from "react-icons/fa"
+import { FaEdit, FaUserMinus, FaFileExcel } from "react-icons/fa"
 import EmpleadosForm from "./EmpleadosForm"
 import BajaEmpleadosForm from "./BajaEmpleadosForm"
 import { ExportToExcel } from "../../utils/ExportToExcel"
-import ErrorAlert from "@/components/common/ErrorAlert"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
-import SearchBar from "@/components/common/SearchBar"
-import FabButton from "@/components/common/FabButton"
-import PageHeader from "@/components/layout/PageHeader"
-import RecordCount from "@/components/common/RecordCount"
 import CardGrid from "@/components/layout/CardGrid"
+import MaestroLayout from "@/components/layout/MaestroLayout"
 
 export default function EmpleadosMaestro() {
 
@@ -31,38 +27,34 @@ export default function EmpleadosMaestro() {
 
 
   return (
-    <div>
-
-      <PageHeader
-        title="Empleados"
-        menuOptions={[
-          {
-            label: "Exportar",
-            icon: <FaFileExcel className="mr-2 text-green-600" />,
-            onClick: () => ExportToExcel({
-                data: empleadosFiltrados,
-                fileName: "empleados.xlsx",
-                sheetName: "Empleados",
-                mapFn: (emp) => ({
-                  "No. Empleado": emp.numeroDeEmpleado,
-                  "Nombre": emp.nombre,
-                  "Teléfono": emp.telefono,
-                  "Fecha Nacimiento": formatFecha(emp.fechaNacimiento),
-                  "DPI": emp.dpi,
-                }),
+    <MaestroLayout
+      title="Empleados"
+      menuOptions={[
+        {
+          label: "Exportar",
+          icon: <FaFileExcel className="mr-2 text-green-600" />,
+          onClick: () => ExportToExcel({
+              data: empleadosFiltrados,
+              fileName: "empleados.xlsx",
+              sheetName: "Empleados",
+              mapFn: (emp) => ({
+                "No. Empleado": emp.numeroDeEmpleado,
+                "Nombre": emp.nombre,
+                "Teléfono": emp.telefono,
+                "Fecha Nacimiento": formatFecha(emp.fechaNacimiento),
+                "DPI": emp.dpi,
               }),
-          }
-        ]}
-      />
-
-      <SearchBar
-        value={busqueda}
-        onChange={setBusqueda}
-        placeholder="Buscar por nombre, teléfono, fechaNac..."
-      />
-
-      <RecordCount count={loading ? 0 : empleadosFiltrados.length} />
-      <ErrorAlert error={error} />
+            }),
+        }
+      ]}
+      busqueda={busqueda}
+      onBusquedaChange={setBusqueda}
+      searchPlaceholder="Buscar por nombre, teléfono, fechaNac..."
+      recordCount={loading ? 0 : empleadosFiltrados.length}
+      error={error}
+      loading={loading}
+      onAgregar={() => { setEmpleadoSeleccionado(null); setModalEmpleadosAbierto(true) }}
+    >
       <CardGrid
         items={empleadosFiltrados}
         isLoading={loading}
@@ -91,12 +83,7 @@ export default function EmpleadosMaestro() {
           </>
         )}
       />
-        
-      <FabButton
-        onClick={() => { setEmpleadoSeleccionado(null); setModalEmpleadosAbierto(true) }}
-        icon={<FaUserPlus />}
-      />
-      
+
       {/* MODALES */}
       <EmpleadosForm
         isOpen={modalEmpleadosAbierto}
@@ -110,6 +97,6 @@ export default function EmpleadosMaestro() {
         onSuccess={obtenerEmpleados}
         empleado={empleadoParaBaja} />
 
-    </div>
+    </MaestroLayout>
   )
 }

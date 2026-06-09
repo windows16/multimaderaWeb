@@ -1,18 +1,14 @@
 
 import { useState } from "react"
-import { FaEdit,FaFileExcel, FaTrash, FaPlus} from "react-icons/fa"
+import { FaEdit,FaFileExcel, FaTrash} from "react-icons/fa"
 import { ExportToExcel } from "@/utils/ExportToExcel"
-import ErrorAlert from "@/components/common/ErrorAlert"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
-import SearchBar from "@/components/common/SearchBar"
 import type { TipoCliente } from "@/types/Clientes/TipoCliente"
 import { deleteTipoCliente, getAllTiposCliente } from "@/services/clientes-service"
 import TiposClienteForm from "./TiposClienteForm"
-import FabButton from "@/components/common/FabButton"
-import RecordCount from "@/components/common/RecordCount"
-import PageHeader from "@/components/layout/PageHeader"
 import CardGrid from "@/components/layout/CardGrid"
+import MaestroLayout from "@/components/layout/MaestroLayout"
 
 export default function TiposClienteMaestro() {
 
@@ -36,31 +32,30 @@ export default function TiposClienteMaestro() {
   }
 
   return (
-    <div>
-      <PageHeader
-        title="Tipos de Cliente"
-        menuOptions={[
-          {
-            label: "Exportar a Excel",
-            icon: <FaFileExcel className="mr-2 text-green-600" />,
-            onClick: () => ExportToExcel({
-              data: tiposClienteFiltrados,
-              fileName: "TiposCliente.xlsx",
-              sheetName: "TiposCliente"
-            }),
-          }
-        ]}
-      />
-
-      <SearchBar
-        value={busqueda}
-        onChange={setBusqueda}
-        placeholder="Buscar por descripcion"/>
-
-      <ErrorAlert error={error}/>
-
-      <RecordCount count={loading ? 0 : tiposClienteFiltrados.length} />
-      
+    <MaestroLayout
+      title="Tipos de Cliente"
+      menuOptions={[
+        {
+          label: "Exportar a Excel",
+          icon: <FaFileExcel className="mr-2 text-green-600" />,
+          onClick: () => ExportToExcel({
+            data: tiposClienteFiltrados,
+            fileName: "TiposCliente.xlsx",
+            sheetName: "TiposCliente"
+          }),
+        }
+      ]}
+      busqueda={busqueda}
+      onBusquedaChange={setBusqueda}
+      searchPlaceholder="Buscar por descripcion"
+      recordCount={loading ? 0 : tiposClienteFiltrados.length}
+      error={error}
+      loading={loading}
+      onAgregar={() => {
+        setTipoClienteSeleccionado(null)
+        setModalTipoClienteAbierto(true)
+      }}
+    >
       <CardGrid
         items={tiposClienteFiltrados}
         isLoading={loading}
@@ -83,18 +78,11 @@ export default function TiposClienteMaestro() {
         renderContent={() => null}
       />
 
-      <FabButton
-          onClick={() => { 
-            setTipoClienteSeleccionado(null)
-            setModalTipoClienteAbierto(true)
-          }}
-          icon={<FaPlus />} />
-
       <TiposClienteForm
         isOpen={modalTipoClienteAbierto}
         onClose={() => { setModalTipoClienteAbierto(false); setTipoClienteSeleccionado(null) }}
         onSuccess={obtenerTiposCliente}
         tipoClienteEditar={tipoClienteSeleccionado} />
-    </div>
+    </MaestroLayout>
   )
 }

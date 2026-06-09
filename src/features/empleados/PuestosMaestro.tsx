@@ -1,18 +1,14 @@
 
 import { useState } from "react"
-import { FaEdit,FaFileExcel, FaTrash, FaPlus } from "react-icons/fa"
+import { FaEdit,FaFileExcel, FaTrash } from "react-icons/fa"
 import type { Puesto } from "@/types/Empleados/Puesto"
 import { getAllPuestos, deletePuesto } from "../../services/empleados-service"
 import { ExportToExcel } from "@/utils/ExportToExcel"
 import PuestosForm from "./PuestosForm"
-import ErrorAlert from "@/components/common/ErrorAlert"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
-import SearchBar from "@/components/common/SearchBar"
-import FabButton from "@/components/common/FabButton"
-import PageHeader from "@/components/layout/PageHeader"
-import RecordCount from "@/components/common/RecordCount"
 import CardGrid from "@/components/layout/CardGrid"
+import MaestroLayout from "@/components/layout/MaestroLayout"
 
 export default function PuestosMaestro() {
 
@@ -36,32 +32,30 @@ export default function PuestosMaestro() {
   }
 
   return (
-    <div>
-
-      <PageHeader
-        title="Puestos"
-        menuOptions={[
-          {
-            label: "Exportar",
-            icon: <FaFileExcel className="mr-2 text-green-600" />,
-            onClick: () => ExportToExcel({
-                data: puestosFiltrados,
-                fileName: "Puesto.xlsx",
-                sheetName: "Puesto"
-              }),
-          }
-        ]}
-      />
-
-      <SearchBar
-        value={busqueda}
-        onChange={setBusqueda}
-        placeholder="Buscar por puesto, descripcion..."/>
-
-      <RecordCount count={loading ? 0 : puestosFiltrados.length} />
-
-      <ErrorAlert error={error}/>
-      
+    <MaestroLayout
+      title="Puestos"
+      menuOptions={[
+        {
+          label: "Exportar",
+          icon: <FaFileExcel className="mr-2 text-green-600" />,
+          onClick: () => ExportToExcel({
+              data: puestosFiltrados,
+              fileName: "Puesto.xlsx",
+              sheetName: "Puesto"
+            }),
+        }
+      ]}
+      busqueda={busqueda}
+      onBusquedaChange={setBusqueda}
+      searchPlaceholder="Buscar por puesto, descripcion..."
+      recordCount={loading ? 0 : puestosFiltrados.length}
+      error={error}
+      loading={loading}
+      onAgregar={() => {
+        setPuestoSeleccionado(null)
+        setModalPuestoAbierto(true)
+      }}
+    >
       <CardGrid
         items={puestosFiltrados}
         isLoading={loading}
@@ -86,20 +80,11 @@ export default function PuestosMaestro() {
         )}
       />
 
-      <FabButton
-        onClick={() => {  
-          setPuestoSeleccionado(null)
-          setModalPuestoAbierto(true) 
-        }}
-        icon={<FaPlus  size={20} />}
-      />
-
-      {/* MODALES */}
       <PuestosForm
         isOpen={modalPuestoAbierto}
         onClose={() => { setModalPuestoAbierto(false); setPuestoSeleccionado(null) }}
         onSuccess={obtenerPuesto}
         puestoEditar={PuestoSeleccionado} />
-    </div>
+    </MaestroLayout>
   )
 }

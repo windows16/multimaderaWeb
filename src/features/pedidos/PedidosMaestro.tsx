@@ -1,14 +1,10 @@
 import { useMemo, useState } from "react"
-import { FaEdit, FaFileExcel, FaTrash, FaPlus, FaMoneyCheck } from "react-icons/fa"
+import { FaEdit, FaFileExcel, FaTrash, FaMoneyCheck } from "react-icons/fa"
 import { ExportToExcel } from "@/utils/ExportToExcel"
-import ErrorAlert from "@/components/common/ErrorAlert"
 import type { Pedido } from "@/types/Pedidos/Pedido"
 import { deletePedido, getAllPedidos, cancelarPedido } from "@/services/pedidos-service"
 import PedidosForm from "./PedidosForm"
 import { useFiltros } from "@/hooks/useFiltros"
-import RecordCount from "@/components/common/RecordCount"
-import PageHeader from "@/components/layout/PageHeader"
-import FabButton from "@/components/common/FabButton"
 import CardGrid from "@/components/layout/CardGrid"
 import { useNavigate } from "react-router-dom"
 import { formatFecha } from "@/utils/Functions"
@@ -19,6 +15,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { usePaginacion } from "@/hooks/usePaginacion"
 import { Paginacion } from "@/components/common/Paginacion"
+import MaestroLayout from "@/components/layout/MaestroLayout"
 
 export default function PedidosMaestro() {
 
@@ -72,35 +69,42 @@ export default function PedidosMaestro() {
   }
 
   return (
-    <div>
-      <PageHeader
-        title="Pedidos"
-        menuOptions={[
-          {
-            label: "Exportar a Excel",
-            icon: <FaFileExcel className="mr-2 text-green-600" />,
-            onClick: () => ExportToExcel({
-              data: pedidosFiltrados,
-              fileName: "Pedidos.xlsx",
-              sheetName: "Pedidos"
-            }),
-          },
-          
-        ]}
-      />
-      
-      <div className="flex gap-4 mb-4">
-        <RecordCount count={loading ? 0 : pedidosFiltrados.length} />
+    <MaestroLayout
+      title="Pedidos"
+      menuOptions={[
+        {
+          label: "Exportar a Excel",
+          icon: <FaFileExcel className="mr-2 text-green-600" />,
+          onClick: () => ExportToExcel({
+            data: pedidosFiltrados,
+            fileName: "Pedidos.xlsx",
+            sheetName: "Pedidos"
+          }),
+        },
+      ]}
+      recordCount={pedidosFiltrados.length}
+      loading={loading}
+      toolbarExtras={
         <PanelFiltros.Trigger
-            className="ml-auto"
-            abierto={abierto}
-            onToggle={toggle}
-            cantidadActivos={filtrosActivos.length}
-          />
-      </div>
-
-      <ErrorAlert error={error}/>
-      
+          className="ml-auto"
+          abierto={abierto}
+          onToggle={toggle}
+          cantidadActivos={filtrosActivos.length}
+        />
+      }
+      error={error}
+      paginacion={
+        <Paginacion
+          page={page}
+          totalPages={meta.totalPages > 0 ? meta.totalPages : Math.ceil((meta.total || 1) / 10)}
+          onChange={setPage}
+        />
+      }
+      onAgregar={() => {
+        setPedidoSeleccionado(null)
+        setModalPedidoAbierto(true)
+      }}
+    >
       <PanelFiltros.Panel abierto={abierto} onLimpiar={limpiarFiltros} cantidadActivos={filtrosActivos.length}>
         <FiltroSelect
           label="Albañil"
@@ -178,18 +182,6 @@ export default function PedidosMaestro() {
         )}
         onItemClick={(item) => navigate(`/pedidos/${item.idPedido}`, { state: { pedido: item } })}
       />
-      <Paginacion
-            page={page}
-            totalPages={meta.totalPages > 0 ? meta.totalPages : Math.ceil((meta.total || 1) / 10)}
-            onChange={setPage}
-          />
-      <FabButton
-        onClick={() => {
-          setPedidoSeleccionado(null)
-          setModalPedidoAbierto(true)
-        }}
-        icon={<FaPlus size={20} />}
-      />
 
       {/* MODALES */}
       <PedidosForm
@@ -197,6 +189,6 @@ export default function PedidosMaestro() {
         onClose={() => { setModalPedidoAbierto(false); setPedidoSeleccionado(null) }}
         onSuccess={obtenerPedidos}
         pedidoEditar={PedidoSeleccionado} />
-    </div>
+    </MaestroLayout>
   )
 }
