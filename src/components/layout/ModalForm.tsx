@@ -18,10 +18,10 @@ export default function ModalForm({ isOpen, onClose, onSubmit, titulo, esEdicion
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl">
+      <div className="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
 
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        {/* Header — fijo */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
           <div className="flex items-center gap-2 text-gray-800">
             {esEdicion ? <FaEdit className="text-amber-600" /> : <FaPlus className="text-blue-600" />}
             <h2 className="text-lg font-semibold">
@@ -33,13 +33,16 @@ export default function ModalForm({ isOpen, onClose, onSubmit, titulo, esEdicion
           </button>
         </div>
 
-        {/* Contenido */}
-        <form onSubmit={onSubmit} className="px-6 py-5 grid grid-cols-2 gap-4">
-          {children}
+        <form onSubmit={onSubmit} className="flex flex-col flex-1 min-h-0">
 
-          <ErrorAlert error={error} title="Error al guardar" />
+          {/* Campos — scrolleable */}
+          <div className="overflow-y-auto flex-1 px-6 py-5 grid grid-cols-2 gap-4 content-start">
+            {children}
+            <ErrorAlert error={error} title="Error al guardar" />
+          </div>
 
-          <div className="col-span-2 flex justify-end gap-3 mt-2">
+          {/* Botones — fijos al fondo */}
+          <div className="shrink-0 flex justify-end gap-3 px-6 py-4 border-t border-gray-100">
             <Button variant="outline" onClick={onClose} disabled={cargando}>
               Cancelar
             </Button>
@@ -47,6 +50,7 @@ export default function ModalForm({ isOpen, onClose, onSubmit, titulo, esEdicion
               {cargando ? "Guardando..." : esEdicion ? "Actualizar" : "Guardar"}
             </Button>
           </div>
+
         </form>
 
       </div>
