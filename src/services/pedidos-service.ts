@@ -1,4 +1,4 @@
-import type { Pedido, DetallePedido, CreatePedidoDto, UpdatePedidoDto } from '@/types/Pedidos/Pedido';
+import type { Pedido, DetallePedido, CreatePedidoDto, UpdatePedidoDto, UpdateDetallePedidoDto, CreateDetallePedidoDto } from '@/types/Pedidos/Pedido';
 import apiMultimadera from './api-client';
 import type { PagedResponse } from './paged-response';
 
@@ -80,12 +80,12 @@ export async function getDetallePedidoById(idDetallePedido: number): Promise<Det
     return data;
 }
 
-export async function insertDetallePedido({ idDetallePedido, material, ...detalle }: DetallePedido) {
+export async function insertDetallePedido(detalle: CreateDetallePedidoDto) {
     const { data } = await apiMultimadera.post("/detalles-pedidos", detalle);
     return data;
-}
+} 
 
-export async function updateDetallePedido(idDetallePedido: number, { material, ...detalle }: DetallePedido) {
+export async function  updateDetallePedido(idDetallePedido: number, detalle : UpdateDetallePedidoDto) {
     const { data } = await apiMultimadera.patch(`/detalles-pedidos/${idDetallePedido}`, detalle);
     return data;
 }

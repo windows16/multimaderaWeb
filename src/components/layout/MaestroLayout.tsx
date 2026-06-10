@@ -33,7 +33,7 @@ export default function MaestroLayout({
 }: MaestroLayoutProps) {
   return (
     <div>
-      <PageHeader title={title} menuOptions={menuOptions} />
+      <PageHeader title={title} menuOptions={ !error && !loading ? menuOptions : undefined } />
 
       {!error && busqueda !== undefined && (
         <SearchBar
@@ -43,7 +43,7 @@ export default function MaestroLayout({
         />
       )}
 
-      {!error && recordCount !== undefined && (
+      {!error && !loading && recordCount !== undefined  && (
         <div className="flex gap-4 mb-4">
           <RecordCount count={loading ? 0 : recordCount} />
           {toolbarExtras}
