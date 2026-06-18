@@ -55,7 +55,6 @@ export default function ClientesMaestro() {
       ]}
       busqueda={busqueda}
       onBusquedaChange={setBusqueda}
-      searchPlaceholder="Buscar por nombre, teléfono, tipo..."
       recordCount={meta.total}
       error={error}
       loading={loading}

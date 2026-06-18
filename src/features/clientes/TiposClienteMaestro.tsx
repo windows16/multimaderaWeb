@@ -47,7 +47,6 @@ export default function TiposClienteMaestro() {
       ]}
       busqueda={busqueda}
       onBusquedaChange={setBusqueda}
-      searchPlaceholder="Buscar por descripcion"
       recordCount={loading ? 0 : tiposClienteFiltrados.length}
       error={error}
       loading={loading}

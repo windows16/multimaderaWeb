@@ -54,7 +54,6 @@ export default function MaterialesMaestro() {
       ]}
       busqueda={busqueda}
       onBusquedaChange={setBusqueda}
-      searchPlaceholder="Buscar por descripcion, precio..."
       recordCount={materialesFiltrados.length}
       error={error}
       loading={loading}

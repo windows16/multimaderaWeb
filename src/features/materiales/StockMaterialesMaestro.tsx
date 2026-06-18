@@ -47,7 +47,6 @@ export default function StockMaterialesMaestro() {
       ]}
       busqueda={busqueda}
       onBusquedaChange={setBusqueda}
-      searchPlaceholder="Buscar por material"
       recordCount={stockFiltrados.length}
       error={error}
       loading={loading}

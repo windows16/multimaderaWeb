@@ -49,7 +49,6 @@ export default function EmpleadosMaestro() {
       ]}
       busqueda={busqueda}
       onBusquedaChange={setBusqueda}
-      searchPlaceholder="Buscar por nombre, teléfono, fechaNac..."
       recordCount={loading ? 0 : empleadosFiltrados.length}
       error={error}
       loading={loading}

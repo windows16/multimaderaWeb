@@ -47,7 +47,6 @@ export default function PuestosMaestro() {
       ]}
       busqueda={busqueda}
       onBusquedaChange={setBusqueda}
-      searchPlaceholder="Buscar por puesto, descripcion..."
       recordCount={loading ? 0 : puestosFiltrados.length}
       error={error}
       loading={loading}

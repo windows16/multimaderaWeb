@@ -44,7 +44,6 @@ export default function MaestroRoles() {
       ]}
       busqueda={busqueda}
       onBusquedaChange={setBusqueda}
-      searchPlaceholder="Buscar por descripcion, precio..."
       recordCount={rolesFiltrados.length}
       error={error}
       loading={loading}
