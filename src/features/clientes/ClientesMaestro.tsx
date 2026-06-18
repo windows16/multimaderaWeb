@@ -1,6 +1,6 @@
 
 import { useState } from "react"
-import { FaEdit, FaFileExcel, FaTrash } from "react-icons/fa"
+import { FaEdit, FaFileExcel, FaPhone, FaTrash, FaWhatsapp } from "react-icons/fa"
 import { ExportToExcel } from "@/utils/ExportToExcel"
 import CardGrid from "@/components/layout/CardGrid"
 import type { Cliente } from "@/types/Clientes/Cliente"
@@ -10,6 +10,7 @@ import { usePaginacion } from "@/hooks/usePaginacion"
 import { Paginacion } from "@/components/common/Paginacion"
 import { useBusqueda } from "@/hooks/useBusqueda"
 import MaestroLayout from "@/components/layout/MaestroLayout"
+import { limpiarTelefono, telefonoParaWhatsapp } from "@/utils/telefono"
 
 export default function ClientesMaestro() {
 
@@ -87,7 +88,25 @@ export default function ClientesMaestro() {
             className: "text-red-500 focus:text-red-500 focus:bg-red-50",
             separator: true,
             onClick: (item) => eliminarCliente(item)
-          }
+          },
+          {
+            label: "Llamar",
+            icon: <FaPhone className="w-3.5 h-3.5 mr-2" />,
+            onClick: (item) => {
+              const numero = limpiarTelefono(item.telefono)
+              if (!numero) return
+              window.location.href = `tel:${numero}`
+            }
+          },
+          {
+            label: "WhatsApp",
+            icon: <FaWhatsapp className="w-3.5 h-3.5 mr-2" />,
+            onClick: (item) => {
+              const numero = telefonoParaWhatsapp(item.telefono)
+              if (!numero) return
+              window.open(`https://wa.me/${numero}`, "_blank", "noopener,noreferrer")
+            }
+          },
         ]}
         renderContent={(item) => (
           <>
