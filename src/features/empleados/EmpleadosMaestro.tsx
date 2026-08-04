@@ -3,7 +3,7 @@ import { useState } from "react"
 import { getAllEmpleados } from "../../services/empleados-service"
 import type { Empleado } from "../../types/Empleados/Empleado"
 import { formatFecha } from "../../utils/Functions"
-import { FaEdit, FaUserMinus, FaFileExcel } from "react-icons/fa"
+import { FaEdit, FaUserMinus, FaFileExcel, FaPhone } from "react-icons/fa"
 import EmpleadosForm from "./EmpleadosForm"
 import BajaEmpleadosForm from "./BajaEmpleadosForm"
 import { ExportToExcel } from "../../utils/ExportToExcel"
@@ -74,12 +74,15 @@ export default function EmpleadosMaestro() {
           }
         ]}
         renderContent={(item) => (
-          <>
-            <p>Tel: {item.telefono}</p>
+          <div className="mt-2 space-y-1" >
+            <div className="flex items-center gap-1.5">
+              <FaPhone className="text-blue-500" /> 
+              <span>Tel: {item.telefono? item.telefono : "N/A"}</span>
+            </div>
             <p>Fecha de Nacimiento: {formatFecha(item.fechaNacimiento)}</p>
             <p>DPI: {item.dpi}</p>
             <p>Puesto: {item.puesto}</p>
-          </>
+          </div>
         )}
       />
 

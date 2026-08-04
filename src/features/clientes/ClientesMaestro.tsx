@@ -109,7 +109,10 @@ export default function ClientesMaestro() {
         ]}
         renderContent={(item) => (
           <>
-            <p>Teléfono: {item.telefono}</p>
+            <div className="flex items-center gap-1.5">
+              <FaPhone className="text-blue-500" /> 
+              <span>Tel: {item.telefono? item.telefono : "N/A"}</span>
+            </div>
             <p>Tipo de cliente: {item.tipoCliente || "--"}</p>
           </>
         )}
