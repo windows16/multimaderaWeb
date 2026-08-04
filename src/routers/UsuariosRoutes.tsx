@@ -1,12 +1,10 @@
-import MaestroRoles from "@/features/usuarios/MaestroRoles"
+import MaestroRoles from "@/features/usuarios/RolesMaestro"
+import MaestroUsuarios from "@/features/usuarios/UsuariosMaestro"
 import { Route } from "react-router-dom"
 
-function Usuarios() {
-    return <div className="text-xl font-semibold">Sección de Usuarios</div>
-}
 export const UsuariosRoutes = (
   <>
-    <Route path="/usuarios"element={< Usuarios/>} />
-    <Route path="/usuarios/roles" element={< MaestroRoles/>} />
+    <Route path="/usuarios/auth" element={<MaestroUsuarios />} />
+    <Route path="/usuarios/roles" element={<MaestroRoles />} />
   </>
 )
