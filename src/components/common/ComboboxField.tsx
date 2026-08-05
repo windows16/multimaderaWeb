@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo, useCallback } from "react"
 import {
   Combobox,
   ComboboxContent,
@@ -29,7 +29,9 @@ export function ComboboxField<T>({
   placeholder = "Selecciona una opción",
   isLoading = false,
 }: ComboboxFieldProps<T>) {
-  const selected = items.find((item) => getValue(item) === selectedValue)
+  const selected = useMemo(() => {
+    return items.find((item) => getValue(item) === selectedValue)
+  }, [items, selectedValue, getValue])
 
   const [search, setSearch] = useState(() =>
     selected ? getLabel(selected) : ""
@@ -38,9 +40,9 @@ export function ComboboxField<T>({
   // Sincroniza el label cuando selectedValue cambia desde afuera (guardar, reset, etc.)
   useEffect(() => {
     setSearch(selected ? getLabel(selected) : "")
-  }, [selectedValue])
+  }, [selected, getLabel])
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearch(value)
 
@@ -48,11 +50,13 @@ export function ComboboxField<T>({
     if (value === "") {
       onChange(null)
     }
-  }
+  }, [onChange])
 
-  const filteredItems = items.filter((item) =>
-    getLabel(item).toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredItems = useMemo(() => {
+    const q = search.trim().toLowerCase()
+    if (q === "") return items
+    return items.filter((item) => getLabel(item).toLowerCase().includes(q))
+  }, [items, search, getLabel])
 
   return (
     <Combobox items={filteredItems}>
