@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { supabase } from "../supabase/supabase-config"
-import { useLocation, useNavigate, Navigate } from "react-router-dom"
+import { useLocation, useNavigate, Navigate, Link } from "react-router-dom"
 import { FaEye, FaEyeSlash, FaSignInAlt } from "react-icons/fa"
 import { useAuth } from "../hooks/useAuth"
 import ErrorAlert from "../components/common/ErrorAlert"
@@ -92,6 +92,10 @@ export default function Login() {
             <FaSignInAlt size={15} />
             Ingresar
           </Button>
+
+          <div className="mt-3 text-center">
+            <Link to="/recuperar" className="text-sm text-blue-600 hover:underline">¿Olvidaste tu contraseña?</Link>
+          </div>
 
         </form>
         <p className="text-center text-xs text-gray-400 mt-6">

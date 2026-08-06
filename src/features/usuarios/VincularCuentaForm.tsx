@@ -76,7 +76,7 @@ export default function VincularCuentaForm({ isOpen, onClose, onSuccess }: Vincu
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      titulo="Vincular Cuenta de Sistema"
+      titulo="usuario vinculado"
       esEdicion={false}
       cargando={cargando}
       error={error}
