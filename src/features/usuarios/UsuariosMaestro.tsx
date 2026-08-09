@@ -62,7 +62,7 @@ export default function MaestroUsuarios() {
         items={usuariosFiltrados}
         isLoading={loading}
         getKey={(item) => item.idUsuario ?? item.numeroDeEmpleado}
-        getTitulo={(item) => `${item.numeroDeEmpleado} - ${item.tblPersonal?.nombre || "Desconocido"}`}
+        getTitulo={(item) => `${item.numeroDeEmpleado} - ${item.tblPersonal?.nombre || "Desconocido o de baja"}`}
         cardOptions={[
           {
             label: "Editar Rol",
