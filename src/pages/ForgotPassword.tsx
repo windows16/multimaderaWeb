@@ -20,7 +20,7 @@ export default function ForgotPassword() {
 
     try {
       // Send recovery email that redirects to the app's new-password page
-      const redirectTo = window.location.origin + "/recuperar/nueva"
+      const redirectTo = `${import.meta.env.VITE_BASE_URL_API}/recuperar/nueva`
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo,
       })
