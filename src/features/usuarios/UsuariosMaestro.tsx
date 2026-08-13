@@ -11,6 +11,7 @@ import MaestroLayout from "@/components/layout/MaestroLayout"
 import UsuarioRolForm from "./UsuarioRolForm"
 import EliminarUsuarioRolForm from "./EliminarUsuarioRolForm"
 import VincularCuentaForm from "./VincularCuentaForm"
+import CreateAuthUserForm from "./CreateAuthUserForm"
 
 export default function MaestroUsuarios() {
   const { items: itemUsuariosVinculados, error, recargar: obtenerUsuarios, loading } = useFetch<UsuarioVinculadoCompleto>(getAllUsuariosVinculados)
@@ -20,6 +21,9 @@ export default function MaestroUsuarios() {
 
   // Modal Vincular Cuenta
   const [modalVincularAbierto, setModalVincularAbierto] = useState(false)
+
+  // Modal crear cuenta Auth
+  const [modalCrearAuthAbierto, setModalCrearAuthAbierto] = useState(false)
 
   // Modal crear / editar Rol
   const [modalUsuarioAbierto, setModalUsuarioAbierto] = useState(false)
@@ -49,6 +53,11 @@ export default function MaestroUsuarios() {
               "Fecha Vinculación": formatFechaHora(uv.fechaCreacion?.toString()),
             }),
           }),
+        },
+        {
+          label: "Crear cuenta Auth",
+          icon: <FaEnvelope className="mr-2 text-blue-600" />,
+          onClick: () => setModalCrearAuthAbierto(true),
         }
       ]}
       busqueda={busqueda}
@@ -107,6 +116,12 @@ export default function MaestroUsuarios() {
       <VincularCuentaForm 
         isOpen={modalVincularAbierto}
         onClose={() => setModalVincularAbierto(false)}
+        onSuccess={obtenerUsuarios}
+      />
+
+      <CreateAuthUserForm
+        isOpen={modalCrearAuthAbierto}
+        onClose={() => setModalCrearAuthAbierto(false)}
         onSuccess={obtenerUsuarios}
       />
 

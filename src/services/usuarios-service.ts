@@ -110,4 +110,9 @@ export async function vincularUsuario(modelo: Omit<UsuarioVinculado, 'idUsuario'
 export async function desvincularUsuario(idUsuario: number): Promise<boolean> {
     const { data } = await apiMultimadera.delete(`/auth-usuarios/desvincular/${idUsuario}`);
     return data;
-}
+}
+
+export async function createAuthUser(modelo: { email: string, password: string }): Promise<{ id: string, email: string }> {
+    const { data } = await apiMultimadera.post('/auth-usuarios/create', modelo);
+    return data;
+}
