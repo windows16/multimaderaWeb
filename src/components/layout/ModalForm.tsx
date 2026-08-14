@@ -11,9 +11,10 @@ interface ModalFormProps {
   cargando: boolean
   error: string | null
   children: React.ReactNode
+  hideClose?: boolean
 }
 
-export default function ModalForm({ isOpen, onClose, onSubmit, titulo, esEdicion, cargando, error, children }: ModalFormProps) {
+export default function ModalForm({ isOpen, onClose, onSubmit, titulo, esEdicion, cargando, error, hideClose = false, children }: ModalFormProps) {
   if (!isOpen) return null
 
   return (
@@ -28,9 +29,11 @@ export default function ModalForm({ isOpen, onClose, onSubmit, titulo, esEdicion
               {esEdicion ? `Editar ${titulo}` : `Nuevo ${titulo}`}
             </h2>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">
-            <FaTimes />
-          </button>
+          {!hideClose && (
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">
+              <FaTimes />
+            </button>
+          )}
         </div>
 
         <form onSubmit={onSubmit} className="flex flex-col flex-1 min-h-0">
@@ -43,9 +46,11 @@ export default function ModalForm({ isOpen, onClose, onSubmit, titulo, esEdicion
 
           {/* Botones — fijos al fondo */}
           <div className="shrink-0 flex justify-end gap-3 px-6 py-4 border-t border-gray-100">
-            <Button variant="outline" onClick={onClose} disabled={cargando}>
-              Cancelar
-            </Button>
+            {!hideClose && (
+              <Button variant="outline" type="button" onClick={onClose} disabled={cargando}>
+                Cancelar
+              </Button>
+            )}
             <Button type="submit" disabled={cargando} className="bg-blue-600">
               {cargando ? "Guardando..." : esEdicion ? "Actualizar" : "Guardar"}
             </Button>

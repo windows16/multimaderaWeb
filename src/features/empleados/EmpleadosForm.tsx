@@ -11,7 +11,7 @@ import ModalForm from "@/components/layout/ModalForm"
 interface EmpleadosFormProps {
   isOpen: boolean
   onClose: () => void
-  onSuccess: () => void
+  onSuccess: (data?: any, esEdicion?: boolean) => void
   empleadoEditar: Empleado | null
 }
 
@@ -20,8 +20,7 @@ const FormVacio: FormEmpleado = {
   nombre: "",
   telefono: "",
   fechaNacimiento: "",
-  dpi: "",
-  idPuesto: null
+  dpi: ""
 }
 
 export default function EmpleadosForm({ isOpen, onClose, onSuccess, empleadoEditar }: EmpleadosFormProps) {
@@ -37,24 +36,20 @@ export default function EmpleadosForm({ isOpen, onClose, onSuccess, empleadoEdit
     }),
   })
 
-  const { data: puestos = [], isLoading } = useQuery({
-    queryKey: ["puestos"],
-    queryFn: getAllPuestos,
-    enabled: isOpen 
-  })
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     clearError()
     setCargando(true)
     try {
-      
+      let resultado = { ...form } as any;
       if (esEdicion && empleadoEditar) {
-        await updateEmpleado({ ...form })
+        const resUpdate = await updateEmpleado({ ...form })
+        if (typeof resUpdate === 'object' && resUpdate !== null) resultado = resUpdate;
       } else {
-        await insertEmpleado({...form as Omit<FormEmpleado, "numeroDeEmpleado">})
+        const resInsert = await insertEmpleado({...form as Omit<FormEmpleado, "numeroDeEmpleado">})
+        if (typeof resInsert === 'object' && resInsert !== null) resultado = resInsert;
       }
-      onSuccess()
+      onSuccess(resultado, esEdicion)
       onClose()
     } catch (err: any) {  
       handleError(err)
@@ -87,20 +82,6 @@ export default function EmpleadosForm({ isOpen, onClose, onSuccess, empleadoEdit
       <div className="col-span-2">
         <Label className="block text-gray-700 mb-1">DPI</Label>
         <Input name="dpi" type="number" value={form.dpi} onChange={handleChange} required placeholder="0000 00000 0000" />
-      </div>
-
-      <div className="col-span-2">
-        <Label className="block text-gray-700 mb-1">Puesto</Label>
-        <ComboboxField
-          items={puestos}
-          selectedValue={form.idPuesto}
-          getValue={(p) => p.idPuesto}
-          getLabel={(p) => p.puesto}
-          renderItem={(p) => `${p.idPuesto} - ${p.puesto}`}
-          placeholder="Selecciona un puesto"
-          isLoading={isLoading}
-          onChange={(data) => setForm((prev) => ({ ...prev, idPuesto: data as number }))}
-        />
       </div>
 
     </ModalForm>

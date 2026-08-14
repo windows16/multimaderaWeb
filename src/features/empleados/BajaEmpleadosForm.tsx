@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 interface BajaEmpleadosFormProps {
   isOpen: boolean
   onClose: () => void
-  onSuccess: () => void
+  onSuccess: (data?: Empleado, esEdicion?: boolean) => void
   empleado: Empleado | null
 }
 
@@ -26,12 +26,12 @@ export default function BajaEmpleadosForm({ isOpen, onClose, onSuccess, empleado
   }
 
   async function handleConfirmar() {
-    if (!empleado || !motivoBaja.trim()) return
+    if (!empleado ) return
     setCargando(true)
     setError(null)
     try {
-      await deleteEmpleado(empleado.numeroDeEmpleado!, motivoBaja.trim())
-      onSuccess()
+      await deleteEmpleado(empleado.numeroDeEmpleado!)
+      onSuccess(empleado, false)
       handleClose()
     } catch (err: any) {
       setError(getErrorMessage(err))
@@ -68,24 +68,11 @@ export default function BajaEmpleadosForm({ isOpen, onClose, onSuccess, empleado
             </span>
             . Esta acción no se puede deshacer.
           </p>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Motivo de baja <span className="text-red-500">*</span>
-            </label>
-            <Textarea
-              value={motivoBaja}
-              onChange={(e) => setMotivoBaja(e.target.value)}
-              rows={3}
-              placeholder="Descripcion motivo de baja..."
-            />
-          </div>
-
           <ErrorAlert error={error} title="Error al dar de baja"/>
 
           <div className="flex justify-end gap-3 pt-1">
             <Button type="button" onClick={handleConfirmar}
-              disabled={cargando || !motivoBaja.trim()}
+              disabled={cargando}
               className="bg-red-600">
               {cargando ? "Procesando..." : "Confirmar Baja"}
             </Button>

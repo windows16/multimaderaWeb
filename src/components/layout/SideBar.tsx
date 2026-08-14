@@ -11,7 +11,8 @@ const links = [
   { name: "Empleados", 
     children: [
       { name: "Empleados", path: "/empleados/personas" }, 
-      { name: "Puestos", path: "/empleados/puestos" }
+      { name: "Puestos", path: "/empleados/puestos" },
+      { name: "Historial Laboral", path: "/empleados/historial" }
     ] 
   },
   { name: "Usuarios", children: 

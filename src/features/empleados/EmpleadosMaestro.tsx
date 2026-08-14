@@ -6,6 +6,8 @@ import { formatFecha } from "../../utils/Functions"
 import { FaEdit, FaUserMinus, FaFileExcel, FaPhone } from "react-icons/fa"
 import EmpleadosForm from "./EmpleadosForm"
 import BajaEmpleadosForm from "./BajaEmpleadosForm"
+import HistoricoLaboralForm from "./HistoricoLaboralForm"
+import type { HistoricoLaboral } from "../../types/Empleados/HistoricoLaboral"
 import { ExportToExcel } from "../../utils/ExportToExcel"
 import { useFetch } from "@/hooks/useFetch"
 import { useBusqueda } from "@/hooks/useBusqueda"
@@ -24,6 +26,59 @@ export default function EmpleadosMaestro() {
   // Modal baja
   const [bajaModalAbierto, setBajaModalAbierto] = useState(false)
   const [empleadoParaBaja, setEmpleadoParaBaja] = useState<Empleado | null>(null)
+
+  // Modal Historial
+  const [modalHistorialAbierto, setModalHistorialAbierto] = useState(false)
+  const [historicoPrellenado, setHistoricoPrellenado] = useState<HistoricoLaboral | null>(null)
+
+  const handleAltaSuccess = async (empleadoForm?: Empleado, esEdicion?: boolean) => {
+    obtenerEmpleados()
+    // Solo mostramos el historial si es una creación nueva y tenemos los datos
+    if (!esEdicion && empleadoForm) {
+      
+      let empId = empleadoForm.numeroDeEmpleado;
+      if (!empId) {
+        try {
+            const empleadosList = await getAllEmpleados();
+            const found = empleadosList.find(e => String(e.dpi) === String(empleadoForm.dpi));
+            if (found) empId = found.numeroDeEmpleado;
+        } catch (e) {
+            console.error("Error buscando al empleado por DPI", e);
+        }
+      }
+
+      setHistoricoPrellenado({
+        idHistorial: 0,
+        numeroDeEmpleado: empId || 0,
+        idPuesto: 0,
+        fechaInicio: new Date().toISOString().split('T')[0],
+        fechaFin: null,
+        tipoMovimiento: "Alta",
+        motivo: "Nuevo ingreso a la empresa",
+        puesto: "",
+        nombreEmpleado: empleadoForm.nombre || ""
+      })
+      setModalHistorialAbierto(true)
+    }
+  }
+
+  const handleBajaSuccess = (empleado?: Empleado) => {
+    obtenerEmpleados()
+    if (empleado) {
+      setHistoricoPrellenado({
+        idHistorial: 0,
+        numeroDeEmpleado: empleado.numeroDeEmpleado || 0,
+        idPuesto: 0,
+        fechaInicio: new Date().toISOString().split('T')[0],
+        fechaFin: new Date().toISOString().split('T')[0],
+        tipoMovimiento: "Baja",
+        motivo: "",
+        puesto: "",
+        nombreEmpleado: empleado.nombre || ""
+      })
+      setModalHistorialAbierto(true)
+    }
+  }
 
 
   return (
@@ -81,7 +136,6 @@ export default function EmpleadosMaestro() {
             </div>
             <p>Fecha de Nacimiento: {formatFecha(item.fechaNacimiento)}</p>
             <p>DPI: {item.dpi}</p>
-            <p>Puesto: {item.puesto}</p>
           </div>
         )}
       />
@@ -90,14 +144,21 @@ export default function EmpleadosMaestro() {
       <EmpleadosForm
         isOpen={modalEmpleadosAbierto}
         onClose={() => { setModalEmpleadosAbierto(false); setEmpleadoSeleccionado(null) }}
-        onSuccess={obtenerEmpleados}
+        onSuccess={handleAltaSuccess}
         empleadoEditar={empleadoSeleccionado} />
 
       <BajaEmpleadosForm
         isOpen={bajaModalAbierto}
         onClose={() => { setBajaModalAbierto(false); setEmpleadoParaBaja(null) }}
-        onSuccess={obtenerEmpleados}
+        onSuccess={handleBajaSuccess}
         empleado={empleadoParaBaja} />
+
+      <HistoricoLaboralForm
+        isOpen={modalHistorialAbierto}
+        onClose={() => { setModalHistorialAbierto(false); setHistoricoPrellenado(null); }}
+        onSuccess={() => {}}
+        historicoEditar={historicoPrellenado} // Lo pasamos como "edición" para que use los valores, pero el ID será null/0
+      />
 
     </MaestroLayout>
   )
