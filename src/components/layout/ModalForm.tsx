@@ -6,7 +6,7 @@ interface ModalFormProps {
   isOpen: boolean
   onClose: () => void
   onSubmit: (e: React.FormEvent) => void
-  titulo: string
+  titulo?: string
   esEdicion: boolean
   cargando: boolean
   error: string | null
@@ -25,9 +25,6 @@ export default function ModalForm({ isOpen, onClose, onSubmit, titulo, esEdicion
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
           <div className="flex items-center gap-2 text-gray-800">
             {esEdicion ? <FaEdit className="text-amber-600" /> : <FaPlus className="text-blue-600" />}
-            <h2 className="text-lg font-semibold">
-              {esEdicion ? `Editar ${titulo}` : `Nuevo ${titulo}`}
-            </h2>
           </div>
           {!hideClose && (
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">

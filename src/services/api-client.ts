@@ -26,14 +26,27 @@ apiMultimadera.interceptors.response.use(
     const status = error.response?.status;
 
     if (status === 401 && !isLoggingOut) {
+      if (window.location.pathname === "/login") {
+        alert("Su sesión ha expirado. Por favor, inicie sesión nuevamente.");
+        return Promise.reject(error);
+      }
+
       isLoggingOut = true;
 
-      const { data } = await supabase.auth.getSession();
+      try {
+        const { data, error: refreshError } = await supabase.auth.refreshSession();
 
-      if (data.session) {
-        console.warn("🔒 Sesión expirada");
+        if (!refreshError && data.session) {
+          isLoggingOut = false;
+          alert("Su sesión ha sido renovada. Por favor, intente nuevamente.");
+          return apiMultimadera.request(error.config);
+        }
+
+        alert(refreshError?.message);
         await supabase.auth.signOut();
         window.location.href = "/login";
+      } finally {
+        isLoggingOut = false;
       }
     }
 
