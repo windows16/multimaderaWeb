@@ -59,11 +59,11 @@ export default function ClientesMaestro() {
       error={error}
       loading={loading}
       paginacion={
-        <Paginacion
-          page={page}
-          totalPages={meta.totalPages > 0 ? meta.totalPages : Math.ceil((meta.total || 1) / 10)}
-          onChange={setPage}
-        />
+          <Paginacion
+            page={page}
+            totalPages={meta.totalPages}
+            onChange={setPage}
+          />
       }
       onAgregar={() => {
         setClienteSeleccionado(null)

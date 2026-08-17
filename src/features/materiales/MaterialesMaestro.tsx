@@ -60,7 +60,7 @@ export default function MaterialesMaestro() {
       paginacion={
         <Paginacion
           page={page}
-          totalPages={meta.totalPages > 0 ? meta.totalPages : Math.ceil((meta.total || 1) / 10)}
+          totalPages={meta.totalPages}
           onChange={setPage}
         />
       }
