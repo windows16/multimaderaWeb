@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 
 # Variables de entorno
-config/
+
 .env
 .env.*
 *.env

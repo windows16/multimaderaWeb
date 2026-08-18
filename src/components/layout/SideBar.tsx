@@ -2,96 +2,80 @@ import { useState } from "react"
 import { NavLink } from "react-router-dom"
 import AppRoutes from "../../routers/AppRoutes"
 import { FaChevronDown } from "react-icons/fa"
-
-const links = [
-  { name: "Inicio", path: "/" },
-  { name: "Materiales", children: [{ name: "Materiales", path: "/materiales" }, { name: "Inventario", path: "/inventario" }] },
-  { name: "Pedidos", path: "/pedidos" },
-  { name: "Clientes", children: [{ name: "Clientes", path: "/clientes" }, { name: "Tipos de Cliente", path: "/tipos-cliente" }] },
-  { name: "Empleados", 
-    children: [
-      { name: "Empleados", path: "/empleados/personas" }, 
-      { name: "Puestos", path: "/empleados/puestos" },
-      { name: "Historial Laboral", path: "/empleados/historial" }
-    ] 
-  },
-  { name: "Usuarios", children: 
-    [
-      { name: "Usuarios", path: "/usuarios/auth" },
-      { name: "Roles", path: "/usuarios/roles" },
-      ]
-  },
-  { name: "Reportes", 
-    children: [
-      { name: "Pedidos Activos", path: "/reportes/pedidos-activos" },
-      { name: "Historial de Pedidos", path: "/reportes/historial-pedidos" },
-      { name: "Clientes Activos", path: "/reportes/clientes-activos" },
-    ]
-    
-  },
-  { name: "Inicio de Sesión", path: "/sesion" },
-]
+import { usePermisos } from "@/hooks/usePermisos"
+import { links } from "@/config/navegacion"
 
 export default function SideBar() {
-  const [collapsed, setCollapsed] = useState(false)   // solo desktop
-  const [mobileOpen, setMobileOpen] = useState(false) // solo móvil
+  const [collapsed, setCollapsed] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
   const [openSubMenu, setOpenSubMenu] = useState<string | null>(null)
 
+  const { permisos } = usePermisos()
+
   const handleMenuClick = () => { setMobileOpen(false); setOpenSubMenu(null) }
+  const handleChildMenuClick = () => { setMobileOpen(false) }
 
-  const handleChildMenuClick = () => {
-    setMobileOpen(false)
-  }
+  const NavContent = ({ mobile = false }: { mobile?: boolean }) => {
+    const isModuleAllowed = (moduloId: number | null) => {
+      if (moduloId === null) return true // sin restricción (ej. Inicio, Sesión)
+      return permisos?.modulos?.includes(moduloId) ?? false
+    }
 
-  const NavContent = ({ mobile = false }: { mobile?: boolean }) => (
-    <nav className="flex-1 overflow-y-auto p-2 space-y-0.5">
-      {links.map(link =>
-        link.children ? (
-          <div key={link.name}>
-            <button
-              onClick={() => setOpenSubMenu(prev => prev === link.name ? null : link.name)}
-              title={!mobile && collapsed ? link.name : undefined}
-              className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-slate-600 hover:bg-gray-100 ${!mobile && collapsed ? "justify-center" : "justify-between"}`}>
-              <span className="flex items-center gap-2.5">
-                <MenuIcon name={link.name} />
-                {(mobile || !collapsed) && link.name}
-              </span>
-              {(mobile || !collapsed) && (
-                <span className={`text-[10px] text-slate-400 transition-transform ${openSubMenu === link.name ? "rotate-180" : ""}`}><FaChevronDown /></span>
-              )}
-            </button>
-            {(mobile || !collapsed) && openSubMenu === link.name && (
-              <div className="ml-8 space-y-0.5 mt-0.5">
-                {link.children.map(child => (
-                  <NavLink key={child.path} to={child.path} onClick={handleChildMenuClick}
-                    className={({ isActive }) =>
-                      `block px-3 py-1.5 rounded-md text-sm ${isActive ? "text-amber-700 font-medium bg-amber-50" : "text-slate-500 hover:bg-gray-100"}`
-                    }
-                  >{child.name}</NavLink>
-                ))}
+    return (
+      <nav className="flex-1 overflow-y-auto p-2 space-y-0.5">
+        {links.map(link => {
+          const allowed = isModuleAllowed(link.moduloId)
+
+          if (link.children) {
+            return (
+              <div key={link.name}>
+                <button
+                  onClick={() => allowed && setOpenSubMenu(prev => prev === link.name ? null : link.name)}
+                  title={!mobile && collapsed ? link.name : (!allowed ? "Sin permisos" : undefined)}
+                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-slate-600 ${!mobile && collapsed ? "justify-center" : "justify-between"} ${!allowed ? "opacity-40 pointer-events-none" : "hover:bg-gray-100"}`}>
+                  <span className="flex items-center gap-2.5">
+                    <MenuIcon name={link.name} />
+                    {(mobile || !collapsed) && link.name}
+                  </span>
+                  {(mobile || !collapsed) && (
+                    <span className={`text-[10px] text-slate-400 transition-transform ${openSubMenu === link.name ? "rotate-180" : ""}`}><FaChevronDown /></span>
+                  )}
+                </button>
+
+                {(mobile || !collapsed) && openSubMenu === link.name && (
+                  <div className="ml-8 space-y-0.5 mt-0.5">
+                    {link.children.map(child => (
+                      <NavLink key={child.path} to={child.path} onClick={handleChildMenuClick}
+                        className={({ isActive }) =>
+                          `block px-3 py-1.5 rounded-md text-sm ${isActive ? "text-amber-700 font-medium bg-amber-50" : "text-slate-500 hover:bg-gray-100"}`
+                        }
+                      >{child.name}</NavLink>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        ) : (
-          <NavLink key={link.path} to={link.path} onClick={handleMenuClick}
-            title={!mobile && collapsed ? link.name : undefined}
-            className={({ isActive }) =>
-              `flex items-center gap-2.5 px-2.5 py-2 rounded-lg
-              ${!mobile && collapsed ? "justify-center" : ""}
-              ${isActive ? "text-amber-700 bg-amber-50" : "text-slate-600 hover:bg-gray-100"}`
-            }>
-            <MenuIcon name={link.name} />
-            {(mobile || !collapsed) && link.name}
-          </NavLink>
-        )
-      )}
-    </nav>
-  )
+            )
+          }
+
+          return (
+            <NavLink key={link.path} to={link.path!} onClick={handleMenuClick}
+              title={!mobile && collapsed ? link.name : (!allowed ? "Sin permisos" : undefined)}
+              className={({ isActive }) =>
+                `flex items-center gap-2.5 px-2.5 py-2 rounded-lg
+                ${!mobile && collapsed ? "justify-center" : ""}
+                ${isActive ? "text-amber-700 bg-amber-50" : "text-slate-600 "} ${!allowed ? "opacity-40 pointer-events-none" : "hover:bg-gray-100"}`
+              }>
+              <MenuIcon name={link.name} />
+              {(mobile || !collapsed) && link.name}
+            </NavLink>
+          )
+        })}
+      </nav>
+    )
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-
-      {/* ── SIDEBAR DESKTOP (md+) ── */}
       <aside className={`
         hidden md:flex flex-col fixed top-0 left-0 h-screen z-40
         bg-white border-r border-gray-100
@@ -112,12 +96,10 @@ export default function SideBar() {
         <NavContent />
       </aside>
 
-      {/* ── OVERLAY EN MOVIL ── */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 bg-black/30 z-30" onClick={handleMenuClick} />
       )}
 
-      {/* ── SIDEBAR Movil (drawer) ── */}
       <aside className={`
         md:hidden fixed top-0 left-0 h-screen w-56 z-40
         flex flex-col bg-white border-r border-gray-100
@@ -135,7 +117,6 @@ export default function SideBar() {
         <NavContent mobile />
       </aside>
 
-      {/* ── TOPBAR MOVILA ── */}
       <header className="md:hidden fixed top-0 left-0 right-0 h-[52px] z-20 bg-white border-b border-gray-100 flex items-center px-3 gap-2">
         <button onClick={() => setMobileOpen(true)} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-gray-100">
           <HamburgerIcon />
@@ -145,7 +126,6 @@ export default function SideBar() {
         </span>
       </header>
 
-      {/* ── CONTENIDO ── */}
       <main className={`
         flex-1 min-h-screen py-10 px-6
         pt-[calc(52px+2.5rem)] md:pt-10
