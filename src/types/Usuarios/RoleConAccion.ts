@@ -6,6 +6,7 @@ export interface Rol {
 export interface AccionRol {
     idAccionRol?: number | null
     idAccion: number
+    idModulo: number
     idRol: number
 }
 

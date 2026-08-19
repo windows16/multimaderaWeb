@@ -118,7 +118,7 @@ export async function createAuthUser(modelo: { email: string, password: string }
 }
 
 // ── MIS PERMISOS (usuario autenticado) ───────────────────────────────────
-export async function getMisPermisos(): Promise<{ acciones: number[]; modulos: number[]; rol: string | null; numeroDeEmpleado: number | null }> {
+export async function getMisPermisos(): Promise<{ acciones: number[]; accionesPorModulo?: Record<number, number[]>; modulos: number[]; rol: string | null; numeroDeEmpleado: number | null }> {
     const { data } = await apiMultimadera.get('/auth-usuarios/mis-permisos');
     return data;
 }

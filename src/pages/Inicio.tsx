@@ -3,6 +3,7 @@ import { FaBoxes, FaClipboardList, FaUsers, FaUserCog, FaArrowRight } from "reac
 import { usePermisos } from "@/hooks/usePermisos"
 import { Modulos } from "@/constants/modulos" 
 import { Loading, LoadingError } from "@/components/common/LoadingState"
+import { useAuth } from "@/hooks/useAuth"
 
 
 const accesosRapidos = [
@@ -38,10 +39,14 @@ const accesosRapidos = [
 
 const resumen = [
   { label: "Accesos rápidos", value: accesosRapidos.length },
-  { label: "Estado", value: "Listo" },
+  { label: "Modulos", value: Object.keys(Modulos).length }
+  
 ]
 
 export default function Inicio() {
+
+  const {user} = useAuth()
+
   const { permisos, loading, error } = usePermisos()
 
   if (loading) {
@@ -66,7 +71,9 @@ export default function Inicio() {
         <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm font-medium uppercase tracking-wide text-slate-500">Inicio</p>
-            <h1 className="text-3xl font-bold text-slate-800">Bienvenido a MultiMadera</h1>
+            <h1 className="text-3xl font-bold text-slate-800">
+              Hola, {user?.email?.split("@")[0].split(/[._-]/).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ")}
+            </h1>
           </div>
           <p className="text-sm text-slate-500">Panel de acceso rápido</p>
         </div>

@@ -10,7 +10,7 @@ export interface UsuarioRolCompleto extends UsuarioRol {
         nombre: string
     }
     tblRoles?: {
-        descripcion: string
+        descripcion: string | null
     }
 }
 
