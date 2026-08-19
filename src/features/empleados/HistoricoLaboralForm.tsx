@@ -64,9 +64,8 @@ export default function HistoricoLaboralForm({ isOpen, onClose, onSuccess, histo
           fechaFin: form.fechaFin ? form.fechaFin : null
         })
       } else {
-        if (!form.idPuesto) throw new Error("El idPuesto es requerido para insertar un historial laboral.");
         await insertHistoricoEmpleado({
-            ...form as Omit<FormHistoricoLaboral, "idHistorial">,
+            ...form as FormHistoricoLaboral,
             fechaFin: form.fechaFin ? form.fechaFin : null
         })
       }
