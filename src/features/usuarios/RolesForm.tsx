@@ -144,7 +144,6 @@ async function handleSubmit(e: React.FormEvent) {
   } finally {
     setCargando(false)
   }
-  window.location.reload()
 }
 
   if (!isOpen) return null
