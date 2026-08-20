@@ -6,8 +6,14 @@ import ForgotPassword from "./pages/ForgotPassword"
 import NewPassword from "./pages/NewPassword"
 import { ProtectedLayout } from "./components/common/ProtectedLayout"
 import { UpdatePrompt } from "./components/layout/UpdateLayout"
+import { useEffect } from "react"
+import { useAuthStore } from "./store/authStore"
 
 export default function App() {
+
+  useEffect(() => {
+    useAuthStore.getState().initialize()
+  }, [])
 
   return (
     <>

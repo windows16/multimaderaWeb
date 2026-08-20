@@ -6,12 +6,13 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card"
+import { useAuthStore } from "@/store/authStore"
 import { Mail, Shield, LogOut } from "lucide-react"
-import { useAuth } from "../hooks/useAuth"
 import { FaUserShield } from "react-icons/fa"
+import { Link } from "react-router-dom"
 
 export default function Session() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuthStore()
 
   if (!user) return null
 
@@ -59,6 +60,9 @@ export default function Session() {
             <LogOut className="mr-2 h-4 w-4" />
             Cerrar sesión
           </Button>
+          <div className="mt-3 text-center">
+            <Link to="/recuperar" className="text-sm text-blue-600 hover:underline">Cambiar Contraseña</Link>
+          </div>
         </CardContent>
       </Card>
     </div>

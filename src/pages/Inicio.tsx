@@ -3,7 +3,7 @@ import { FaBoxes, FaClipboardList, FaUsers, FaUserCog, FaArrowRight } from "reac
 import { usePermisos } from "@/hooks/usePermisos"
 import { Modulos } from "@/constants/modulos" 
 import { Loading, LoadingError } from "@/components/common/LoadingState"
-import { useAuth } from "@/hooks/useAuth"
+import { useAuthStore } from "@/store/authStore"
 
 
 const accesosRapidos = [
@@ -45,7 +45,7 @@ const resumen = [
 
 export default function Inicio() {
 
-  const {user} = useAuth()
+  const { user } = useAuthStore()
 
   const { permisos, loading, error } = usePermisos()
 
