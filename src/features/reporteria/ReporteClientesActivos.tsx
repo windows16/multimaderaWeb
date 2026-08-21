@@ -1,13 +1,13 @@
 import { useState, useEffect, useMemo } from "react"
 import { Printer, Users,Phone, BarChart3 } from "lucide-react"
-import { getAllClientes } from "@/services/clientes-service"
-import type { Cliente } from "@/types/Clientes/Cliente"
+import { getAllClientes } from "@/features/clientes/services/clientes-service"
+import type { Cliente } from "@/features/clientes/models/Cliente"
 import { Button } from "@/components/ui/button"
 import { usePaginacion } from "@/hooks/usePaginacion"
 import RecordCount from "@/components/common/RecordCount"
 import { Paginacion } from "@/components/common/Paginacion"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts"
-import { getAllPedidos } from "@/services/pedidos-service"
+import { getAllPedidos } from "@/features/pedidos/services/pedidos-service"
 import SearchBar from "@/components/common/SearchBar"
 
 async function fetchClientesPaginados(page: number, limit: number) {

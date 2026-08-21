@@ -1,7 +1,7 @@
 import { Route } from "react-router-dom"
 
-import ClientesMaestro from "@/features/clientes/ClientesMaestro"
-import TiposClienteMaestro from "@/features/clientes/TiposClienteMaestro"
+import ClientesMaestro from "@/features/clientes/components/ClientesMaestro"
+import TiposClienteMaestro from "@/features/clientes/components/TiposClienteMaestro"
 
 export const ClientesRoutes = (
     <>

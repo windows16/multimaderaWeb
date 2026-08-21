@@ -1,7 +1,7 @@
 import { Route } from "react-router-dom"
-import EmpleadosMaestro from "@/features/empleados/EmpleadosMaestro"
-import PuestosMaestro from "@/features/empleados/PuestosMaestro"
-import HistoricoLaboralMaestro from "@/features/empleados/HistoricoLaboralMaestro"
+import EmpleadosMaestro from "@/features/empleados/components/EmpleadosMaestro"
+import PuestosMaestro from "@/features/empleados/components/PuestosMaestro"
+import HistoricoLaboralMaestro from "@/features/empleados/components/HistoricoLaboralMaestro"
 
 export const EmpleadosRoutes = (
   <>

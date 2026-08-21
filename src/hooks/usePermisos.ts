@@ -1,4 +1,4 @@
-import { getMisPermisos } from "@/services/usuarios-service";
+import { getMisPermisos } from "@/features/usuarios/services/usuarios-service";
 import { useEffect, useState } from "react";
 import { useError } from "./useError";
 

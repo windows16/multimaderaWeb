@@ -1,5 +1,5 @@
-import MaestroRoles from "@/features/usuarios/RolesMaestro"
-import MaestroUsuarios from "@/features/usuarios/UsuariosMaestro"
+import MaestroRoles from "@/features/usuarios/components/RolesMaestro"
+import MaestroUsuarios from "@/features/usuarios/components/UsuariosMaestro"
 import { Route } from "react-router-dom"
 
 export const UsuariosRoutes = (
