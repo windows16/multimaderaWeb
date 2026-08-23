@@ -50,7 +50,7 @@ export default function EmpleadosMaestro() {
       setHistoricoPrellenado({
         idHistorial: 0,
         numeroDeEmpleado: empId || 0,
-        idPuesto: 0,
+        idPuesto: empleadoForm.idPuesto,
         fechaInicio: new Date().toISOString().split('T')[0],
         fechaFin: null,
         tipoMovimiento: "Alta",
@@ -68,7 +68,7 @@ export default function EmpleadosMaestro() {
       setHistoricoPrellenado({
         idHistorial: 0,
         numeroDeEmpleado: empleado.numeroDeEmpleado || 0,
-        idPuesto: 0,
+        idPuesto: empleado.idPuesto,
         fechaInicio: new Date().toISOString().split('T')[0],
         fechaFin: new Date().toISOString().split('T')[0],
         tipoMovimiento: "Baja",
@@ -136,6 +136,7 @@ export default function EmpleadosMaestro() {
             </div>
             <p>Fecha de Nacimiento: {formatFecha(item.fechaNacimiento)}</p>
             <p>DPI: {item.dpi}</p>
+            <p>Puesto: {item.puesto}</p>
           </div>
         )}
       />

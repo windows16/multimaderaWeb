@@ -20,6 +20,7 @@ const FormVacio: FormEmpleado = {
   nombre: "",
   telefono: "",
   fechaNacimiento: "",
+  idPuesto: null,
   dpi: ""
 }
 
@@ -34,6 +35,12 @@ export default function EmpleadosForm({ isOpen, onClose, onSuccess, empleadoEdit
       ...emp,
       fechaNacimiento: emp.fechaNacimiento?.slice(0, 10) ?? null,
     }),
+  })
+
+  const { data: puestos = [], isLoading } = useQuery({
+    queryKey: ["puestos"],
+    queryFn: getAllPuestos,
+    enabled: isOpen 
   })
 
   async function handleSubmit(e: React.FormEvent) {
@@ -83,6 +90,20 @@ export default function EmpleadosForm({ isOpen, onClose, onSuccess, empleadoEdit
       <div className="col-span-2">
         <Label className="block text-gray-700 mb-1">DPI</Label>
         <Input name="dpi" type="number" value={form.dpi} onChange={handleChange} required placeholder="0000 00000 0000" />
+      </div>
+
+      <div className="col-span-2">
+        <Label className="block text-gray-700 mb-1">Puesto</Label>
+        <ComboboxField
+          items={puestos}
+          selectedValue={form.idPuesto}
+          getValue={(p) => p.idPuesto}
+          getLabel={(p) => p.puesto}
+          renderItem={(p) => `${p.idPuesto} - ${p.puesto}`}
+          placeholder="Selecciona un puesto"
+          isLoading={isLoading}
+          onChange={(data) => setForm((prev) => ({ ...prev, idPuesto: data as number }))}
+        />
       </div>
 
     </ModalForm>
