@@ -74,7 +74,7 @@ export default function ClientesMaestro() {
         items={clientesFiltrados}
         isLoading={loading}
         getKey={(item) => item.numeroDeCliente ?? 0}
-        getTitulo={(item) => `${item.numeroDeCliente} - ${item.nombre}`}
+        getTitulo={(item) => `${item.nombre}`}
         cardOptions={[
           {
             label: "Editar",

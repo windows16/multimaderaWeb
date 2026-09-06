@@ -26,13 +26,15 @@ export default function SideBar() {
         {links.map(link => {
           const allowed = isModuleAllowed(link.moduloId)
 
+          if (!allowed) return null;
+
           if (link.children) {
             return (
               <div key={link.name}>
                 <button
-                  onClick={() => allowed && setOpenSubMenu(prev => prev === link.name ? null : link.name)}
-                  title={!mobile && collapsed ? link.name : (!allowed ? "Sin permisos" : undefined)}
-                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-slate-600 ${!mobile && collapsed ? "justify-center" : "justify-between"} ${!allowed ? "opacity-40 pointer-events-none" : "hover:bg-gray-100"}`}>
+                  onClick={() => setOpenSubMenu(prev => prev === link.name ? null : link.name)}
+                  title={!mobile && collapsed ? link.name : undefined}
+                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-slate-600 ${!mobile && collapsed ? "justify-center" : "justify-between"} hover:bg-gray-100`}>
                   <span className="flex items-center gap-2.5">
                     <MenuIcon name={link.name} />
                     {(mobile || !collapsed) && link.name}
@@ -59,11 +61,11 @@ export default function SideBar() {
 
           return (
             <NavLink key={link.path} to={link.path!} onClick={handleMenuClick}
-              title={!mobile && collapsed ? link.name : (!allowed ? "Sin permisos" : undefined)}
+              title={!mobile && collapsed ? link.name : undefined}
               className={({ isActive }) =>
                 `flex items-center gap-2.5 px-2.5 py-2 rounded-lg
                 ${!mobile && collapsed ? "justify-center" : ""}
-                ${isActive ? "text-amber-700 bg-amber-50" : "text-slate-600 "} ${!allowed ? "opacity-40 pointer-events-none" : "hover:bg-gray-100"}`
+                ${isActive ? "text-amber-700 bg-amber-50" : "text-slate-600 hover:bg-gray-100"}`
               }>
               <MenuIcon name={link.name} />
               {(mobile || !collapsed) && link.name}

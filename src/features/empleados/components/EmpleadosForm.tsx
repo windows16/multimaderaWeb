@@ -52,6 +52,7 @@ export default function EmpleadosForm({ isOpen, onClose, onSuccess, empleadoEdit
       if (esEdicion && empleadoEditar) {
         const resUpdate = await updateEmpleado({ ...form })
         if (typeof resUpdate === 'object' && resUpdate !== null) resultado = resUpdate;
+         onSuccess()
       } else {
         const resInsert = await insertEmpleado({...form as Omit<FormEmpleado, "numeroDeEmpleado">})
         if (typeof resInsert === 'object' && resInsert !== null) resultado = resInsert;

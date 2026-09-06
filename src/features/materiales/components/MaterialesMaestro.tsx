@@ -73,7 +73,7 @@ export default function MaterialesMaestro() {
         items={materialesFiltrados}
         isLoading={loading}
         getKey={(item) => item.idMaterial ?? 0}
-        getTitulo={(item) => `${item.idMaterial} - ${item.descripcion}`}
+        getTitulo={(item) => `${item.descripcion}`}
         cardOptions={[
           {
             label: "Editar",
@@ -92,7 +92,7 @@ export default function MaterialesMaestro() {
           }
         ]}
         renderContent={(item) => (
-          <p>Precio de alquiler: Q{item.precioAlquiler}</p>
+          <div> Q{item.precioAlquiler}</div>
         )}
       />
 

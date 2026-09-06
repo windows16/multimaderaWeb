@@ -59,7 +59,7 @@ export default function StockMaterialesMaestro() {
         items={stockFiltrados}
         isLoading={loading}
         getKey={(item) => item.idMaterial ?? 0}
-        getTitulo={(item) => `${item.idMaterial} - ${item.material}`}
+        getTitulo={(item) => `${item.material}`}
         cardOptions={[
           {
             label: "Editar",
@@ -79,7 +79,7 @@ export default function StockMaterialesMaestro() {
         ]}
         renderContent={(item) => (
           <>
-            <p>Stock: {item.stock}</p>
+            <p>en stock: {item.stock}</p>
           </>
         )}
       />
