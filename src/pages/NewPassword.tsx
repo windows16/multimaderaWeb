@@ -14,7 +14,12 @@ export default function NewPassword() {
   const [loading, setLoading] = useState(false)
   const [ready, setReady] = useState(false)
 
-  // Password strength validations
+  // Estados para rastrear si el usuario ha interactuado con los campos
+  const [passwordTouched, setPasswordTouched] = useState(false)
+  const [confirmTouched, setConfirmTouched] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
+  // Validaciones individuales de fortaleza
   const validations = {
     length: password.length >= 8,
     upper: /[A-Z]/.test(password),
@@ -26,20 +31,21 @@ export default function NewPassword() {
   const isPasswordStrong = Object.values(validations).every(Boolean)
   const passwordsMatch = password !== "" && password === confirm
 
+  // Condiciones de error para aplicar el estilo rojo
+  const showPasswordError = (passwordTouched || isSubmitted) && !isPasswordStrong
+  const showConfirmError = (confirmTouched || isSubmitted) && !passwordsMatch
+
   useEffect(() => {
     const checkSession = async () => {
-      // Try to obtain session from URL if Supabase SDK exposes getSessionFromUrl
       try {
         // @ts-ignore
         if (typeof supabase.auth.getSessionFromUrl === "function") {
-          // attempt to parse URL and store session
           // @ts-ignore
           await supabase.auth.getSessionFromUrl({ storeSession: true })
         }
       } catch (err) {
         // ignore
       }
-
       const { data } = await supabase.auth.getSession()
       if (data.session) setReady(true)
     }
@@ -55,26 +61,28 @@ export default function NewPassword() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsSubmitted(true)
     setErrorMsg("")
     setInfoMsg("")
 
     if (!isPasswordStrong) {
-      setErrorMsg("La contraseña no cumple los requisitos de seguridad")
+      setErrorMsg("La contraseña no cumple con los requisitos de seguridad.")
       return
     }
 
     if (!passwordsMatch) {
-      setErrorMsg("Las contraseñas no coinciden")
+      setErrorMsg("Las contraseñas no coinciden.")
       return
     }
 
     setLoading(true)
     try {
       const { error } = await supabase.auth.updateUser({ password })
-      if (error) setErrorMsg(error.message)
-      else {
+      if (error) {
+        setErrorMsg(error.message)
+      } else {
         setInfoMsg("Contraseña actualizada correctamente. Serás redirigido al inicio de sesión.")
-        setTimeout(() => navigate('/login'), 2000)
+        setTimeout(() => navigate("/login"), 2000)
       }
     } catch (err: any) {
       setErrorMsg(err?.message ?? String(err))
@@ -86,7 +94,6 @@ export default function NewPassword() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-
         <div className="mb-7 text-center">
           <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-blue-50 mb-4">
             <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -104,56 +111,52 @@ export default function NewPassword() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Nueva Contraseña */}
           <div className="flex flex-col gap-1.5">
-            {/* Password requirements */}
-            <div className="mt-2 text-sm text-gray-500">
-              <p className="font-medium text-gray-700 mb-1">La contraseña debe contener:</p>
-              <ul className="ml-4 space-y-1">
-                <li className={validations.length ? "text-green-600" : "text-gray-400"}>
-                  {validations.length ? "✔" : "•"} Mínimo 8 caracteres
-                </li>
-                <li className={validations.upper ? "text-green-600" : "text-gray-400"}>
-                  {validations.upper ? "✔" : "•"} Al menos una letra mayúscula
-                </li>
-                <li className={validations.lower ? "text-green-600" : "text-gray-400"}>
-                  {validations.lower ? "✔" : "•"} Al menos una letra minúscula
-                </li>
-                <li className={validations.number ? "text-green-600" : "text-gray-400"}>
-                  {validations.number ? "✔" : "•"} Al menos un número
-                </li>
-                <li className={validations.special ? "text-green-600" : "text-gray-400"}>
-                  {validations.special ? "✔" : "•"} Al menos un carácter especial (ej. !@#$%)
-                </li>
-              </ul>
-            </div>
             <label className="text-sm font-medium text-gray-600">Nueva contraseña</label>
             <Input
               type="password"
               placeholder="••••••••"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                if (!passwordTouched) setPasswordTouched(true)
+              }}
+              onBlur={() => setPasswordTouched(true)}
               required
-              className="h-11 rounded-xl border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-              disabled={!ready}
+              disabled={!ready || loading}
+              className={`h-11 rounded-xl transition-all ${
+                showPasswordError
+                  ? "border-red-500 focus-visible:ring-red-200"
+                  : "border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              }`}
             />
           </div>
 
+          {/* Confirmar Contraseña */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-gray-600">Confirmar contraseña</label>
             <Input
               type="password"
               placeholder="••••••••"
               value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
+              onChange={(e) => {
+                setConfirm(e.target.value)
+                if (!confirmTouched) setConfirmTouched(true)
+              }}
+              onBlur={() => setConfirmTouched(true)}
               required
-              className="h-11 rounded-xl border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-              disabled={!ready}
+              disabled={!ready || loading}
+              className={`h-11 rounded-xl transition-all ${
+                showConfirmError
+                  ? "border-red-500 focus-visible:ring-red-200"
+                  : "border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              }`}
             />
 
-            {!passwordsMatch && confirm.length > 0 && (
-              <div className="text-sm text-red-500 mt-1">Las contraseñas no coinciden</div>
+            {showConfirmError && (
+              <div className="text-xs text-red-500 mt-0.5">Las contraseñas no coinciden</div>
             )}
-
           </div>
 
           <ErrorAlert error={errorMsg} title="Error" />
@@ -163,16 +166,27 @@ export default function NewPassword() {
           )}
 
           <div className="flex gap-3">
-            <Button type="submit" className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 rounded-xl font-medium" disabled={!ready || loading || !isPasswordStrong || !passwordsMatch}>
-              Actualizar contraseña
+            <Button
+              type="submit"
+              className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 rounded-xl font-medium"
+              disabled={!ready || loading}
+            >
+              {loading ? "Actualizando..." : "Actualizar contraseña"}
             </Button>
-            <Button type="button" variant="secondary" className="h-11 rounded-xl" onClick={() => navigate('/login')}>
+            <Button
+              type="button"
+              variant="secondary"
+              className="h-11 rounded-xl"
+              onClick={() => navigate("/login")}
+            >
               Cancelar
             </Button>
           </div>
         </form>
 
-        <p className="text-center text-xs text-gray-400 mt-6">© 2025 MultiMadera · Todos los derechos reservados.</p>
+        <p className="text-center text-xs text-gray-400 mt-6">
+          © 2025 MultiMadera · Todos los derechos reservados.
+        </p>
       </div>
     </div>
   )

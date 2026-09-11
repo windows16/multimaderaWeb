@@ -27,13 +27,37 @@ export default function CreateAuthUserForm({ isOpen, onClose, onSuccess }: Creat
 
     const email = form.email?.trim()
     const password = form.password || ""
+    
+    const validations = {
+      length: password.length >= 8,
+      upper: /[A-Z]/.test(password),
+      lower: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]/.test(password),
+    }
 
     if (!email) {
       handleError(new Error("El correo es requerido"))
       return
     }
-    if (password.length < 6) {
-      handleError(new Error("La contraseña debe tener al menos 6 caracteres"))
+    if (!validations.length) {
+      handleError(new Error("La contraseña debe tener al menos 8 caracteres"))
+      return
+    }
+    if (!validations.upper) {
+      handleError(new Error("La contraseña debe contener al menos una letra mayúscula"))
+      return
+    }
+    if (!validations.lower) {
+      handleError(new Error("La contraseña debe contener al menos una letra minúscula"))
+      return
+    }
+    if (!validations.number) {
+      handleError(new Error("La contraseña debe contener al menos un número"))
+      return
+    }
+    if (!validations.special) {
+      handleError(new Error("La contraseña debe contener al menos un carácter especial"))
       return
     }
     if (password !== confirm) {
