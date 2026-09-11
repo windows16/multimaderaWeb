@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import { FaTimes, FaEdit, FaPlus } from "react-icons/fa"
 import { Button } from "@/components/ui/button"
 import ErrorAlert from "@/components/common/ErrorAlert"
@@ -14,7 +15,28 @@ interface ModalFormProps {
   hideClose?: boolean
 }
 
-export default function ModalForm({ isOpen, onClose, onSubmit, titulo, esEdicion, cargando, error, hideClose = false, children }: ModalFormProps) {
+export default function ModalForm({
+  isOpen,
+  onClose,
+  onSubmit,
+  titulo,
+  esEdicion,
+  cargando,
+  error,
+  hideClose = false,
+  children
+}: ModalFormProps) {
+  const errorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (error && errorRef.current) {
+      // Hace scroll suave hasta el contenedor del error
+      errorRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" })
+      // Enfoca el contenedor para lectura inmediata y accesibilidad (screen readers)
+      errorRef.current.focus()
+    }
+  }, [error])
+
   if (!isOpen) return null
 
   return (
@@ -37,8 +59,18 @@ export default function ModalForm({ isOpen, onClose, onSubmit, titulo, esEdicion
 
           {/* Campos — scrolleable */}
           <div className="overflow-y-auto flex-1 px-6 py-5 grid grid-cols-2 gap-4 content-start">
+            
+            {/* Contenedor envolvente del error con ref y tabIndex */}
+            {error && (
+              <div 
+                ref={errorRef} 
+                tabIndex={-1} 
+                className="col-span-2 outline-none rounded-lg transition-all">
+                <ErrorAlert error={error} title="Error al guardar" />
+              </div>
+            )}
+
             {children}
-            <ErrorAlert error={error} title="Error al guardar" />
           </div>
 
           {/* Botones — fijos al fondo */}
