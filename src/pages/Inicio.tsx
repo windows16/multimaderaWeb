@@ -67,11 +67,11 @@ export default function Inicio() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm font-medium uppercase tracking-wide text-slate-500">Inicio</p>
-            <h1 className="text-3xl font-bold text-slate-800">
+            <h1 className="text-2xl font-bold text-slate-800">
               Hola, {user?.email?.split("@")[0].split(/[._-]/).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ")}
             </h1>
           </div>
@@ -81,14 +81,14 @@ export default function Inicio() {
 
       <div className="grid gap-4 md:grid-cols-3">
         {resumen.map((item) => (
-          <div key={item.label} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div key={item.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
             <p className="text-sm text-slate-500">{item.label}</p>
-            <p className="mt-3 text-3xl font-bold text-slate-800">{item.value}</p>
+            <p className="mt-3 text-2xl font-bold text-slate-800">{item.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="mb-4 text-xl font-semibold text-slate-800">Accesos rápidos</h2>
         {accesosVisibles.length === 0 ? (
           <p className="text-sm text-slate-500">No tenés accesos rápidos disponibles.</p>
