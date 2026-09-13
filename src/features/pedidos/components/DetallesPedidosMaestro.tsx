@@ -68,31 +68,116 @@ export default function DetallesPedidosMaestro() {
 
   const subTotal = itemDetalles
     .reduce((acc, item) => acc + (Number(item.total) || 0), 0)
-
+  
   const exportarPDF = () => {
-    if (!hayDetalles) return;
+    if (!hayDetalles) return
 
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text(`Albañil: ${pedidoCompleto?.nombreAlbanil ?? "N/A"}`, 14, 22);
-    doc.text(`Fecha: ${pedidoCompleto?.fechaInicio ?? "N/A"} al ${pedidoCompleto?.fechaFin}`, 14, 28);
-    doc.text(`Dirección: ${pedidoCompleto?.direccion ?? "N/A"}`, 14, 34);
+    const doc = new jsPDF()
 
-    // Autogenerar leyendo el HTML directamente
+    // --- PALETA DE COLORES (HEX STRING) ---
+    const PRIMARY = "#0f172a"
+    const ACCENT = "#0284c7"
+    const TEXT_DARK = "#334155"
+    const TEXT_LIGHT = "#94a3b8"
+    const BG_LIGHT = "#f8fafc"
+    const BORDER_COLOR = "#e2e8f0"
+
+    // 2. BLOQUE DE INFORMACIÓN (METADATA)
+    const currentY = 15
+
+    doc.setDrawColor(BORDER_COLOR)
+    doc.setFillColor(BG_LIGHT)
+    doc.roundedRect(14, currentY, 182, 28, 2, 2, "FD")
+
+    doc.setTextColor(TEXT_DARK)
+    doc.setFontSize(9)
+    doc.setFont("helvetica", "bold")
+    doc.text("DATOS DE LA OBRA Y PEDIDO", 18, currentY + 6)
+
+    doc.setFont("helvetica", "bold")
+    doc.text("No. Pedido:", 18, currentY + 13)
+    doc.text("Albañil:", 18, currentY + 19)
+    doc.text("Dirección:", 18, currentY + 24)
+
+    doc.setFont("helvetica", "normal")
+    doc.text(`#${pedidoId || "N/A"}`, 42, currentY + 13)
+    doc.text(`${pedidoCompleto?.nombreAlbanil ?? "N/A"}`, 42, currentY + 19)
+    doc.text(`${pedidoCompleto?.direccion ?? "N/A"}`, 42, currentY + 24)
+
+    doc.setFont("helvetica", "bold")
+    doc.text("Fecha Inicio:", 125, currentY + 13)
+    doc.text("Fecha Fin:", 125, currentY + 19)
+
+    doc.setFont("helvetica", "normal")
+    doc.text(`${pedidoCompleto?.fechaInicio ?? "N/A"}`, 150, currentY + 13)
+    doc.text(`${pedidoCompleto?.fechaFin ?? "N/A"}`, 150, currentY + 19)
+
+    // 3. TABLA DE DETALLES
+    const tableData = itemDetalles.map((item, index) => [
+      (index + 1).toString().padStart(2, "0"),
+      item.material || "N/A",
+      item.cantidad?.toString() || "0",
+      `Q${Number(item.total || 0).toFixed(2)}`
+    ])
+
     autoTable(doc, {
-      html: '#tabla-exportar', // tabla de React
-      startY: 45,
-      theme: 'striped',
-      // Este hook borra la columna de acciones (la número 3, empezando desde 0) en el PDF
-      didParseCell: function (data) {
-        if (data.column.index === 3) {
-          data.cell.styles.halign = 'center'; // Opcional
-          data.cell.text = []; // Vaciamos el texto del botón
-        }
+      startY: currentY + 34,
+      head: [["#", "Material / Descripción", "Cant.", "Total"]],
+      body: tableData,
+      theme: "striped",
+      headStyles: {
+        fillColor: PRIMARY,
+        textColor: "#ffffff",
+        fontStyle: "bold",
+        fontSize: 9,
+        halign: "left"
+      },
+      columnStyles: {
+        0: { cellWidth: 12, halign: "center" },
+        1: { halign: "left" },
+        2: { cellWidth: 25, halign: "center" },
+        3: { cellWidth: 35, halign: "right" }
+      },
+      styles: {
+        fontSize: 9,
+        cellPadding: 4,
+        textColor: TEXT_DARK
+      },
+      alternateRowStyles: {
+        fillColor: BG_LIGHT
       }
-    });
+    })
 
-    doc.save(`Pedido_${pedidoId}.pdf`);
+    // 4. RESUMEN DE TOTALES Y FIRMAS
+    const finalY = (doc as any).lastAutoTable.finalY + 8
+
+    // Recuadro Total General
+    doc.setFillColor(BG_LIGHT)
+    doc.setDrawColor(BORDER_COLOR)
+    doc.roundedRect(125, finalY, 71, 14, 2, 2, "FD")
+
+    doc.setFontSize(10)
+    doc.setFont("helvetica", "bold")
+    doc.setTextColor(PRIMARY)
+    doc.text("TOTAL GENERAL:", 130, finalY + 9)
+    doc.text(`Q${subTotal.toFixed(2)}`, 190, finalY + 9, { align: "right" })
+
+
+    // 5. PIE DE PÁGINA
+    const pageCount = doc.getNumberOfPages()
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i)
+      doc.setFontSize(8)
+      doc.setTextColor(TEXT_LIGHT)
+      doc.text(
+        `Página ${i} de ${pageCount} • Documento de Control Interno`,
+        105,
+        287,
+        { align: "center" }
+      )
+    }
+
+    doc.save(`Factura_Pedido_${pedidoId}.pdf`)
   }
 
   return (
