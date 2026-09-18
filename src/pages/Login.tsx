@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { supabase } from "../supabase/supabase-config"
 import { useLocation, useNavigate, Navigate, Link } from "react-router-dom"
 import { FaEye, FaEyeSlash, FaSignInAlt } from "react-icons/fa"
 import ErrorAlert from "../components/common/ErrorAlert"
@@ -10,7 +9,7 @@ import { useAuthStore } from "@/store/authStore"
 export default function Login() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, loading } = useAuthStore()
+  const { user, loading, login } = useAuthStore()
   const from = location.state?.from?.pathname || "/"
 
   const [email, setEmail] = useState("")
@@ -31,9 +30,11 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setErrorMsg("")
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setErrorMsg(error.message)
-    else navigate(from, { replace: true })
+    login(email, password).then(({error}) =>{
+      if (error) setErrorMsg(error.message)
+      else navigate(from, { replace: true })
+    })
+    
   }
 
   return (
