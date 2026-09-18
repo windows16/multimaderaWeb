@@ -1,73 +1,138 @@
-# React + TypeScript + Vite
+# Multimadera Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web desarrollada con React, TypeScript y Vite para gestionar procesos operativos y administrativos de una empresa de materiales de construcción. El sistema incluye autenticación, administración de empleados, clientes, materiales, pedidos, usuarios y reportería, además de integración con Supabase y una API backend para manejar los datos.
 
-Currently, two official plugins are available:
+## ¿Qué incluye?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Autenticación de usuarios con Supabase Auth
+- Recuperación y restablecimiento de contraseña
+- Administración de clientes, empleados y usuarios
+- Gestión de materiales y pedidos
+- Control de permisos por rol
+- Reportes y consultas
+- Interfaz moderna con React y Tailwind CSS
+- Soporte PWA para uso cercano a una aplicación nativa
 
-## React Compiler
+## Stack tecnológico
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- TanStack Query
+- Zustand
+- Supabase JS
+- Axios
+- Recharts
+- Vite PWA
 
-## Expanding the ESLint configuration
+## Estructura general
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+src/
+├── components/
+├── features/
+├── hooks/
+├── pages/
+├── routers/
+├── services/
+├── store/
+├── supabase/
+├── types/
+├── utils/
+├── App.tsx
+├── main.tsx
+└── index.css
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Requisitos previos
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Antes de levantar el proyecto, asegúrate de tener instalado:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 18 o superior
+- npm o pnpm
+- Un proyecto de Supabase configurado
+- La API backend disponible
+
+## Instalación
+
+1. Clona el repositorio:
+
+```bash
+git clone https://github.com/windows16/multimaderaWeb.git
+cd multimaderaWeb
 ```
+
+2. Instala las dependencias:
+
+```bash
+npm install
+```
+
+3. Crea un archivo `.env.local` en la raíz del proyecto:
+
+```env
+VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+VITE_SUPABASE_ANON_KEY=tu-anon-key
+VITE_BASE_URL_API=http://localhost:3000
+```
+
+> Ajusta `VITE_BASE_URL_API` según la URL y el puerto donde se esté ejecutando tu backend.
+
+## Levantar el proyecto en local
+
+Ejecuta el servidor de desarrollo:
+
+```bash
+npm run dev
+```
+
+Después abre la aplicación en tu navegador:
+
+```text
+http://localhost:5173
+```
+
+## Construcción para producción
+
+Para generar la versión optimizada para producción:
+
+```bash
+npm run build
+```
+
+Para previsualizar la compilación localmente:
+
+```bash
+npm run preview
+```
+
+## Scripts disponibles
+
+```bash
+npm run dev      # Inicia el servidor de desarrollo
+npm run build    # Compila la aplicación para producción
+npm run preview  # Previsualiza la build de producción
+npm run lint     # Ejecuta ESLint
+```
+
+## Notas importantes
+
+- La autenticación depende de `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`.
+- Las peticiones a la API utilizan `VITE_BASE_URL_API`.
+- El cliente HTTP agrega automáticamente el token de sesión de Supabase a las peticiones autenticadas.
+- El backend debe exponer los endpoints necesarios para clientes, empleados, materiales, pedidos, usuarios, permisos y reportes.
+- No compartas claves privadas ni archivos `.env.local` en el repositorio.
+
+## Contribución
+
+1. Haz un fork del repositorio.
+2. Crea una rama para tu cambio.
+3. Realiza y prueba tus modificaciones.
+4. Ejecuta `npm run lint` y `npm run build`.
+5. Abre un pull request con una descripción clara.
+
+## Licencia
+
+Este proyecto no especifica una licencia en el repositorio. Consulta con el propietario antes de reutilizarlo o distribuirlo.
