@@ -70,15 +70,15 @@ cd multimaderaWeb
 npm install
 ```
 
-3. Crea un archivo `.env.local` en la raíz del proyecto:
+3. Crea un archivo `.env` en la raíz del proyecto:
 
 ```env
 VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
 VITE_SUPABASE_ANON_KEY=tu-anon-key
-VITE_BASE_URL_API=http://localhost:3000
+VITE_BASE_URL_API=http://url-api-desplegada
 ```
 
-> Ajusta `VITE_BASE_URL_API` según la URL y el puerto donde se esté ejecutando tu backend.
+> Ajusta `VITE_BASE_URL_API` según la URL y el puerto donde se esté ejecutando el backend.
 
 ## Levantar el proyecto en local
 
@@ -102,36 +102,12 @@ Para generar la versión optimizada para producción:
 npm run build
 ```
 
-Para previsualizar la compilación localmente:
-
-```bash
-npm run preview
-```
-
-## Scripts disponibles
-
-```bash
-npm run dev      # Inicia el servidor de desarrollo
-npm run build    # Compila la aplicación para producción
-npm run preview  # Previsualiza la build de producción
-npm run lint     # Ejecuta ESLint
-```
-
 ## Notas importantes
 
-- La autenticación depende de `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`.
-- Las peticiones a la API utilizan `VITE_BASE_URL_API`.
+- La autenticación depende de Supabase.
 - El cliente HTTP agrega automáticamente el token de sesión de Supabase a las peticiones autenticadas.
 - El backend debe exponer los endpoints necesarios para clientes, empleados, materiales, pedidos, usuarios, permisos y reportes.
-- No compartas claves privadas ni archivos `.env.local` en el repositorio.
-
-## Contribución
-
-1. Haz un fork del repositorio.
-2. Crea una rama para tu cambio.
-3. Realiza y prueba tus modificaciones.
-4. Ejecuta `npm run lint` y `npm run build`.
-5. Abre un pull request con una descripción clara.
+- No compartas claves privadas ni archivos `.env` en el repositorio.
 
 ## Licencia
 
