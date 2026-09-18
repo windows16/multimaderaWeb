@@ -12,11 +12,12 @@ interface Permisos {
 export function usePermisos() {
   const [permisos, setPermisos] = useState<Permisos | null>(null);
   const [loading, setCargando] = useState(true);
-  const { error, handleError } = useError();
+  const { error, handleError, clearError } = useError();
 
   useEffect(() => {
     let mounted = true;
     const fetchPermisos = async () => {
+      clearError();
       try {
         const data = await getMisPermisos();
         if (mounted) setPermisos(data);

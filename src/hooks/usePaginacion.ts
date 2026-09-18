@@ -14,13 +14,14 @@ export function usePaginacion<T>({ fetchFn, initialLimit = 10, search = "" }: Us
   const [page, setPage] = useState(1)
   const [items, setItems] = useState<T[]>([])
   const [loading, setLoading] = useState(false)
-  const { error, handleError } = useError()
+  const { error, handleError, clearError } = useError()
   const [meta, setMeta] = useState({ total: 0, totalPages: 0 })
 
 
   // 1. Una única función encargada de pedir los datos al servidor
   const cargarDatos = useCallback(async (paginaDestino: number, textoBusqueda: string) => {
     setLoading(true)
+    clearError()
     try {
       const respuesta = await fetchFn(paginaDestino, initialLimit, textoBusqueda.trim())
       

@@ -50,7 +50,7 @@ export default function MaestroLayout({
         </div>
       )}
 
-      <ErrorAlert error={error} />
+      {!loading && error && <ErrorAlert error={error} />}
 
       {children}
 

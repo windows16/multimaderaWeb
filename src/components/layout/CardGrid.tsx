@@ -6,6 +6,7 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
+import { Loading } from "../common/LoadingState"
 
 interface CardOption<T> {
   label: string
@@ -36,21 +37,7 @@ export default function CardGrid<T>({
 }: CardGridProps<T>) {
   if (isLoading) {
     return (
-      <div className="my-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="shadow-md animate-pulse">
-            <CardHeader>
-              <div className="h-6 w-2/3 bg-gray-200 rounded dark:bg-gray-700" />
-            </CardHeader>
-
-            <CardContent className="space-y-3">
-              <div className="h-4 bg-gray-200 rounded w-full dark:bg-gray-700" />
-              <div className="h-4 bg-gray-200 rounded w-5/6 dark:bg-gray-700" />
-              <div className="h-4 bg-gray-200 rounded w-4/5 dark:bg-gray-700" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Loading />
     )
   }
 
